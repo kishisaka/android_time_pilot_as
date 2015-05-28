@@ -25,8 +25,6 @@ public class MainLoop extends Thread
 	public MainLoop(float density)
 	{		
 		_density = density;
-		// SpeedController controller = new SpeedController();
-		// controller.start();
 		initGame();
 		start();
 	}
