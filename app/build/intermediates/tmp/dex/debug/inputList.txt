@@ -1,0 +1,3 @@
+D:\as-dev\Asteroids\app\build\intermediates\classes\debug
+D:\as-dev\Asteroids\app\build\intermediates\pre-dexed\debug\classes-e3dd8d6b1f570ee72e7c173975b5ac8e33bda303.jar
+D:\as-dev\Asteroids\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-1f1785711649b7f290c6a82894820eb825aa944b.jar
