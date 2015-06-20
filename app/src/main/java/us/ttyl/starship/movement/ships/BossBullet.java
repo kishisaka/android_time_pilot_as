@@ -1,5 +1,7 @@
 package us.ttyl.starship.movement.ships;
 
+import android.util.Log;
+
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
 import us.ttyl.starship.movement.LineEngine;
@@ -13,7 +15,6 @@ public class BossBullet extends LineEngine
 			int endurance, int hitpoints) {
 		super(direction, currentDirection, currentX, currentY, currentSpeed, maxSpeed,
 				acceleration, turnMode, name, origin, endurance, hitpoints);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -31,11 +32,12 @@ public class BossBullet extends LineEngine
 						, this.getOrigin(), particleEndurance, 1); 
 				GameState._weaponList.add(bullet);
 			}
+			_endurance = 0;
 		}
 		if (_endurance > 0)
 		{
 			_endurance = _endurance - 1;
-		}				
+		}
 	}
 	
 	@Override

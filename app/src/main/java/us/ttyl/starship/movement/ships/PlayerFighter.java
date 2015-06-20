@@ -29,7 +29,7 @@ public class PlayerFighter extends FreeEngine
 	public void onCollision(MovementEngine engine2)
 	{
 		//on collision with enemy, enemy missile or enemy gun, kill player fighter, show explosion
-		if (getWeaponName() != engine2.getWeaponName() && mWaiting == false)
+		if (getWeaponName() != engine2.getWeaponName() && mWaiting == false && GameState.sIsInvulnerable == false)
 		{
 			if (engine2.getWeaponName() == Constants.ENEMY_FIGHTER || engine2.getWeaponName() == Constants.ENEMY_BOSS 
 					|| engine2.getWeaponName() == Constants.MISSILE_ENEMY || engine2.getWeaponName() == Constants.GUN_ENEMY

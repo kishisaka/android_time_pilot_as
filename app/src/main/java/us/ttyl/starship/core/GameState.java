@@ -14,12 +14,17 @@ public class GameState
 	public static boolean mWaitTimeBetweenLevels = false;
 	
 	//turn off enemy weapon systems (testing)
-	public static boolean sFireEnemyGuns = true;
+	public static boolean sIsFireEnemyGuns = true;
+	//turn on player invulnerability (testing)
+	public static boolean sIsInvulnerable = false;
 	
-	// guns, missiles, player ship, enemy ships
+	// guns, missiles, player ship, enemy ships, parachutes, etc.
 	public static Vector <MovementEngine> _weaponList = new Vector<MovementEngine>();
+	//explosion particles
 	public static Vector <MovementEngine> _explosionParticleList = new Vector<MovementEngine>();
+	//small clouds
 	public static Vector <MovementEngine> _cloudListSmall = new Vector<MovementEngine>();
+	//large clouds
 	public static Vector <MovementEngine> _cloudListLarge = new Vector<MovementEngine>();
 	
 	//sprites

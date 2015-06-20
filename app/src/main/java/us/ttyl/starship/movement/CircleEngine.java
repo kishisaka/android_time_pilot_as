@@ -38,12 +38,12 @@ public class CircleEngine extends MovementEngine
   {
   }
 
-  public void updateDisplacement()
+  public void updateDisplacement(int layer)
   {
     if (_currentSpeed > 0)
     {
-    	_currentX = _currentX + (GameState._density * (Math.cos(Math.toRadians(_currentDirection)) * _currentSpeed));
-	    _currentY = _currentY + (GameState._density * (Math.sin(Math.toRadians(_currentDirection)) * _currentSpeed));
+    	_currentX = _currentX + (GameState._density * (Math.cos(Math.toRadians(_currentDirection)) * (_currentSpeed / layer)));
+	    _currentY = _currentY + (GameState._density * (Math.sin(Math.toRadians(_currentDirection)) * (_currentSpeed / layer)));
     }
   }
 
@@ -65,7 +65,7 @@ public class CircleEngine extends MovementEngine
   		if (_currentTurnMode >= _turnMode)
   		{
   			_currentTurnMode = 0;
-  			_currentDirection = _currentDirection + 1;		  
+  			_currentDirection = _currentDirection + 1;
   			if (_currentDirection > 359)
   			{
   				_currentDirection = 0;

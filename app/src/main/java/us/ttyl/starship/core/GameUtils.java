@@ -1,6 +1,7 @@
 package us.ttyl.starship.core;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.util.Log;
 
 import us.ttyl.asteroids.R;
 import us.ttyl.starship.movement.MovementEngine;
+import us.ttyl.starship.movement.ships.Parachute;
 
 public class GameUtils 
 {	
@@ -153,18 +155,18 @@ public class GameUtils
 		double yFactor = (y2 - y1) * (y2 -y1);
 		return (int)Math.sqrt(xFactor + yFactor);
 	}
-	
+
 	/**
 	 * get ship type count (gun, enemy)
 	 * @param name
 	 * @return ship count
 	 */
-	public static int getTypeCount(int name)
+	public static int getTypeCount(int name, List<MovementEngine> itemList)
 	{
 		int count = 0;
-		for(int i = 0; i < GameState._weaponList.size(); i ++)
+		for(int i = 0; i < itemList.size(); i ++)
 		{
-			if (GameState._weaponList.get(i).getWeaponName() == (name))
+			if (itemList.get(i).getWeaponName() == (name))
 			{
 				count = count + 1;
 			}
@@ -581,26 +583,66 @@ public class GameUtils
 		return new int[]{0,0};
 	}
 
+	/**
+	 * return the enemy gun fire rate based on the current wave level
+	 * increases difficulty for game
+	 * @return fire rate interval in ms
+	 */
 	public static int getEnemyGunFireRate()
 	{
-		if (GameState.sCurrentLevel == 1)
+		if (GameState.sWaveLevel == 0)
 		{
 			return 500;
 		}
-		else if (GameState.sCurrentLevel == 2)
+		else if (GameState.sWaveLevel == 1)
 		{
 			return 400;
 		}
-		else if (GameState.sCurrentLevel == 3)
+		else if (GameState.sWaveLevel == 2)
 		{
 			return 300;
 		}
 		return 200;
 	}
 
-	public static boolean fireWeapon()
+	/**
+	 * return the enemy missile fire rate based on the current wave level
+	 * @return fire rate interval in ms
+	 */
+	public static int getEnemyMissileFireRate()
 	{
-		if (Math.random() * 100 < 1)
+		if (GameState.sWaveLevel == 0)
+		{
+			return 1500;
+		}
+		else if (GameState.sWaveLevel == 1)
+		{
+			return 1000;
+		}
+		else if (GameState.sWaveLevel == 2)
+		{
+			return 800;
+		}
+		return 500;
+	}
+
+	/**
+	 * should we fire a particular weapon or should we not based on the current wave level
+	 * used for the boss gun and missile for fighters.
+	 * @return true for fire, false for not fire
+	 */
+	public static boolean shouldFireWeapon()
+	{
+		int randomFireFactor = 1;
+		if (GameState.sWaveLevel == 2)
+		{
+			randomFireFactor = 3;
+		}
+		else if (GameState.sWaveLevel > 2)
+		{
+			randomFireFactor = 10;
+		}
+		if (Math.random() * 100 < randomFireFactor)
 		{
 			return true;
 		}
@@ -608,6 +650,78 @@ public class GameUtils
 		{
 			return false;
 		}
+	}
+
+	/**
+	 * get the current enemy boss speed based on current and wave leveels
+	 * @param weaponType
+	 * @return speed
+	 */
+	public static float getPlaneSpeed(int weaponType)
+	{
+		if (weaponType == Constants.ENEMY_BOSS)
+		{
+			if (GameState.sWaveLevel == 0)
+			{
+				switch(GameState.sCurrentLevel)
+				{
+					case 2:
+						return 2;
+					case 3:
+						return 2;
+					case 4:
+						return 3.5f;
+					default:
+						return 1;
+				}
+			}
+			else
+			{
+				switch(GameState.sCurrentLevel)
+				{
+					case 2:
+						return 3;
+					case 3:
+						return 4;
+					case 4:
+						return 5;
+					default:
+						return 2;
+				}
+			}
+		}
+		else if (weaponType == Constants.ENEMY_FIGHTER)
+		{
+			if (GameState.sWaveLevel == 0)
+			{
+				switch(GameState.sCurrentLevel)
+				{
+					case 2:
+						return 1.4f;
+					case 3:
+						return 1.4f;
+					case 4:
+						return 3;
+					default:
+						return 1;
+				}
+			}
+			else
+			{
+				switch(GameState.sCurrentLevel)
+				{
+					case 2:
+						return 2.3f;
+					case 3:
+						return 2.3f;
+					case 4:
+						return 4;
+					default:
+						return 2;
+				}
+			}
+		}
+		return 1;
 	}
 
 

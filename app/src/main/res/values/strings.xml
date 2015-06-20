@@ -4,5 +4,9 @@
     <string name="app_name">Asteroids</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="enemy_fire">turn %s enemy fire</string>
+    <string name="invulnerability">turn %s invulnerability</string>
+    <string name="on">on</string>
+    <string name="off">off</string>
 
 </resources>

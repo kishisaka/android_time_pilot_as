@@ -7,6 +7,7 @@ import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.Cloud;
 import us.ttyl.starship.movement.ships.EnemyBoss;
 import us.ttyl.starship.movement.ships.EnemyFighter;
+import us.ttyl.starship.movement.ships.FollowFighter;
 
 /**
  * weapon builder
@@ -18,16 +19,22 @@ public class EnvBuilder
 {
 	/**
 	 * generate enemy fighter
-	 * @param planetX
-	 * @param planetY
+	 * @param fighterStartPositionX
+	 * @param fighterStartPositionY
 	 * @param turnmode
 	 * @param speed
 	 */
-	private static void generateShip(double planetX, double planetY, int turnmode, int speed)
-	{
-		MovementEngine circleEngine = new EnemyFighter(0, 0, planetX, planetY, 1
-				, 1, 1, turnmode, (Constants.ENEMY_FIGHTER),-1);
-		GameState._weaponList.add(circleEngine);
+	private static void generateShip(double fighterStartPositionX, double fighterStartPositionY, int turnmode, float speed, boolean follow) {
+		if (follow == false) {
+			MovementEngine circleEngine = new EnemyFighter(0, 0, fighterStartPositionX, fighterStartPositionY, speed
+					, speed, speed, turnmode, (Constants.ENEMY_FIGHTER), -1);
+			GameState._weaponList.add(circleEngine);
+		}
+		else{
+			MovementEngine followEngine = new FollowFighter(0, 0, fighterStartPositionX, fighterStartPositionY, speed
+					, speed, speed, turnmode, (Constants.ENEMY_FIGHTER), -1);
+			GameState._weaponList.add(followEngine);
+		}
 	}
 	
 	/**
@@ -37,7 +44,7 @@ public class EnvBuilder
 	 * @param turnmode
 	 * @param speed
 	 */
-	private static void generateShipBoss(double playerPositionX, double playerPositionY, int turnmode, int speed)
+	private static void generateShipBoss(double playerPositionX, double playerPositionY, int turnmode, float speed)
 	{
 		//determine direction of boss
 		int direction = 180;
@@ -48,7 +55,7 @@ public class EnvBuilder
 			xOffset = -GameState.sObjectCreationRadius;
 		}
 
-		if (GameUtils.getTypeCount(Constants.ENEMY_BOSS) <= 0)
+		if (GameUtils.getTypeCount(Constants.ENEMY_BOSS, GameState._weaponList) <= 0)
 		{
 			// generate the boss
 			GameState._weaponList.add(new EnemyBoss(direction, direction, playerPositionX + xOffset
@@ -62,18 +69,19 @@ public class EnvBuilder
 	 * @param playerPositionX
 	 * @param playerPositionY
 	 */
-	public static void generateEnemy(double playerPositionX, double playerPositionY)
+	public static void generateEnemy(double playerPositionX, double playerPositionY, boolean follow)
 	{
 		// the enemy fighter
-		int track = ((int)(Math.random() * 359));
+		int track = ((int) (Math.random() * 359));
+		float speed = GameUtils.getPlaneSpeed(Constants.ENEMY_FIGHTER);
 		double[] coord = GameUtils.getCoordsGivenTrackAndDistance(track, GameState.sObjectCreationRadius);
-		generateShip((int) playerPositionX + coord[0], (int) playerPositionY + coord[1], 0, 10);
+		generateShip((int) playerPositionX + coord[0], (int) playerPositionY + coord[1], 0, speed, follow);
 	}
 	
 	public static void generateEnemyBoss(double playerPositionX, double playerPositionY)
 	{
 		// the enemy boss
-		int speed = GameState.sCurrentLevel + 1;
+		float speed = GameUtils.getPlaneSpeed(Constants.ENEMY_BOSS);
 		generateShipBoss((int)playerPositionX, (int)playerPositionY, 1, speed);
 	}
 	
@@ -93,10 +101,10 @@ public class EnvBuilder
 		{
 			direction = 180;
 		}
-		double speed = (Math.random() * .5)+.2;
+		double speed = (Math.random() * .5) + .5;
 		GameState._cloudListSmall.add(new Cloud(direction, direction, coord[0] + playerPositionX
 				, coord[1] + playerPositionY, speed
-				, speed, .1d, 0, Constants.CLOUD_SMALL, null, -1, 1));	
+				, speed, .1d, 0, Constants.CLOUD_SMALL, null, -1, 1));
 	}
 	
 	/**
@@ -118,6 +126,6 @@ public class EnvBuilder
 		double speed = (Math.random() * .5)+.2;
 		GameState._cloudListLarge.add(new Cloud(direction, direction, coord[0] + playerPositionX
 				, coord[1] + playerPositionY, speed
-				, speed, .1d, 0, Constants.CLOUD_BIG, null, -1, 1));	
+				, speed, .1d, 0, Constants.CLOUD_BIG, null, -1, 1));
 	}
 }

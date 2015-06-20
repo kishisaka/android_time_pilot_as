@@ -45,13 +45,13 @@ public class FollowEngine extends MovementEngine
 	{
 	}
 
-	public void updateDisplacement()
+	public void updateDisplacement(int layer)
 	{
 	    if (_currentSpeed > 0)
 	    {
-	    	_currentX = _currentX + (GameState._density * (Math.cos(Math.toRadians(_currentDirection)) * _currentSpeed));
-		    _currentY = _currentY + (GameState._density * (Math.sin(Math.toRadians(_currentDirection)) * _currentSpeed));
-	    }
+	    	_currentX = _currentX + (GameState._density * (Math.cos(Math.toRadians(_currentDirection)) * (_currentSpeed / layer)));
+		    _currentY = _currentY + (GameState._density * (Math.sin(Math.toRadians(_currentDirection)) * (_currentSpeed / layer)));
+		}
 	}
 
   public void updateSpeed()

@@ -18,6 +18,7 @@ public class Constants {
 	public static final int PARACHUTE_SMALL = 14;
 	public static final int MISSILE_SMALL = 15;
 	public static final int TEXT = 16;
+	public static final int GUN_ENEMY_BOSS = 17;
 
 	//player initialization
 	public static final int START_MISSILE_COUNT = 20;
@@ -39,9 +40,9 @@ public class Constants {
 	//boss initialization
 	public static final int BOSS_STARTING_HITPOINT = 100;
 
-	// enemy fire rate (in ms)
-	public static final int ENEMY_BOSS_FIRE_INTERVAL = 1250;
-	public static final int ENEMY_GUN_FIRE_INTERVAL = 1800;
-	public static final int ENEMY_MISSILE_FIRE_INTERVAL = 5000;
+	public static final int ENEMY_BOSS_FIRE_RADIUS = 700;
+	public static final int ENEMY_FIGHTER_FiRE_RADIUS = 800;
 
+	//minimum frame rate allowed before fire rate limitation imposed
+	public static final int FRAME_RATE_MIN = 45;
 }
