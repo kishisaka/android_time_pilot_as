@@ -829,7 +829,6 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f090001;
         public static final int action_menu_presenter=0x7f090002;
         public static final int action_mode_close_button=0x7f090024;
-        public static final int action_settings=0x7f09003e;
         public static final int activity_chooser_view_content=0x7f090025;
         public static final int always=0x7f090013;
         public static final int beginning=0x7f09000f;
@@ -842,6 +841,7 @@ containing a value of this type.
         public static final int dropdown=0x7f090019;
         public static final int edit_query=0x7f090030;
         public static final int end=0x7f090010;
+        public static final int enemy_fire=0x7f09003f;
         public static final int expand_activities_button=0x7f090026;
         public static final int expanded_menu=0x7f09002c;
         public static final int home=0x7f090003;
@@ -849,6 +849,7 @@ containing a value of this type.
         public static final int icon=0x7f09002a;
         public static final int ifRoom=0x7f090015;
         public static final int image=0x7f090027;
+        public static final int invulnerarbility=0x7f09003e;
         public static final int listMode=0x7f090006;
         public static final int list_item=0x7f090029;
         public static final int middle=0x7f090011;
@@ -946,7 +947,11 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f0b000c;
         public static final int action_settings=0x7f0b000d;
         public static final int app_name=0x7f0b000e;
-        public static final int hello_world=0x7f0b000f;
+        public static final int enemy_fire=0x7f0b000f;
+        public static final int hello_world=0x7f0b0010;
+        public static final int invulnerability=0x7f0b0011;
+        public static final int off=0x7f0b0012;
+        public static final int on=0x7f0b0013;
     }
     public static final class style {
         /** 

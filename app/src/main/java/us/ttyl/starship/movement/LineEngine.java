@@ -1,5 +1,8 @@
 package us.ttyl.starship.movement;
 
+import android.util.Log;
+
+import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
 
 /**
@@ -58,10 +61,15 @@ public class LineEngine extends MovementEngine
 	}
 
 	@Override
-	public void updateDisplacement() 
-	{	
-		_currentX = _currentX + (GameState._density * (Math.cos(Math.toRadians(_currentDirection)) * _currentSpeed));
-	    _currentY = _currentY + (GameState._density * (Math.sin(Math.toRadians(_currentDirection)) * _currentSpeed));
+	public void updateDisplacement(int layer)
+	{
+		if (_currentSpeed > 0)
+		{
+			double displacementX = (GameState._density * (Math.cos(Math.toRadians(_currentDirection)) * (_currentSpeed)));
+			double displacementY = (GameState._density * (Math.sin(Math.toRadians(_currentDirection)) * (_currentSpeed)));
+			_currentX = (_currentX + (displacementX));
+			_currentY = (_currentY + (displacementY));
+		}
 	}
 	
 	@Override
@@ -70,7 +78,7 @@ public class LineEngine extends MovementEngine
 		if (_endurance > 0)
 		{
 			_endurance = _endurance - 1;
-		}		
+		}
 	}
 
 	@Override

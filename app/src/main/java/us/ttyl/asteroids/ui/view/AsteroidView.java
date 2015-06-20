@@ -283,17 +283,17 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback
 				int centerXCanvas = (int)(mAppContext.getResources().getDisplayMetrics().widthPixels / 2);
 				int centerYCanvas = (int)(mAppContext.getResources().getDisplayMetrics().heightPixels / 2);
 
-				// draw the small clouds
-				for(int i = 0; i < GameState._cloudListLarge.size(); i ++)
+				// draw the large clouds
+				for(int i = 0; i < GameState._cloudListSmall.size(); i ++)
 				{
-					me = GameState._cloudListLarge.elementAt(i);
+					me = GameState._cloudListSmall.elementAt(i);
 					double x = GameUtils.getA(centerX, me.getX())/_scale;
 					double y = GameUtils.getB(centerY, me.getY())/_scale;
 					double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
 					double range = GameUtils.getRange(x, y);
 					x = range * Math.cos(Math.toRadians(track));
 					y = range * Math.sin(Math.toRadians(track));
-					canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.CLOUD_BIG),(int)(centerXCanvas + x), (int)(centerYCanvas - y), null);
+					canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.CLOUD_SMALL),(int)((centerXCanvas + x)/1.3), (int)((centerYCanvas - y)/1.3), null);
 				}
 
 				me = GameState._weaponList.elementAt(_selected);
@@ -380,16 +380,16 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback
 				}
 
 				// draw the small clouds
-				for(int i = 0; i < GameState._cloudListSmall.size(); i ++)
+				for(int i = 0; i < GameState._cloudListLarge.size(); i ++)
 				{
-					me = GameState._cloudListSmall.elementAt(i);
+					me = GameState._cloudListLarge.elementAt(i);
 					double x = GameUtils.getA(centerX, me.getX())/_scale;
 					double y = GameUtils.getB(centerY, me.getY())/_scale;
 					double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
 					double range = GameUtils.getRange(x, y);
 					x = range * Math.cos(Math.toRadians(track));
 					y = range * Math.sin(Math.toRadians(track));
-					canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.CLOUD_SMALL),(int)(centerXCanvas + x), (int)(centerYCanvas - y), null);
+					canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.CLOUD_BIG),(int)(centerXCanvas + x), (int)(centerYCanvas - y), null);
 				}
 
 				// draw all explosion particles (explosions, smoke, etc)
@@ -601,7 +601,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback
     public boolean onTouchEvent(MotionEvent motionEvent) {
 		int count = motionEvent.getPointerCount();
 
-		// get the direction and special weapon motion events if exists. 		
+		// get the direction and special weapon motion events if exists.
 		for (int countIndex = 0; countIndex < count; countIndex++) {
 			int x = 0;
 			int y = 0;
@@ -623,7 +623,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback
 				int track = _degrev[(int) GameUtils.track(0, 0, x, y)];
 				GameState._weaponList.get(0).setDirection(track);
 			}
-			if (rangeSpecialWeapon <= (30 * density)) {
+			if (rangeSpecialWeapon <= (50 * density)) {
 				if ((GameState._weaponList.get(0).getWeaponName() != (Constants.PLAYER))) {
 					//restart game
 					GameState._lives = 2;

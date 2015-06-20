@@ -46,7 +46,7 @@ public abstract class MovementEngine
   /**
    * change the location of the weapon
    */
-  public abstract void updateDisplacement();
+  public abstract void updateDisplacement(int layer);
   /**
    * update the endurance of the weapon (generally reduce its fuel suppy here)
    */
@@ -139,14 +139,14 @@ public abstract class MovementEngine
 /**
    * MainLoop runs this method to update the weapon's state
    */
-  public void run()
+  public void run(int layer)
   {
 	  try
       {
 		  doOther();
 		  updateSpeed();
 		  updateDirection();
-		  updateDisplacement();
+		  updateDisplacement(layer);
 		  updateFuelUsage();
 		  checkDestroyed();
       }

@@ -141,7 +141,11 @@
     <eat-comment/>
     <string name="action_settings">Settings</string>
     <string name="app_name">Asteroids</string>
+    <string name="enemy_fire">turn %s enemy fire</string>
     <string name="hello_world">Hello world!</string>
+    <string name="invulnerability">turn %s invulnerability</string>
+    <string name="off">off</string>
+    <string name="on">on</string>
     <!-- From: file:/D:/as-dev/Asteroids/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">

@@ -248,7 +248,6 @@ int id action_context_bar 0x7f09001d
 int id action_menu_divider 0x7f090001
 int id action_menu_presenter 0x7f090002
 int id action_mode_close_button 0x7f090024
-int id action_settings 0x7f09003e
 int id activity_chooser_view_content 0x7f090025
 int id always 0x7f090013
 int id beginning 0x7f09000f
@@ -261,6 +260,7 @@ int id disableHome 0x7f090009
 int id dropdown 0x7f090019
 int id edit_query 0x7f090030
 int id end 0x7f090010
+int id enemy_fire 0x7f09003f
 int id expand_activities_button 0x7f090026
 int id expanded_menu 0x7f09002c
 int id home 0x7f090003
@@ -268,6 +268,7 @@ int id homeAsUp 0x7f09000a
 int id icon 0x7f09002a
 int id ifRoom 0x7f090015
 int id image 0x7f090027
+int id invulnerarbility 0x7f09003e
 int id listMode 0x7f090006
 int id list_item 0x7f090029
 int id middle 0x7f090011
@@ -355,7 +356,11 @@ int string abc_shareactionprovider_share_with 0x7f0b000b
 int string abc_shareactionprovider_share_with_application 0x7f0b000c
 int string action_settings 0x7f0b000d
 int string app_name 0x7f0b000e
-int string hello_world 0x7f0b000f
+int string enemy_fire 0x7f0b000f
+int string hello_world 0x7f0b0010
+int string invulnerability 0x7f0b0011
+int string off 0x7f0b0012
+int string on 0x7f0b0013
 int style AppBaseTheme 0x7f0c0000
 int style AppTheme 0x7f0c0001
 int style TextAppearance_AppCompat_Base_CompactMenu_Dialog 0x7f0c0002

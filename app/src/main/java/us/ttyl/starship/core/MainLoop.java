@@ -54,19 +54,20 @@ public class MainLoop extends Thread
 		
 		//main game loop
 		while(GameState.mIsRunning == true)
-		{	
+		{
 			long currentTime = System.currentTimeMillis();
 			try
 			{	
 				//create clouds 
-				int cloudCount = GameUtils.getTypeCount(Constants.CLOUD_BIG); 
-				cloudCount = cloudCount + GameUtils.getTypeCount(Constants.CLOUD_SMALL); 
+				int cloudCount = GameUtils.getTypeCount(Constants.CLOUD_BIG, GameState._cloudListLarge);
+				cloudCount = cloudCount + GameUtils.getTypeCount(Constants.CLOUD_SMALL, GameState._cloudListSmall);
 				long currentTimeClouds = currentTime;
-				if (currentTimeClouds - startTimeClouds > 250 && cloudCount < 18)
+                Log.i("kurt_test", "cloudCount: " + cloudCount);
+				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < 10)
 				{
 					startTimeClouds = currentTimeClouds;
 					int random = (int)(Math.random() * 100);
-					if (random > 50)
+					if (random > 30)
 					{
 						EnvBuilder.generateSmallClouds(GameState._weaponList.get(0).getX(), GameState._weaponList.get(0).getY(), GameState._weaponList.get(0).getCurrentDirection());
 					}
@@ -76,14 +77,14 @@ public class MainLoop extends Thread
 					}
 				}
 
-		    	//generate a enemy fighter.
-		    	int enemyCount = GameUtils.getTypeCount(Constants.ENEMY_FIGHTER); 
-		    	// System.out.println("enemyCount: " + enemyCount);
-				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - startTime) > 300 && enemyCount < 12)
+				//generate an enemy follow fighter.
+				int enemyCount = GameUtils.getTypeCount(Constants.ENEMY_FIGHTER, GameState._weaponList);
+				// System.out.println("enemyCount: " + enemyCount);
+				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - startTime) > 30 && enemyCount < 10)
 				{
-			    	EnvBuilder.generateEnemy(GameState._weaponList.get(0).getX()
-			    			, GameState._weaponList.get(0).getY());
-			    	startTime = currentTime;
+					EnvBuilder.generateEnemy(GameState._weaponList.get(0).getX()
+							, GameState._weaponList.get(0).getY(), true);
+					startTime = currentTime;
 				}
 				
 				//generate a boss ship
@@ -96,35 +97,57 @@ public class MainLoop extends Thread
 				
 				// fire enemy guns constantly
 				if (GameState._weaponList.get(0).getWeaponName()==(Constants.PLAYER) == true
-						&& GameState.sFireEnemyGuns == true)
+						&& GameState.sIsFireEnemyGuns == true && GameState.sFramerate > Constants.FRAME_RATE_MIN)
 				{
 					for(int i = 0; i < GameState._weaponList.size(); i ++)
 					{
+						// get range to target (from current ship to player)
+						int rangeToTarget = GameUtils.getRange(GameState._weaponList.get(i), GameState._weaponList.get(0));
+
 						// Log.d("MainLoop", "current time: "+ currentTime + " | startTimeBossBullet: " + startTimeBossBullet + " diff: " + (currentTime - startTimeBossBullet));
 						if (GameState._weaponList.get(i).getWeaponName() == Constants.ENEMY_BOSS
-								&& (currentTime - startTimeBossBullet > Constants.ENEMY_BOSS_FIRE_INTERVAL))
+								&& rangeToTarget < Constants.ENEMY_BOSS_FIRE_RADIUS
+								&& (currentTime - startTimeBossBullet > GameUtils.getEnemyGunFireRate()))
 						{
-							Log.d("MainLoop", "fire boss");
+							// Log.d("MainLoop", "fire boss");
 							int targetTrack = (int)GameUtils.getTargetTrack(GameState._weaponList.get(i), GameState._weaponList.get(0));
-							MovementEngine bossBullet = new BossBullet(targetTrack, targetTrack
-									, (int)GameState._weaponList.get(i).getX()
-									, (int)GameState._weaponList.get(i).getY()
-									, 3, 3, 1, 1
-									, Constants.GUN_ENEMY, GameState._weaponList.get(i), 50, 1);
-							GameState._weaponList.add(bossBullet);
-							if (GameState._muted == false)
+							if (GameState.sWaveLevel > 0)
 							{
-								AudioPlayer.playEnemyGun();
+								MovementEngine bossBullet = new BossBullet(targetTrack, targetTrack
+										, (int) GameState._weaponList.get(i).getX()
+										, (int) GameState._weaponList.get(i).getY()
+										, 3, 3, 1, 1
+										, Constants.GUN_ENEMY, GameState._weaponList.get(i), 50, 1);
+								GameState._weaponList.add(bossBullet);
+								if (GameState._muted == false)
+								{
+									AudioPlayer.playEnemyGun();
+								}
+								startTimeBossBullet = currentTime;
 							}
-							startTimeBossBullet = currentTime;
+							else if (GameState.sWaveLevel > 1)
+							{
+								MovementEngine bullet = new Bullet(targetTrack, targetTrack
+										, (int) GameState._weaponList.get(i).getX()
+										, (int) GameState._weaponList.get(i).getY()
+										, 3, 3, 1, 1
+										, Constants.GUN_ENEMY, GameState._weaponList.get(i), 50, 1);
+								GameState._weaponList.add(bullet);
+								if (GameState._muted == false)
+								{
+									AudioPlayer.playEnemyGun();
+								}
+								startTimeBossBullet = currentTime;
+							}
 						}
 
 						if (GameState._weaponList.get(i).getWeaponName() == Constants.ENEMY_FIGHTER
-								&& GameUtils.getRange(GameState._weaponList.get(i), GameState._weaponList.get(0)) > 100
-								&& GameUtils.fireWeapon()
-								&& (currentTime - startTimeEnemyGun  > Constants.ENEMY_GUN_FIRE_INTERVAL))
+								&& rangeToTarget > 150 && rangeToTarget < Constants.ENEMY_FIGHTER_FiRE_RADIUS
+								&& GameUtils.shouldFireWeapon()
+								&& (currentTime - startTimeEnemyGun  > GameUtils.getEnemyGunFireRate()))
 						{
-							Log.d("MainLoop", "fire enemy gun");
+
+							// Log.d("MainLoop", "fire enemy gun");
 							// get player track
 							int targetTrack = (int) GameUtils.getTargetTrack(GameState._weaponList.get(i), GameState._weaponList.get(0));
 							MovementEngine bullet = new Bullet(targetTrack, targetTrack
@@ -141,11 +164,12 @@ public class MainLoop extends Thread
 						}
 
 						if (GameState._weaponList.get(i).getWeaponName() == Constants.ENEMY_FIGHTER
-								&& GameUtils.getRange(GameState._weaponList.get(i), GameState._weaponList.get(0)) > 100
-								&& GameUtils.fireWeapon()
-								&& (currentTime - startTimeEnemyMissile  > Constants.ENEMY_MISSILE_FIRE_INTERVAL))
+								&& rangeToTarget > 150 && rangeToTarget < Constants.ENEMY_FIGHTER_FiRE_RADIUS
+								&& GameUtils.shouldFireWeapon()
+								&& (currentTime - startTimeEnemyMissile  > GameUtils.getEnemyMissileFireRate())
+								&& GameState.sWaveLevel > 0)
 						{
-							Log.d("MainLoop", "fire enemy missile");
+							// Log.d("MainLoop", "fire enemy missile");
 							// get player track
 							int targetTrack = (int)GameUtils.getTargetTrack(GameState._weaponList.get(i), GameState._weaponList.get(0));
 
@@ -208,7 +232,7 @@ public class MainLoop extends Thread
 							GameState._explosionParticleList.add(explosionParticle);
 			    		}
 		    		}
-		    		ship.run();
+		    		ship.run(1);
 
 		    		//TODO O(n^2) function unfortunately, any other way to make this faster? 
 		    		checkCollisions(ship);
@@ -218,29 +242,29 @@ public class MainLoop extends Thread
 				for(int i = 0; i < GameState._explosionParticleList.size(); i ++)
 				{
 					MovementEngine ship = GameState._explosionParticleList.get(i);
-					ship.run();
+					ship.run(1);
 				}
 
 				//run the clouds (large)
 				for(int i = 0; i < GameState._cloudListLarge.size(); i ++)
 				{
 					MovementEngine ship = GameState._cloudListLarge.get(i);
-					ship.run();
+					ship.run(2);
 				}
 
 				//run the clouds (small)
 				for(int i = 0; i < GameState._cloudListSmall.size(); i ++)
 				{
 					MovementEngine ship = GameState._cloudListSmall.get(i);
-					ship.run();
+					ship.run(1);
 				}
 				
-				//check destroyed and remove from weapon list if so and remove all objects that are over 700 units away from the player
+				//check destroyed and remove from weapon list if so and remove all objects that are over screen radius units away from the player
 				for(int i = 1; i < GameState._weaponList.size(); i ++)
 		    	{
 					try
 					{
-						if ((i > 0 && GameUtils.getRange(GameState._weaponList.get(0), GameState._weaponList.get(i)) >(GameState.sObjectCreationRadius + 100))
+						if ((i > 0 && GameUtils.getRange(GameState._weaponList.get(0), GameState._weaponList.get(i)) >((GameState.sObjectCreationRadius * _density) + 100))
 								|| (GameState._weaponList.get(i).getDestroyedFlag() == true))
 						{
 							GameState._weaponList.remove(i);
@@ -252,12 +276,12 @@ public class MainLoop extends Thread
 					}
 		    	}
 
-				//check destroyed and remove from explosion list if so and remove if over 700 units away from the player
+				//check destroyed and remove from explosion list if so and remove if over screen radius units away from the player
 				for(int i = 0; i < GameState._explosionParticleList.size(); i ++)
 				{
 					try
 					{
-						if (( GameUtils.getRange(GameState._weaponList.get(0), GameState._explosionParticleList.get(i)) > (GameState.sObjectCreationRadius + 100))
+						if (( GameUtils.getRange(GameState._weaponList.get(0), GameState._explosionParticleList.get(i)) > ((GameState.sObjectCreationRadius)+ 100))
 								|| (GameState._explosionParticleList.get(i).getDestroyedFlag() == true))
 						{
 							GameState._explosionParticleList.remove(i);

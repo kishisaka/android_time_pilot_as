@@ -29,7 +29,8 @@ public class Parachute extends LineEngine
 		// player collects parachute, add 10 missiles to inventory, if player 
 		// collects 4 parachutes, kill all enemies and move to next level
 		long pickupInterval = System.currentTimeMillis() - GameState.sLastParachutePickupInterval;
-		if (pickupInterval > Constants.PARACHUTE_PICKUP_INTERVAL && engine2.getWeaponName() == Constants.PLAYER)
+		if (pickupInterval > Constants.PARACHUTE_PICKUP_INTERVAL
+				&& engine2.getWeaponName() == Constants.PLAYER && engine2.getDestroyedFlag() == false)
 		{
 			GameState.sLastParachutePickupInterval = System.currentTimeMillis();
 			engine2.setMissileCount(engine2.getMissileCount() + 20);

@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import us.ttyl.starship.core.GameState;
+
 public class MainActivity extends FragmentActivity {
 
 	@Override
@@ -23,10 +25,28 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+
+		MenuItem invulnerabilityItem = menu.getItem(0);
+		String invulnerabilityString = getString(R.string.invulnerability);
+		String invulnerabilityStringSetting = getString(R.string.on);
+		if (GameState.sIsInvulnerable == true)
+		{
+			invulnerabilityStringSetting = getString(R.string.off);
+		}
+		invulnerabilityItem.setTitle(String.format(invulnerabilityString, invulnerabilityStringSetting));
+
+		MenuItem enemyFire = menu.getItem(1);
+		String enemyFireString = getString(R.string.enemy_fire);
+		String enemyFireStringSetting = getString(R.string.on);
+		if (GameState.sIsFireEnemyGuns == true)
+		{
+			enemyFireStringSetting = getString(R.string.off);
+		}
+		enemyFire.setTitle(String.format(enemyFireString, enemyFireStringSetting));
 		return true;
 	}
 
@@ -36,8 +56,40 @@ public class MainActivity extends FragmentActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.invulnerarbility) {
+			if (GameState.sIsInvulnerable == true)
+			{
+				GameState.sIsInvulnerable = false;
+			}
+			else
+			{
+				GameState.sIsInvulnerable = true;
+			}
+			String invulnerabilityString = getString(R.string.invulnerability);
+			String invulnerabilityStringSetting = getString(R.string.off);
+			if (GameState.sIsInvulnerable == false)
+			{
+				invulnerabilityStringSetting = getString(R.string.on);
+			}
+			item.setTitle(String.format(invulnerabilityString, invulnerabilityStringSetting));
+		}
+		if (id == R.id.enemy_fire)
+		{
+			if (GameState.sIsFireEnemyGuns == true)
+			{
+				GameState.sIsFireEnemyGuns = false;
+			}
+			else
+			{
+				GameState.sIsFireEnemyGuns = true;
+			}
+			String enemyFireString = getString(R.string.enemy_fire);
+			String enemyFireStringSetting = getString(R.string.off);
+			if (GameState.sIsFireEnemyGuns == false)
+			{
+				enemyFireStringSetting = getString(R.string.on);
+			}
+			item.setTitle(String.format(enemyFireString, enemyFireStringSetting));
 		}
 		return super.onOptionsItemSelected(item);
 	}
