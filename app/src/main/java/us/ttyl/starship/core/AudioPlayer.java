@@ -5,16 +5,27 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
+/**
+ * missile sound: https://www.freesound.org/people/smcameron/sounds/51468/
+ * parachute pickup: https://www.freesound.org/people/fins/sounds/133280/
+ * helipcopter https://www.freesound.org/people/fridobeck/sounds/194250/
+ *
+ *
+ *
+ */
 public class AudioPlayer 
 {
 	public static int sPlayerGunSoundId;
-	public static int sMissileSoundId;
-	public static int sShipDeathSoundId;
-	public static int sParachutePickup;
-	public static int sLevelChange;
-	public static int sEnemyGunSound;
-	
-	public static SoundPool sSoundPool;
+    public static int sPlayerGunSoundStreamId;
+    public static int sMissileSoundId;
+    public static int sShipDeathSoundId;
+    public static int sParachutePickup;
+    public static int sLevelChange;
+    public static int sEnemyGunSound;
+    public static int sHelicopterBoss;
+    public static int sHelicopterBossStreamId;
+
+    public static SoundPool sSoundPool;
 	
 	/**
 	 * do this once, load all sounds into pool and obtain sounds ids for them. 
@@ -24,6 +35,7 @@ public class AudioPlayer
 	{
 		sSoundPool = new SoundPool(30, AudioManager.STREAM_MUSIC, 0);
 		sPlayerGunSoundId = sSoundPool.load(context, R.raw.gun3, 1);
+        sHelicopterBoss = sSoundPool.load(context, R.raw.helicopter, 1);
 		sShipDeathSoundId = sSoundPool.load(context, R.raw.enemy_death, 2);
 		sMissileSoundId = sSoundPool.load(context, R.raw.missile_launch2, 2);
 		sParachutePickup = sSoundPool.load(context, R.raw.parachute_pickup, 2);
@@ -52,7 +64,7 @@ public class AudioPlayer
 	 */
 	public static void resumePlayerGun()
 	{
-		sSoundPool.resume(sPlayerGunSoundId);
+		sSoundPool.resume(sPlayerGunSoundStreamId);
 	}
 	
 	/**
@@ -60,7 +72,7 @@ public class AudioPlayer
 	 */
 	public static void pausePlayerGun()
 	{
-		sSoundPool.pause(sPlayerGunSoundId);
+		sSoundPool.pause(sPlayerGunSoundStreamId);
 	}
 	
 	/**
@@ -68,7 +80,7 @@ public class AudioPlayer
 	 */
 	public static void playPlayerGun()
 	{
-		sSoundPool.play(sPlayerGunSoundId, .5f, .5f, Integer.MAX_VALUE, -1, 1.0f);
+        sPlayerGunSoundStreamId = sSoundPool.play(sPlayerGunSoundId, .5f, .5f, Integer.MAX_VALUE, -1, 1.0f);
 	}
 	
 	/**
@@ -86,15 +98,56 @@ public class AudioPlayer
 	{
 		sSoundPool.play(sParachutePickup, .5f, .5f, 2, 0, 1.0f);
 	}
-	
+
+    /**
+     * play level change sound
+     */
 	public static void playLevelChange()
 	{
 		sSoundPool.play(sLevelChange, 1.0f, 1.0f, 2, 0, 1.0f);
 	}
-	
+
+    /**
+     * play enemy gun sound
+     */
 	public static void playEnemyGun()
 	{
-		sSoundPool.play(sEnemyGunSound, 1.0f, 1.0f, 2, 0, 1.0f);
+        sSoundPool.play(sEnemyGunSound, 1.0f, 1.0f, 2, 0, 1.0f);
 	}
 
+    /**
+     * start helicopter sound
+     * @return helicopter stream id
+     */
+    public static void playHelicopter()
+    {
+        sHelicopterBossStreamId = sSoundPool.play(sHelicopterBoss, 0.1f, 0.1f, 2, -1, 1.0f);
+    }
+
+    /**
+     * pause helicopter sound
+     */
+    public static void stopHelicopter()
+    {
+        sSoundPool.stop(sHelicopterBossStreamId);
+    }
+
+    /**
+     * change helicopter volume
+     * @param volume
+     */
+    public static void changeHelicopterVolume(float volume)
+    {
+        sSoundPool.setVolume(sHelicopterBossStreamId, volume, volume);
+    }
+
+    public static void pauseAll()
+    {
+        sSoundPool.autoPause();
+    }
+
+    public static void resumeAll()
+    {
+        sSoundPool.autoResume();
+    }
 }

@@ -45,4 +45,7 @@ public class Constants {
 
 	//minimum frame rate allowed before fire rate limitation imposed
 	public static final int FRAME_RATE_MIN = 45;
+
+    // frames max for animation
+    public static int sMaxFrame = 4;
 }
