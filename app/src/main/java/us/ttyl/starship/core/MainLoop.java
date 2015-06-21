@@ -40,7 +40,6 @@ public class MainLoop extends Thread
 		long startTime = System.currentTimeMillis();
 		long startTimeGun = startTime;
 		long startTimeClouds = startTime;
-		long startTimeBoss = startTime;
 
 		long startTimeBossBullet = startTime;
 		long startTimeEnemyGun = startTime;
@@ -62,7 +61,6 @@ public class MainLoop extends Thread
 				int cloudCount = GameUtils.getTypeCount(Constants.CLOUD_BIG, GameState._cloudListLarge);
 				cloudCount = cloudCount + GameUtils.getTypeCount(Constants.CLOUD_SMALL, GameState._cloudListSmall);
 				long currentTimeClouds = currentTime;
-                Log.i("kurt_test", "cloudCount: " + cloudCount);
 				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < 10)
 				{
 					startTimeClouds = currentTimeClouds;
@@ -88,11 +86,14 @@ public class MainLoop extends Thread
 				}
 				
 				//generate a boss ship
-				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - startTimeBoss) > 6000)
+                int bossCount = GameUtils.getTypeCount(Constants.ENEMY_BOSS, GameState._weaponList);
+                Log.i("kurt_test","bossCount: " + bossCount);
+				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - GameState.sStartTimeBoss) > 6000
+                        && bossCount < 1)
 				{
 					EnvBuilder.generateEnemyBoss(GameState._weaponList.get(0).getX()
 					 		, GameState._weaponList.get(0).getY());
-					startTimeBoss = currentTime;
+                    GameState.sStartTimeBoss = currentTime;
 				}
 				
 				// fire enemy guns constantly

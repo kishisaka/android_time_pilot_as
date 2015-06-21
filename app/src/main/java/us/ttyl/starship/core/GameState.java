@@ -28,8 +28,10 @@ public class GameState
 	public static Vector <MovementEngine> _cloudListLarge = new Vector<MovementEngine>();
 	
 	//sprites
-	public static ArrayList <Bitmap> _sprites;
-	public static ArrayList <Bitmap> _bossSprites;
+	public static ArrayList <Bitmap> _sprites1;
+    public static ArrayList <Bitmap> _sprites2;
+	public static ArrayList <Bitmap> _bossSprites1;
+    public static ArrayList <Bitmap> _bossSprites2;
 	public static ArrayList <Bitmap> _cloudSprites;
 	public static Bitmap _bossBullet;
 	
@@ -66,5 +68,11 @@ public class GameState
 
 	// object creation radius
 	public static int sObjectCreationRadius = 0;
+
+    // current frame (only two, so far)
+    public static int sFrame = 1;
+
+    // start time between bosses
+    public static long sStartTimeBoss = System.currentTimeMillis();
 }
 

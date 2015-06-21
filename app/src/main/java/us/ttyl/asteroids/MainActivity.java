@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.GameState;
 
 public class MainActivity extends FragmentActivity {
@@ -95,15 +96,18 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	@Override
-	  protected void onResume() {
-		// Register a listener for the sensor.
+	protected void onResume()
+    {
+	    // Register a listener for the sensor.
 		super.onResume();
+        AudioPlayer.resumeAll();
 	}
 
 	  @Override
 	  protected void onPause() {
-	    // Be sure to unregister the sensor when the activity pauses.
-	    super.onPause();
+	      // Be sure to unregister the sensor when the activity pauses.
+	      super.onPause();
+          AudioPlayer.pauseAll();
 	  }
 	
 	/**

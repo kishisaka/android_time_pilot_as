@@ -115,8 +115,10 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback
 	{		
 		
 		//initialize sprite array
-		GameState._sprites = GameUtils.getTilesFromFile(context);
-		GameState._bossSprites = GameUtils.getBossTilesFromFile(context);
+		GameState._sprites1 = GameUtils.getTilesFromFile(context, R.drawable.sprites1);
+        GameState._sprites2 = GameUtils.getTilesFromFile(context, R.drawable.sprites2);
+		GameState._bossSprites1 = GameUtils.getBossTilesFromFile(context, R.drawable.sprites1);
+        GameState._bossSprites2 = GameUtils.getBossTilesFromFile(context, R.drawable.sprites2);
 		GameState._cloudSprites = GameUtils.getCloudTiles(context);
 		GameState._bossBullet = GameUtils.getBossBullet(context);
 		
@@ -132,7 +134,8 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback
 		float density = getResources().getDisplayMetrics().density;
 		int height = getResources().getDisplayMetrics().heightPixels;
 		int width = getResources().getDisplayMetrics().widthPixels;
-		GameState.sObjectCreationRadius = GameUtils.getRangeBetweenCoords(width/2, height/2, 0,(width-height/2));
+        int radius = (width - height)/2;
+		GameState.sObjectCreationRadius = GameUtils.getRangeBetweenCoords(width/2, height/2, 0,(width-height)/2);
 		new MainLoop(density);
 		
 		//initialize deg map (reversed)
@@ -438,10 +441,10 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback
 			    // draw the top and bottom borders
 			    int width = getResources().getDisplayMetrics().widthPixels;
 			    int height = getResources().getDisplayMetrics().heightPixels;
-			    height = (height - width) / 2;  
+			    height = (height - width) / 2;
 			    canvas.drawRect(0, 0, width, height, mBorderColor);
 			    canvas.drawRect(0, getResources().getDisplayMetrics().heightPixels - height, width, getResources().getDisplayMetrics().heightPixels, mBorderColor);
-			     
+
 			    // draw the score
 			    canvas.drawText("1-UP: " + GameState._playerScore, (int)(15 * density) , (int)(50 * density), mTextColor);
 
@@ -500,6 +503,12 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback
 			    {
 			    	canvas.drawText("Game Over",  centerXCanvas - (40 * density), centerYCanvas - (40 * density), mTextColor);
 			    }
+                //increment frame counter
+                GameState.sFrame = GameState.sFrame + 1;
+                if (GameState.sFrame > Constants.sMaxFrame)
+                {
+                    GameState.sFrame = 1;
+                }
 			}
 			catch(Exception e)
 			{
