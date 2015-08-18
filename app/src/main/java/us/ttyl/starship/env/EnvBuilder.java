@@ -96,11 +96,11 @@ public class EnvBuilder
 		// the cloud
 		int track = ((int)(Math.random() * 359));
 		double[] coord = GameUtils.getCoordsGivenTrackAndDistance(track, GameState.sObjectCreationRadius);
-		int direction = 0;
-		if (Math.random() * 100 > 50)
-		{
-			direction = 180;
-		}
+		int direction = 180;
+//		if (Math.random() * 100 > 50)
+//		{
+//			direction = 180;
+//		}
 		double speed = (Math.random() * .5) + .5;
 		GameState._cloudListSmall.add(new Cloud(direction, direction, coord[0] + playerPositionX
 				, coord[1] + playerPositionY, speed
@@ -118,11 +118,11 @@ public class EnvBuilder
 		// the cloud
 		int track = ((int)(Math.random() * 359));
 		double[] coord = GameUtils.getCoordsGivenTrackAndDistance(track, GameState.sObjectCreationRadius);
-		int direction = 0;
-		if (Math.random() * 100 > 50)
-		{
-			direction = 180;
-		}
+		int direction = 180;
+//		if (Math.random() * 100 > 50)
+//		{
+//			direction = 180;
+//		}
 		double speed = (Math.random() * .5)+.2;
 		GameState._cloudListLarge.add(new Cloud(direction, direction, coord[0] + playerPositionX
 				, coord[1] + playerPositionY, speed

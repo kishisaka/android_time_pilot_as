@@ -61,7 +61,7 @@ public class MainLoop extends Thread
 				int cloudCount = GameUtils.getTypeCount(Constants.CLOUD_BIG, GameState._cloudListLarge);
 				cloudCount = cloudCount + GameUtils.getTypeCount(Constants.CLOUD_SMALL, GameState._cloudListSmall);
 				long currentTimeClouds = currentTime;
-				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < 10)
+				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < 30)
 				{
 					startTimeClouds = currentTimeClouds;
 					int random = (int)(Math.random() * 100);
