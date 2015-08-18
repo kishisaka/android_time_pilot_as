@@ -75,7 +75,6 @@ public class MainLoop extends Thread
 
 				//generate an enemy follow fighter.
 				int enemyCount = GameUtils.getTypeCount(Constants.ENEMY_FIGHTER, GameState._weaponList);
-				// System.out.println("enemyCount: " + enemyCount);
 				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - startTime) > 30 && enemyCount < 10)
 				{
 					EnvBuilder.generateEnemy(GameState._weaponList.get(0).getX()
@@ -85,7 +84,6 @@ public class MainLoop extends Thread
 				
 				//generate a boss ship
                 int bossCount = GameUtils.getTypeCount(Constants.ENEMY_BOSS, GameState._weaponList);
-                Log.i("kurt_test","bossCount: " + bossCount);
 				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - GameState.sStartTimeBoss) > 6000
                         && bossCount < 1)
 				{

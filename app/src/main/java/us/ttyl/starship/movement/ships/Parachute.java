@@ -64,6 +64,7 @@ public class Parachute extends LineEngine
 				if (GameState.sCurrentLevel > 4) {
 					GameState.sCurrentLevel = 1;
 					GameState.sWaveLevel = GameState.sWaveLevel + 1;
+                    GameState.sStartTimeBoss = System.currentTimeMillis();
 				}
 
 				//destroy all enemy fighters

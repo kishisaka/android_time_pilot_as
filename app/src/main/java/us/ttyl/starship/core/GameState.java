@@ -74,5 +74,7 @@ public class GameState
 
     // start time between bosses
     public static long sStartTimeBoss = System.currentTimeMillis();
+
+    public static boolean sShowCurrentTime = true;
 }
 

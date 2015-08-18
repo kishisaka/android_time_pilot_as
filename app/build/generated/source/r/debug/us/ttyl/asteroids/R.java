@@ -813,11 +813,12 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int helicopter=0x7f020057;
-        public static final int ic_launcher=0x7f020058;
-        public static final int sprites=0x7f020059;
-        public static final int sprites1=0x7f02005a;
-        public static final int sprites2=0x7f02005b;
+        public static final int bigboss1=0x7f020057;
+        public static final int helicopter=0x7f020058;
+        public static final int ic_launcher=0x7f020059;
+        public static final int sprites=0x7f02005a;
+        public static final int sprites1=0x7f02005b;
+        public static final int sprites2=0x7f02005c;
     }
     public static final class id {
         public static final int action_bar=0x7f09001c;
@@ -921,18 +922,21 @@ containing a value of this type.
         public static final int main=0x7f0d0000;
     }
     public static final class raw {
-        public static final int enemy_death=0x7f050000;
-        public static final int enemy_gun=0x7f050001;
-        public static final int gun=0x7f050002;
-        public static final int gun2=0x7f050003;
-        public static final int gun3=0x7f050004;
-        public static final int helicopter=0x7f050005;
-        public static final int level_change=0x7f050006;
-        public static final int missile_launch=0x7f050007;
-        public static final int missile_launch2=0x7f050008;
-        public static final int parachute_pickup=0x7f050009;
-        public static final int trek1=0x7f05000a;
-        public static final int trek2=0x7f05000b;
+        public static final int blimp=0x7f050000;
+        public static final int enemy_death=0x7f050001;
+        public static final int enemy_gun=0x7f050002;
+        public static final int gun=0x7f050003;
+        public static final int gun2=0x7f050004;
+        public static final int gun3=0x7f050005;
+        public static final int helicopter=0x7f050006;
+        public static final int jet=0x7f050007;
+        public static final int level_change=0x7f050008;
+        public static final int missile_launch=0x7f050009;
+        public static final int missile_launch2=0x7f05000a;
+        public static final int parachute_pickup=0x7f05000b;
+        public static final int trek1=0x7f05000c;
+        public static final int trek2=0x7f05000d;
+        public static final int ww2=0x7f05000e;
     }
     public static final class string {
         public static final int abc_action_bar_home_description=0x7f0b0000;

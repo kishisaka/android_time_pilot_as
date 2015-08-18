@@ -8,22 +8,34 @@ import android.media.SoundPool;
 /**
  * missile sound: https://www.freesound.org/people/smcameron/sounds/51468/
  * parachute pickup: https://www.freesound.org/people/fins/sounds/133280/
- * helipcopter https://www.freesound.org/people/fridobeck/sounds/194250/
  *
- *
+ * helicopter: https://www.freesound.org/people/fridobeck/sounds/194250/
+ * jets: https://www.freesound.org/people/qubodup/sounds/162445/
+ * ww2 https://www.freesound.org/people/treyc/sounds/123919/
+ * airship ttps://www.freesound.org/people/litewerx/sounds/113633/
  *
  */
 public class AudioPlayer 
 {
+    // sound ids
 	public static int sPlayerGunSoundId;
-    public static int sPlayerGunSoundStreamId;
     public static int sMissileSoundId;
     public static int sShipDeathSoundId;
     public static int sParachutePickup;
     public static int sLevelChange;
     public static int sEnemyGunSound;
+
+    public static int sWW2Boss;
     public static int sHelicopterBoss;
+    public static int sJetBoss;
+    public static int sBlimpBoss;
+
+    //stream ids (looping sounds)
+    public static int sPlayerGunSoundStreamId;
     public static int sHelicopterBossStreamId;
+    public static int sJetBossStreamId;
+    public static int sBlimpBossStreamId;
+    public static int sWW2BossStreamId;
 
     public static SoundPool sSoundPool;
 	
@@ -36,6 +48,9 @@ public class AudioPlayer
 		sSoundPool = new SoundPool(30, AudioManager.STREAM_MUSIC, 0);
 		sPlayerGunSoundId = sSoundPool.load(context, R.raw.gun3, 1);
         sHelicopterBoss = sSoundPool.load(context, R.raw.helicopter, 1);
+        sJetBoss = sSoundPool.load(context, R.raw.jet, 1);
+        sBlimpBoss = sSoundPool.load(context, R.raw.blimp, 1);
+        sWW2Boss = sSoundPool.load(context, R.raw.ww2, 1);
 		sShipDeathSoundId = sSoundPool.load(context, R.raw.enemy_death, 2);
 		sMissileSoundId = sSoundPool.load(context, R.raw.missile_launch2, 2);
 		sParachutePickup = sSoundPool.load(context, R.raw.parachute_pickup, 2);
@@ -84,14 +99,6 @@ public class AudioPlayer
 	}
 	
 	/**
-	 * only kill the player gun audio, all others will end very quickly. 
-	 */
-	public static void killAllAudio()
-	{		
-		sSoundPool.stop(sPlayerGunSoundId);
-	}
-	
-	/**
 	 * play parachute pickup sounds
 	 */
 	public static void playParachutePickup()
@@ -119,26 +126,64 @@ public class AudioPlayer
      * start helicopter sound
      * @return helicopter stream id
      */
-    public static void playHelicopter()
+    public static void playBoss()
     {
-        sHelicopterBossStreamId = sSoundPool.play(sHelicopterBoss, 0.1f, 0.1f, 2, -1, 1.0f);
+        if (GameState.sCurrentLevel == 1) {
+            sSoundPool.stop(sBlimpBossStreamId);
+            sBlimpBossStreamId = sSoundPool.play(sBlimpBoss, 0.1f, 0.1f, 2, -1, 1.0f);
+        }
+        else if (GameState.sCurrentLevel == 2) {
+            sSoundPool.stop(sWW2BossStreamId);
+            sWW2BossStreamId = sSoundPool.play(sWW2Boss, 0.1f, 0.1f, 2, -1, 1.0f);
+        }
+        else if (GameState.sCurrentLevel == 3) {
+            sSoundPool.stop(sHelicopterBossStreamId);
+            sHelicopterBossStreamId = sSoundPool.play(sHelicopterBoss, 0.1f, 0.1f, 2, -1, 1.0f);
+        }
+        else {
+            sSoundPool.stop(sJetBossStreamId);
+            sJetBossStreamId = sSoundPool.play(sJetBoss, 0.1f, 0.1f, 2, -1, 1.0f);
+        }
     }
 
     /**
      * pause helicopter sound
      */
-    public static void stopHelicopter()
+    public static void stopBoss()
     {
-        sSoundPool.stop(sHelicopterBossStreamId);
+        if (GameState.sCurrentLevel == 1) {
+            sSoundPool.stop(sBlimpBossStreamId);
+        }
+        else if (GameState.sCurrentLevel == 2) {
+            sSoundPool.stop(sWW2BossStreamId);
+        }
+        else if (GameState.sCurrentLevel == 3) {
+            sSoundPool.stop(sHelicopterBossStreamId);
+        }
+        else
+        {
+            sSoundPool.stop(sJetBossStreamId);
+        }
     }
 
     /**
      * change helicopter volume
      * @param volume
      */
-    public static void changeHelicopterVolume(float volume)
-    {
-        sSoundPool.setVolume(sHelicopterBossStreamId, volume, volume);
+    public static void changeBossVolume(float volume) {
+        if (GameState.sCurrentLevel == 1) {
+            sSoundPool.setVolume(sBlimpBossStreamId, volume, volume);
+        }
+        else if (GameState.sCurrentLevel == 2) {
+            sSoundPool.setVolume(sWW2BossStreamId, volume, volume);
+        }
+        else if (GameState.sCurrentLevel == 3) {
+            sSoundPool.setVolume(sHelicopterBossStreamId, volume, volume);
+        }
+        else
+        {
+            sSoundPool.setVolume(sJetBossStreamId, volume, volume);
+        }
     }
 
     public static void pauseAll()
