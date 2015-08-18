@@ -16,8 +16,7 @@ public class EnemyBoss extends LineEngine {
                      int endurance) {
         super(direction, currentDirection, currentX, currentY, currentSpeed, maxSpeed,
                 acceleration, turnMode, name, origin, endurance, GameState.sBossHitPoints);
-        Log.i("kurt_test", "start boss sound");
-        AudioPlayer.playHelicopter();
+        AudioPlayer.playBoss();
         // TODO Auto-generated constructor stub
     }
 
@@ -28,28 +27,23 @@ public class EnemyBoss extends LineEngine {
         int range = GameUtils.getRange(this, GameState._weaponList.get(0));
         if (range < 100)
         {
-            Log.i("kurt_test", "increase volume boss sound 1.0");
-            AudioPlayer.changeHelicopterVolume(1.0f);
+            AudioPlayer.changeBossVolume(1.0f);
         }
         else if (range >= 100 && range < 200)
         {
-            Log.i("kurt_test", "increase volume boss sound .8");
-            AudioPlayer.changeHelicopterVolume(0.8f);
+            AudioPlayer.changeBossVolume(0.8f);
         }
         else if (range >= 200 && range < 300)
         {
-            Log.i("kurt_test", "increase volume boss sound .6");
-            AudioPlayer.changeHelicopterVolume(0.6f);
+            AudioPlayer.changeBossVolume(0.6f);
         }
         else if (range >= 300 && range < 400)
         {
-            Log.i("kurt_test", "increase volume boss sound .3");
-            AudioPlayer.changeHelicopterVolume(0.2f);
+            AudioPlayer.changeBossVolume(0.2f);
         }
         else
         {
-            Log.i("kurt_test", "increase volume boss sound .1");
-            AudioPlayer.changeHelicopterVolume(0.1f);
+            AudioPlayer.changeBossVolume(0.1f);
         }
     }
 
@@ -77,8 +71,7 @@ public class EnemyBoss extends LineEngine {
 					GameState.sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;
 
 					// play death sound
-                    Log.i("kurt_test", "stop boss sound");
-                    AudioPlayer.stopHelicopter();
+                    AudioPlayer.stopBoss();
 					AudioPlayer.playShipDeath();
                     GameState.sStartTimeBoss = System.currentTimeMillis();
 
