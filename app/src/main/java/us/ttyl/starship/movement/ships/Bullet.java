@@ -21,8 +21,11 @@ public class Bullet extends LineEngine
 	{
 		if (getOrigin().getWeaponName() != engine2.getWeaponName())
 		{
-			if (engine2.getWeaponName() == Constants.ENEMY_BOSS || engine2.getWeaponName() == Constants.ENEMY_FIGHTER 
-					|| engine2.getWeaponName() == Constants.MISSILE_PLAYER || engine2.getWeaponName() == Constants.MISSILE_ENEMY)
+			if (engine2.getWeaponName() == Constants.ENEMY_BOSS
+					|| engine2.getWeaponName() == Constants.ENEMY_FIGHTER
+					|| engine2.getWeaponName() == Constants.MISSILE_PLAYER
+					|| engine2.getWeaponName() == Constants.MISSILE_ENEMY
+					|| engine2.getWeaponName() == Constants.PLAYER_OPTION)
 			{				
 				if (engine2.getWeaponName() == Constants.ENEMY_BOSS || engine2.getWeaponName() == Constants.ENEMY_FIGHTER)
 				{
@@ -39,6 +42,12 @@ public class Bullet extends LineEngine
 					decrementHitPoints(1);
 					checkDestroyed();
 				}
+				else if (engine2.getWeaponName() == Constants.PLAYER_OPTION && (getWeaponName() == Constants.MISSILE_ENEMY || getWeaponName() == Constants.GUN_ENEMY))
+				{
+					decrementHitPoints(1);
+					checkDestroyed();
+				}
+
 			}
 		}
 	}

@@ -19,10 +19,11 @@ public class Missile extends FollowEngine
 	public void onCollision(MovementEngine engine2)
 	{
 		if ((engine2.getWeaponName() == Constants.MISSILE_ENEMY && getOrigin().getWeaponName() == Constants.PLAYER)
-				|| (engine2.getWeaponName() == Constants.MISSILE_PLAYER && getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER))
+				|| (engine2.getWeaponName() == Constants.MISSILE_PLAYER && getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER)
+				|| (engine2.getWeaponName() == Constants.PLAYER_OPTION && getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER))
 		{
 			decrementHitPoints(1);
 			checkDestroyed();
-		}		
+		}
 	}
 }

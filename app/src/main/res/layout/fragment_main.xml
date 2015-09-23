@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="us.ttyl.asteroids.MainActivity$PlaceholderFragment" >
+    tools:context="us.ttyl.asteroids.TimefightersActivity$PlaceholderFragment" >
     <us.ttyl.asteroids.ui.view.AsteroidView
         android:id="@+id/timepilot"
         android:layout_width="match_parent"

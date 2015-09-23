@@ -3,13 +3,15 @@ package us.ttyl.starship.core;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.SoundPool;
 import us.ttyl.starship.movement.MovementEngine;
 
 public class GameState 
 {
-	public static boolean mIsRunning = false; 
+	public static double sScreenDesnity = 0;
+	public static boolean mIsRunning = false;
 	public static boolean mIsThrottlePressed = false;
 	public static boolean mWaitTimeBetweenLevels = false;
 	
@@ -76,5 +78,8 @@ public class GameState
     public static long sStartTimeBoss = System.currentTimeMillis();
 
     public static boolean sShowCurrentTime = true;
+
+	public static boolean sShownLevelName = false;
+
 }
 

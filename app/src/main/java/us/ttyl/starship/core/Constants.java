@@ -18,7 +18,8 @@ public class Constants {
 	public static final int PARACHUTE_SMALL = 14;
 	public static final int MISSILE_SMALL = 15;
 	public static final int TEXT = 16;
-	public static final int GUN_ENEMY_BOSS = 17;
+	public static final int TEXT_ITEM_LINE = 21;
+	public static final int PLAYER_OPTION = 18;
 
 	//player initialization
 	public static final int START_MISSILE_COUNT = 20;

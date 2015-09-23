@@ -8,5 +8,9 @@
     <string name="invulnerability">turn %s invulnerability</string>
     <string name="on">on</string>
     <string name="off">off</string>
+    <string name="time_1917">Germany 1917 AD</string>
+    <string name="time_1943">Great Britan 1941 AD</string>
+    <string name="time_1972">Vietnam 1972 AD</string>
+    <string name="time_1991">Persian Gulf 1991 AD</string>
 
 </resources>

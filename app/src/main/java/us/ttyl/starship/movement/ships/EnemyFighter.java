@@ -1,5 +1,7 @@
 package us.ttyl.starship.movement.ships;
 
+import android.util.Log;
+
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
@@ -20,11 +22,14 @@ public class EnemyFighter extends CircleEngine
 	@Override
 	public void onCollision(MovementEngine engine2)
 	{
+		Log.i("kurt_test", "Enemyfighter.onCollision() engine2: " + engine2.getWeaponName());
 		if (getWeaponName() != engine2.getWeaponName())
 		{
 			//on collision with player, player missile or player gun, kill fighter, show explosion 
-			if (engine2.getWeaponName() == Constants.PLAYER || engine2.getWeaponName() == Constants.MISSILE_PLAYER
-					|| engine2.getWeaponName() == Constants.GUN_PLAYER)
+			if (engine2.getWeaponName() == Constants.PLAYER
+					|| engine2.getWeaponName() == Constants.MISSILE_PLAYER
+					|| engine2.getWeaponName() == Constants.GUN_PLAYER
+					|| engine2.getWeaponName() == Constants.PLAYER_OPTION)
 			{
 				// show explosion
 				// remove enemy fighter from list

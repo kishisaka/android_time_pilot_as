@@ -53,8 +53,10 @@ public class EnemyBoss extends LineEngine {
 		if (getWeaponName() != engine2.getWeaponName())
 		{
 			//on collision with player, player missile or player gun, kill boss, show explosion 
-			if (engine2.getWeaponName() == Constants.PLAYER || engine2.getWeaponName() == Constants.MISSILE_PLAYER
-					|| engine2.getWeaponName() == Constants.GUN_PLAYER)
+			if (engine2.getWeaponName() == Constants.PLAYER
+					|| engine2.getWeaponName() == Constants.MISSILE_PLAYER
+					|| engine2.getWeaponName() == Constants.GUN_PLAYER
+					|| engine2.getWeaponName() == Constants.PLAYER_OPTION)
 			{
 				// show explosion
 				// remove enemy boss from list

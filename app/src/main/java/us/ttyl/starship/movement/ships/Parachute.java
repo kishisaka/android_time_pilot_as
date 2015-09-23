@@ -3,6 +3,7 @@ package us.ttyl.starship.movement.ships;
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
+import us.ttyl.starship.env.EnvBuilder;
 import us.ttyl.starship.movement.LineEngine;
 import us.ttyl.starship.movement.MovementEngine;
 
@@ -30,10 +31,18 @@ public class Parachute extends LineEngine
 		// collects 4 parachutes, kill all enemies and move to next level
 		long pickupInterval = System.currentTimeMillis() - GameState.sLastParachutePickupInterval;
 		if (pickupInterval > Constants.PARACHUTE_PICKUP_INTERVAL
-				&& engine2.getWeaponName() == Constants.PLAYER && engine2.getDestroyedFlag() == false)
-		{
+				&& engine2.getWeaponName() == Constants.PLAYER && engine2.getDestroyedFlag() == false) {
 			GameState.sLastParachutePickupInterval = System.currentTimeMillis();
-			engine2.setMissileCount(engine2.getMissileCount() + 20);
+
+			//generate player options or give player missiles
+			if ((int) (Math.random() * 100) > 40) {
+				engine2.setMissileCount(engine2.getMissileCount() + 20);
+			} else {
+				EnvBuilder.generatePlayerOption(0, (int)(3 * GameState.sScreenDesnity), (int)(50 * GameState.sScreenDesnity));
+				EnvBuilder.generatePlayerOption(120,(int)(3 * GameState.sScreenDesnity), (int)(50 * GameState.sScreenDesnity));
+				EnvBuilder.generatePlayerOption(240,(int)(3 * GameState.sScreenDesnity), (int)(50 * GameState.sScreenDesnity));
+			}
+
 			decrementHitPoints(1);
 			checkDestroyed();
 			GameState._playerScore = GameState._playerScore + 1000;
@@ -86,6 +95,9 @@ public class Parachute extends LineEngine
 						}
 					}
 				}
+
+				// reset the show game level name flag
+				GameState.sShownLevelName = false;
 			}
 			else
 			{

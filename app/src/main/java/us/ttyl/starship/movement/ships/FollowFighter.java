@@ -24,8 +24,10 @@ public class FollowFighter extends FollowEngine
     public void onCollision(MovementEngine engine2) {
         if (getWeaponName() != engine2.getWeaponName()) {
             //on collision with player, player missile or player gun, kill fighter, show explosion
-            if (engine2.getWeaponName() == Constants.PLAYER || engine2.getWeaponName() == Constants.MISSILE_PLAYER
-                    || engine2.getWeaponName() == Constants.GUN_PLAYER) {
+            if (engine2.getWeaponName() == Constants.PLAYER
+                    || engine2.getWeaponName() == Constants.MISSILE_PLAYER
+                    || engine2.getWeaponName() == Constants.GUN_PLAYER
+                    || engine2.getWeaponName() == Constants.PLAYER_OPTION) {
                 // show explosion
                 // remove enemy fighter from list
                 decrementHitPoints(1);

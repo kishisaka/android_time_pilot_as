@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -557,6 +558,23 @@ public class GameUtils {
 		}
 		return 1;
 	}
+
+    public static String getGameLevelName(Resources res)
+    {
+        switch (GameState.sCurrentLevel)
+        {
+            case 1:
+                return res.getString(R.string.time_1917);
+            case 2:
+                return res.getString(R.string.time_1943);
+            case 3:
+                return res.getString(R.string.time_1972);
+            case 4:
+                return res.getString(R.string.time_1991);
+            default:
+                return "";
+        }
+    }
 
 
 }

@@ -8,6 +8,8 @@ import us.ttyl.starship.movement.ships.Cloud;
 import us.ttyl.starship.movement.ships.EnemyBoss;
 import us.ttyl.starship.movement.ships.EnemyFighter;
 import us.ttyl.starship.movement.ships.FollowFighter;
+import us.ttyl.starship.movement.ships.PlayerOption;
+import us.ttyl.starship.movement.ships.TextItemLine;
 
 /**
  * weapon builder
@@ -82,7 +84,7 @@ public class EnvBuilder
 	{
 		// the enemy boss
 		float speed = GameUtils.getPlaneSpeed(Constants.ENEMY_BOSS);
-		generateShipBoss((int)playerPositionX, (int)playerPositionY, 1, speed);
+		generateShipBoss((int) playerPositionX, (int) playerPositionY, 1, speed);
 	}
 	
 	/**
@@ -128,4 +130,16 @@ public class EnvBuilder
 				, coord[1] + playerPositionY, speed
 				, speed, .1d, 0, Constants.CLOUD_BIG, null, -1, 1));
 	}
+
+	public static void generatePlayerOption(int startingDegree, int speed, int radius)
+	{
+		GameState._weaponList.add(new PlayerOption(GameState._weaponList.elementAt(0),
+				Constants.PLAYER_OPTION, startingDegree, radius, speed));
+	}
+
+	public static void generateTextLine(String text, int speed, int endurance, double x, double y, int direction)
+	{
+		GameState._weaponList.add(new TextItemLine(text, speed, endurance, x, y, direction ));
+	}
+
 }

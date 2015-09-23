@@ -1,5 +1,6 @@
 package us.ttyl.starship.core;
 
+import android.content.Context;
 import android.util.Log;
 
 import us.ttyl.starship.env.EnvBuilder;
@@ -21,9 +22,11 @@ public class MainLoop extends Thread
 	private int _gunModifier = 0;
 	private int _gunModifierSwivel = 3;
 	private float _density;
-	
-	public MainLoop(float density)
-	{		
+	private Context mContext;
+
+	public MainLoop(float density, Context context)
+	{
+		mContext = context;
 		_density = density;
 		initGame();
 		start();
@@ -48,7 +51,7 @@ public class MainLoop extends Thread
 		{
 			AudioPlayer.resumePlayerGun();
 		}
-		
+		Log.i("kurt_test", "starting main loop");
 		//main game loop
 		while(GameState.mIsRunning == true)
 		{
@@ -59,7 +62,7 @@ public class MainLoop extends Thread
 				int cloudCount = GameUtils.getTypeCount(Constants.CLOUD_BIG, GameState._cloudListLarge);
 				cloudCount = cloudCount + GameUtils.getTypeCount(Constants.CLOUD_SMALL, GameState._cloudListSmall);
 				long currentTimeClouds = currentTime;
-				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < 10)
+				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < 40)
 				{
 					startTimeClouds = currentTimeClouds;
 					int random = (int)(Math.random() * 100);
@@ -73,6 +76,14 @@ public class MainLoop extends Thread
 					}
 				}
 
+				if (GameState.sShownLevelName == false && GameState.mWaitTimeBetweenLevels == false)
+				{
+					// generateTextLine(String text, int speed, int endurance, int x, int y, int direction)
+					EnvBuilder.generateTextLine(GameUtils.getGameLevelName(mContext.getResources()),
+							2, 300, GameState._weaponList.get(0).getX(),
+							GameState._weaponList.get(0).getY() + 200, 180);
+					GameState.sShownLevelName = true;
+				}
 				//generate an enemy follow fighter.
 				int enemyCount = GameUtils.getTypeCount(Constants.ENEMY_FIGHTER, GameState._weaponList);
 				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - startTime) > 30 && enemyCount < 10)
@@ -186,7 +197,6 @@ public class MainLoop extends Thread
 				}
 				
 				// fire gun constantly
-				// System.out.println("gunModifier:" + _gunModifier);
 				if (GameState._weaponList.get(0).getDestroyedFlag() == false && (GameState._weaponList.get(0).getWeaponName()==(Constants.PLAYER)))
 				{
 					long currentTimeGun = currentTime;
@@ -347,6 +357,7 @@ public class MainLoop extends Thread
 				e.printStackTrace();
 			}
 		}
+		Log.i("kurt_test", "main loop ended, shutting down");
 	}       
 	
 	/**
@@ -391,6 +402,7 @@ public class MainLoop extends Thread
 				|| currentShip.getWeaponName() == Constants.GUN_PLAYER
 				|| currentShip.getWeaponName() == Constants.PARACHUTE
 				|| currentShip.getWeaponName() == Constants.TEXT
+				|| currentShip.getWeaponName() == Constants.PLAYER_OPTION
 				&& currentShip.getDestroyedFlag() == false)
 		{
 			for(int i = 0; i < GameState._weaponList.size(); i ++)
@@ -409,6 +421,7 @@ public class MainLoop extends Thread
 								|| ship.getWeaponName() == Constants.GUN_PLAYER
 								|| ship.getWeaponName() == Constants.PARACHUTE
 								|| ship.getWeaponName() == Constants.TEXT
+								|| ship.getWeaponName() == Constants.PLAYER_OPTION
 								&& ship.getDestroyedFlag() == false)
 						{
 							int diffX = Math.abs((int)(currentShip.getX() - ship.getX())); 
