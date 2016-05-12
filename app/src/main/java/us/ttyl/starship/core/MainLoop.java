@@ -174,8 +174,7 @@ public class MainLoop extends Thread
 						if (GameState._weaponList.get(i).getWeaponName() == Constants.ENEMY_FIGHTER
 								&& rangeToTarget > 150 && rangeToTarget < Constants.ENEMY_FIGHTER_FiRE_RADIUS
 								&& GameUtils.shouldFireWeapon()
-								&& (currentTime - startTimeEnemyMissile  > GameUtils.getEnemyMissileFireRate())
-								&& GameState.sWaveLevel > 0)
+								&& (currentTime - startTimeEnemyMissile  > GameUtils.getEnemyMissileFireRate()))
 						{
 							// Log.d("MainLoop", "fire enemy missile");
 							// get player track
@@ -202,11 +201,15 @@ public class MainLoop extends Thread
 					long currentTimeGun = currentTime;
 					if (currentTimeGun - startTimeGun > 30)
 					{
+						int gunDirection = GameState._weaponList.get(0).getCurrentDirection() + _gunModifier;
+						if (gunDirection > 360) {
+							gunDirection = gunDirection - 360;
+						}
 						startTimeGun = currentTimeGun;
-						MovementEngine bullet = new Bullet(GameState._weaponList.get(0).getCurrentDirection() + _gunModifier
-								, GameState._weaponList.get(0).getCurrentDirection() + _gunModifier
+						MovementEngine bullet = new Bullet(gunDirection, gunDirection
 								, (int)GameState._weaponList.get(0).getX()
-								, (int)GameState._weaponList.get(0).getY(),10, 10, 1, 1, Constants.GUN_PLAYER, GameState._weaponList.get(0), 30, 1);
+								, (int)GameState._weaponList.get(0).getY(),10, 10, 1, 1,
+								Constants.GUN_PLAYER, GameState._weaponList.get(0), 30, 1);
 						GameState._weaponList.add(bullet);
 						gunModifier();
 					}
@@ -364,23 +367,20 @@ public class MainLoop extends Thread
 	 * move player gun up/down to get a limited firing arc spread of a couple of deg up and down. 
 	 */
 	private void gunModifier()
-	{		
+	{
 		if (_gunModifier == 0)
 		{
-			_gunModifier = (int)(_gunModifierSwivel * GameState._density);
+			_gunModifier = (int)(-1 * _gunModifierSwivel * GameState._density);
 		}
 		else
 		{
-			if (_gunModifier == _gunModifierSwivel * GameState._density)
+			if (_gunModifier < 0)
 			{
-				_gunModifier = (int)(-1 * (_gunModifierSwivel* GameState._density));
+				_gunModifier = (int)(_gunModifierSwivel * GameState._density);
 			}
 			else
 			{
-				if (_gunModifier == -1 * (_gunModifierSwivel* GameState._density))
-				{
-					_gunModifier = 0;
-				}
+				_gunModifier = 0;
 			}
 		}
 	}
@@ -429,7 +429,7 @@ public class MainLoop extends Thread
 
 							if (ship.getWeaponName() == Constants.ENEMY_BOSS || currentShip.getWeaponName() == Constants.ENEMY_BOSS)
 							{
-								// boss ship collision on some side, use 30 X 10
+								// boss ship collision on some side, use 30 X 20
 								if (diffX <= (30 * GameState._density) && diffY <= (20 * GameState._density))
 								{
 									currentShip.onCollision(ship);

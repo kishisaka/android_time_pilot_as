@@ -1,5 +1,6 @@
 package us.ttyl.starship.core;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.shapes.Shape;
 import android.util.Log;
 
 import us.ttyl.asteroids.R;
@@ -14,6 +17,9 @@ import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.Parachute;
 
 public class GameUtils {
+
+    private static final String TAG = "GameUtils";
+
     /**
      * get a deg track of a set of coords from a set of coords
      *
@@ -113,6 +119,7 @@ public class GameUtils {
             double deg = 180 - (Math.toDegrees(Math.atan(convertY / x)) + 90);
             returnDeg = deg + 270;
         }
+
         return returnDeg;
     }
 
@@ -181,29 +188,300 @@ public class GameUtils {
         return tileList;
     }
 
+    public static void getOther(Context context) {
+        GameState._bigParachute = BitmapFactory.decodeResource(context.getResources(), R.drawable.other_parachute_big);
+        GameState._smallParachute = BitmapFactory.decodeResource(context.getResources(), R.drawable.other_parachute_small);
+        GameState._smallMissile = BitmapFactory.decodeResource(context.getResources(), R.drawable.other_player_missile_indicator);
+    }
+
+    public static ArrayList<Bitmap>getPlayerSprites(Context context) {
+        ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_3));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_0));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_11));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_10));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_9));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_8));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_7));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_6));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_5));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_4));
+        return tileList;
+    }
+
+    public static ArrayList<Bitmap>getFighters1917FromFile(Context context, int id) {
+        ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
+        if (id == 1) {
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_3));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_2));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_1));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_0));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_11));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_10));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_9));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_8));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_7));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_6));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_5));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_4));
+        }
+        if (id == 2) {
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_3));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_2));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_1));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_0));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_11));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_10));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_9));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_8));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_7));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_6));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_5));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_fighter_4));
+        }
+        return tileList;
+    }
+
+    public static ArrayList<Bitmap>getFighters1941FromFile(Context context, int id) {
+        ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
+        if (id == 1) {
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_3));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_2));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_1));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_0));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_11));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_10));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_9));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_8));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_7));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_6));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_5));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_4));
+        }
+        if (id == 2) {
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_3));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_2));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_1));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_0));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_11));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_10));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_9));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_8));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_7));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_6));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_5));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_fighter_4));
+        }
+        return tileList;
+    }
+
+    public static ArrayList<Bitmap>getFighters1971FromFile(Context context, int id) {
+        ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
+        if (id == 1) {
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_3));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_2));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_1));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_0));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_11));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_10));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_9));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_8));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_7));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_6));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_5));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_4));
+        }
+        if (id == 2) {
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_3));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_2));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_1));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_0));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_11));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_10));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_9));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_8));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_7));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_6));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_5));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_fighter_4));
+        }
+        return tileList;
+    }
+
+    public static ArrayList<Bitmap>getFighters1984FromFile(Context context, int id) {
+        ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
+        if (id == 1) {
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_3));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_2));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_1));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_0));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_11));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_10));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_9));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_8));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_7));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_6));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_5));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_4));
+        }
+        if (id == 2) {
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_3));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_2));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_1));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_0));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_11));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_10));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_9));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_8));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_7));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_6));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_5));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_fighter_4));
+        }
+        return tileList;
+    }
+
     /**
      * load boss ship sprites, row 8, 72 x 36
      *
      * @param context
      * @return
      */
-    public static ArrayList<Bitmap> getBossTilesFromFile(Context context, int drawableId) {
+    public static ArrayList<Bitmap> getBossTilesFromFile(Context context) {
         ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_boss_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_boss_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_boss_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_boss_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_boss_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_boss_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_boss_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_boss_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_boss_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1917_boss_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_boss_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1941_boss_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_boss_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1971_boss_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_boss_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite2_1984_boss_2));
+        return tileList;
+    }
+
+    /**
+     * get the explosion sprites (50 x 50, 24 frames)
+     * @param context
+     * @return
+     */
+    public static ArrayList<Bitmap> getAnimatedExplosionSprites(Context context) {
+        ArrayList<Bitmap> explosionList = new ArrayList<Bitmap>();
         try {
-            Bitmap tileMap = BitmapFactory.decodeResource(context.getResources(), drawableId);
-            int y = 8;
-            for (int x = 0; x < 6; x++) {
-                int density = (int) context.getResources().getDisplayMetrics().density;
-                tileList.add(Bitmap.createBitmap(tileMap, x * density * 72, y * density * 36, density * 72, density * 36));
-            }
-            y = 14;
-            for (int x = 0; x < 6; x++) {
-                int density = (int) context.getResources().getDisplayMetrics().density;
-                tileList.add(Bitmap.createBitmap(tileMap, x * density * 72, y * density * 36, density * 72, density * 36));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            int width = 150;
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_1a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_1a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_1a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_1a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_2a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_2a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_2a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_2a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_3a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_3a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_3a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_3a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_4a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_4a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_4a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_4a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_5a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_5a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_5a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_5a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_6a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_6a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_6a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_6a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_7a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_7a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_7a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_7a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_8a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_8a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_8a, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.explosion_8a, context, width));
         }
+        catch(Exception e) {
+            Log.e(TAG, "", e);
+        }
+        return explosionList;
+    }
+
+    /**
+     * get the explosion sprites (400 x 400, 24 frames)
+     * @param context
+     * @return
+     */
+    public static ArrayList<Bitmap> getAnimatedExplosionSpritesBoss(Context context) {
+        ArrayList<Bitmap> explosionList = new ArrayList<Bitmap>();
+        try {
+            int width = 400;
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_1, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_1, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_2, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_2, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_3, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_3, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_4, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_4, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_5, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_5, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_6, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_6, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_7, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_7, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_8, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_8, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_9, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_9, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_10, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_10, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_11, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_11, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_12, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_12, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_13, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_13, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_14, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_14, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_15, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_15, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_16, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_16, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_17, context, width));
+            explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_17, context, width));
+        }
+        catch(Exception e) {
+            Log.e(TAG, "", e);
+        }
+        return explosionList;
+    }
+
+    public static List<Bitmap> getMissileBitmaps(Context context) {
+        ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_3));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_2));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_1));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_0));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_11));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_10));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_9));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_8));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_7));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_6));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_5));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_4));
         return tileList;
     }
 
@@ -216,10 +494,8 @@ public class GameUtils {
     public static ArrayList<Bitmap> getCloudTiles(Context context) {
         ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
         try {
-            Bitmap tileMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprites);
-            int density = (int) context.getResources().getDisplayMetrics().density;
-            tileList.add(Bitmap.createBitmap(tileMap, 0, 7 * density * 36, density * 36, density * 36));
-            tileList.add(Bitmap.createBitmap(tileMap, 0, 9 * density * 36, density * 144, density * 72));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.other_cloud_small));
+            tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.other_cloud_big));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -227,126 +503,248 @@ public class GameUtils {
     }
 
     public static Bitmap getBossBullet(Context context) {
-        Bitmap tileMap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sprites);
-        int density = (int) context.getResources().getDisplayMetrics().density;
-        return Bitmap.createBitmap(tileMap, 0, 13 * density * 36, density * 36, density * 36);
+        return BitmapFactory.decodeResource(context.getResources(), R.drawable.other_boss_bullet);
     }
 
+    public static Bitmap getAndScaleBitmap(int bitmapId, Context context, int width) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
+        return Bitmap.createScaledBitmap(bitmap, width, width, false);
+    }
     /**
      * given a track and a ship type, return the appropriate sprite for rendering
      *
-     * @param track
+     * 6103458
+     * @param track (can be either track or endurance)
      * @param type
      * @return sprite (BufferedImage)
      */
     public static Bitmap getImageType(int track, int type) {
         int frame = GameState.sFrame;
-        int missileRow = 12 * 12;
+        //explosions are special, the track is actually the endurance of the explosion
+        if (type == Constants.ANIMATED_EXPLOSION) {
+            return GameState._explosionSprites.get(track);
+        }
+        if (type == Constants.ANIMATED_BOSS_EXPLOSION) {
+            return GameState._explosionBossSprites.get(track);
+        }
         if (type == Constants.CLOUD_SMALL) {
             return GameState._cloudSprites.get(0);
         }
         if (type == Constants.CLOUD_BIG) {
             return GameState._cloudSprites.get(1);
         } else if (type == Constants.PARACHUTE_SMALL) {
-            return GameState._sprites1.get((7 * 12) + 2);
+            return GameState._smallParachute;
         } else if (type == Constants.MISSILE_SMALL) {
-            return GameState._sprites1.get((12 * 13) + 1);
+            return GameState._smallMissile;
         } else if (type == Constants.PARACHUTE) {
-            return GameState._sprites1.get((7 * 12) + 1);
+            return GameState._bigParachute;
         } else if (type == Constants.ENEMY_BOSS && track == 0) {
             if (frame == 1) {
                 if (GameState.sCurrentLevel == 1) {
-                    return GameState._bossSprites1.get(1);
+                    return GameState._bossSprites1.get(0);
                 } else if (GameState.sCurrentLevel == 2) {
                     return GameState._bossSprites1.get(2);
                 } else if (GameState.sCurrentLevel == 3) {
-                    return GameState._bossSprites1.get(0);
+                    return GameState._bossSprites1.get(4);
                 } else {
                     return GameState._bossSprites1.get(6);
                 }
             } else {
                 if (GameState.sCurrentLevel == 1) {
-                    return GameState._bossSprites2.get(1);
+                    return GameState._bossSprites1.get(8);
                 } else if (GameState.sCurrentLevel == 2) {
-                    return GameState._bossSprites2.get(2);
+                    return GameState._bossSprites1.get(10);
                 } else if (GameState.sCurrentLevel == 3) {
-                    return GameState._bossSprites2.get(0);
+                    return GameState._bossSprites1.get(12);
                 } else {
-                    return GameState._bossSprites2.get(6);
+                    return GameState._bossSprites1.get(14);
                 }
             }
         } else if (type == (Constants.ENEMY_BOSS) && track == 180) {
             if (frame == 1) {
                 if (GameState.sCurrentLevel == 1) {
-                    return GameState._bossSprites1.get(5);
+                    return GameState._bossSprites1.get(1);
                 } else if (GameState.sCurrentLevel == 2) {
-                    return GameState._bossSprites1.get(4);
-                } else if (GameState.sCurrentLevel == 3) {
                     return GameState._bossSprites1.get(3);
+                } else if (GameState.sCurrentLevel == 3) {
+                    return GameState._bossSprites1.get(5);
                 } else {
                     return GameState._bossSprites1.get(7);
                 }
             } else {
                 if (GameState.sCurrentLevel == 1) {
-                    return GameState._bossSprites2.get(5);
+                    return GameState._bossSprites1.get(9);
                 } else if (GameState.sCurrentLevel == 2) {
-                    return GameState._bossSprites2.get(4);
+                    return GameState._bossSprites1.get(11);
                 } else if (GameState.sCurrentLevel == 3) {
-                    return GameState._bossSprites2.get(3);
+                    return GameState._bossSprites1.get(13);
                 } else {
-                    return GameState._bossSprites2.get(7);
+                    return GameState._bossSprites1.get(15);
                 }
             }
         } else if (track >= 0 && track < 30) {
-            return getFrameBitmap(frame, type, missileRow, 12, 3);
+            return getFrameBitmap(frame, type, 0);
         } else if (track >= 30 && track < 60) {
-            return getFrameBitmap(frame, type, missileRow, 12, 2);
+            return getFrameBitmap(frame, type,1);
         } else if (track >= 60 && track < 90) {
-            return getFrameBitmap(frame, type, missileRow, 12, 1);
+            return getFrameBitmap(frame, type, 2);
         } else if (track >= 90 && track < 120) {
-            return getFrameBitmap(frame, type, missileRow, 12, 0);
+            return getFrameBitmap(frame, type, 3);
         } else if (track >= 120 && track < 150) {
-            return getFrameBitmap(frame, type, missileRow, 12, 11);
+            return getFrameBitmap(frame, type, 4);
         } else if (track >= 150 && track < 180) {
-            return getFrameBitmap(frame, type, missileRow, 12, 10);
+            return getFrameBitmap(frame, type, 5);
         } else if (track >= 180 && track < 210) {
-            return getFrameBitmap(frame, type, missileRow, 12, 9);
+            return getFrameBitmap(frame, type, 6);
         } else if (track >= 210 && track < 240) {
-            return getFrameBitmap(frame, type, missileRow, 12, 8);
+            return getFrameBitmap(frame, type, 7);
         } else if (track >= 240 && track < 270) {
-            return getFrameBitmap(frame, type, missileRow, 12, 7);
+            return getFrameBitmap(frame, type, 8);
         } else if (track >= 270 && track < 300) {
-            return getFrameBitmap(frame, type, missileRow, 12, 6);
+            return getFrameBitmap(frame, type, 9);
         } else if (track >= 300 && track < 330) {
-            return getFrameBitmap(frame, type, missileRow, 12, 5);
+            return getFrameBitmap(frame, type, 10);
         } else if (track >= 330 && track < 360) {
-            return getFrameBitmap(frame, type, missileRow, 12, 4);
+            return getFrameBitmap(frame, type, 11);
         }
         return null;
     }
 
-    public static Bitmap getFrameBitmap(int frame, int type, int missleRow, int row, int offset) {
+//    public static List<Bitmap> getPlayerFighter(Context context) {
+//        float density = context.getResources().getDisplayMetrics().density;
+//        Bitmap fighter = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_fighter_3);
+//        fighter = fighter.createScaledBitmap(fighter, (int)(36 * density), (int)(36 * density), false);
+//        return rotateBitmaps(context, fighter);
+//    }
+
+//    public static List<Bitmap> get1917Enemy(Context context) {
+//        float density = context.getResources().getDisplayMetrics().density;
+//        Bitmap testBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.biplane_1917);
+//        testBitmap = testBitmap.createScaledBitmap(testBitmap, (int)(36 * density) , (int)(36 * density), false);
+//        return rotateBitmaps(context,testBitmap);
+//    }
+//
+//    public static List<Bitmap> get1941Enemy(Context context) {
+//        float density = context.getResources().getDisplayMetrics().density;
+//        Bitmap testBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fighter_1941);
+//        testBitmap = testBitmap.createScaledBitmap(testBitmap, (int)(36 * density) , (int)(36 * density), false);
+//        return rotateBitmaps(context,testBitmap);
+//    }
+//
+//    public static List<Bitmap> get1971EnemyRotor(Context context) {
+//        float density = context.getResources().getDisplayMetrics().density;
+//        Bitmap testBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rotor_1971_1);
+//        testBitmap = testBitmap.createScaledBitmap(testBitmap, (int)(60 * density) , (int)(60 * density), false);
+//        return rotateBitmaps(context, testBitmap);
+//    }
+//
+//    public static List<Bitmap> get1971Enemy(Context context) {
+//        float density = context.getResources().getDisplayMetrics().density;
+//        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.helicopter_1971);
+//        Bitmap scaledBitmap = bitmap.createScaledBitmap(bitmap, (int) (60 * density), (int) (60 * density), false);
+//        bitmap.recycle();
+//        bitmap = null;
+//        return rotateBitmaps(context,scaledBitmap);
+//    }
+
+    public static void getBoltBitmaps(Context context) {
+        Bitmap bolt = BitmapFactory.decodeResource
+                (context.getResources(), R.drawable.bolt);
+        bolt = bolt.createScaledBitmap(bolt, (int)(10 * context.getResources().getDisplayMetrics().density) , (int)(10 * context.getResources().getDisplayMetrics().density), false);
+        GameState._bolts = rotateBitmaps(context,bolt);
+    }
+
+    public static void getEnemyBoltBitmaps(Context context) {
+        Bitmap bolt = BitmapFactory.decodeResource
+                (context.getResources(), R.drawable.enemy_bolt);
+        bolt = bolt.createScaledBitmap(bolt, (int)(10 * context.getResources().getDisplayMetrics().density) , (int)(10 * context.getResources().getDisplayMetrics().density), false);
+        GameState._enemy_bolts = rotateBitmaps(context,bolt);
+    }
+
+    private static List<Bitmap> rotateBitmaps(Context context, Bitmap bitmap) {
+        List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+        for(int i = 360; i > -1; i --) {
+            Log.i("kurt_test", "rotating bitmap: " + i);
+            bitmapList.add(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix(bitmap, i), false));
+        }
+        bitmap.recycle();
+        bitmap = null;
+        return bitmapList;
+    }
+
+    private static List<Bitmap> rotateRotorBitmaps(Context context, Bitmap bitmap) {
+        List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+        for(int i = 10; i > -1; i --) {
+            Log.i("kurt_test", "rotating bitmap: " + i);
+            bitmapList.add(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix(bitmap, i), false));
+        }
+        bitmap.recycle();
+        bitmap = null;
+        return bitmapList;
+    }
+
+//    public static List<Bitmap> getAwacs(Context context) {
+//        float density = context.getResources().getDisplayMetrics().density;
+//        List<Bitmap> bitmapList = new ArrayList<Bitmap>();
+//        Bitmap awacsLeft = BitmapFactory.decodeResource(context.getResources(), R.drawable.awacs_left_1981);
+//        Bitmap awacsRight = BitmapFactory.decodeResource(context.getResources(), R.drawable.awacs_right_1981);
+//        bitmapList.add(awacsLeft.createScaledBitmap(awacsLeft,(int)(200 * density), (int)(200 * density), false));
+//        bitmapList.add(awacsLeft.createScaledBitmap(awacsRight,(int)(200 * density), (int)(200 * density), false));
+//        awacsLeft.recycle();
+//        awacsLeft = null;
+//        awacsRight.recycle();
+//        awacsRight = null;
+//        return bitmapList;
+//    }
+
+    private static Matrix rotateMatrix(Bitmap bitmap, int rotation) {
+        Matrix rotateMatrix = new Matrix();
+        rotateMatrix.postRotate(rotation, bitmap.getWidth()/2, bitmap.getHeight()/2);
+        rotateMatrix.postTranslate(bitmap.getWidth(), bitmap.getHeight());
+        return rotateMatrix;
+    }
+
+
+    public static Bitmap getFrameBitmap(int frame, int type, int direction) {
+        if (type == (Constants.PLAYER)) {
+            return GameState._playerSprites.get(direction);
+        }
+        if (type == (Constants.MISSILE)) {
+            return GameState._missileSprites.get(direction);
+        }
         if (frame < 3) {
-            if (type == (Constants.PLAYER)) {
-                return GameState._sprites1.get(offset);
-            } else if (type == (Constants.ENEMY_FIGHTER)) {
-                return GameState._sprites1.get((GameState.sCurrentLevel * row) + offset);
-            } else if (type == (Constants.MISSILE)) {
-                return GameState._sprites1.get(missleRow + offset);
+            if (type == (Constants.ENEMY_FIGHTER)) {
+                if (GameState.sCurrentLevel == 1) {
+                    return GameState._1917_fighters_1.get(direction);
+                }
+                if (GameState.sCurrentLevel == 2) {
+                    return GameState._1941_fighters_1.get(direction);
+                }
+                if (GameState.sCurrentLevel == 3) {
+                    return GameState._1971_fighters_1.get(direction);
+                }
+                if (GameState.sCurrentLevel == 4) {
+                    return GameState._1984_fighters_1.get(direction);
+                }
             }
         } else {
-            if (type == (Constants.PLAYER)) {
-                return GameState._sprites2.get(offset);
-            } else if (type == (Constants.ENEMY_FIGHTER)) {
-                return GameState._sprites2.get((GameState.sCurrentLevel * row) + offset);
-            } else if (type == (Constants.MISSILE)) {
-                return GameState._sprites2.get(missleRow + offset);
+            if (type == (Constants.ENEMY_FIGHTER)) {
+                if (GameState.sCurrentLevel == 1) {
+                    return GameState._1917_fighters_2.get(direction);
+                }
+                if (GameState.sCurrentLevel == 2) {
+                    return GameState._1941_fighters_2.get(direction);
+                }
+                if (GameState.sCurrentLevel == 3) {
+                    return GameState._1971_fighters_2.get(direction);
+                }
+                if (GameState.sCurrentLevel == 4) {
+                    return GameState._1984_fighters_2.get(direction);
+                }
             }
         }
         return null;
     }
-
-
 	/**
 	 * given a missle track, return the appropriate x,y offset for the smoke
 	 * @param track
@@ -354,6 +752,9 @@ public class GameUtils {
 	 */
 	public static int[] getSmokeTrailXY(int track)
 	{
+//        double[] smokeCoords = getCoordsGivenTrackAndDistance(track, 4);
+//        return new int[]{(int)(smokeCoords[0] * -1), (int)(smokeCoords[1] * -1)};
+
 		if (track >= 0 && track < 30)
 		{
 			// +3
@@ -364,7 +765,7 @@ public class GameUtils {
 			// + 2
 			return new int[]{-8, 5};
 		}
-		
+
 		else if (track >= 60 && track < 90)
 		{
 			// + 1
@@ -427,11 +828,31 @@ public class GameUtils {
 	{
 		if (GameState.sWaveLevel == 0)
 		{
-			return 500;
+            switch(GameState.sCurrentLevel)
+            {
+                case 2:
+                    return 470;
+                case 3:
+                    return 450;
+                case 4:
+                    return 430;
+                default:
+                    return 500;
+            }
 		}
 		else if (GameState.sWaveLevel == 1)
 		{
-			return 400;
+            switch(GameState.sCurrentLevel)
+            {
+                case 2:
+                    return 380;
+                case 3:
+                    return 370;
+                case 4:
+                    return 360;
+                default:
+                    return 400;
+            }
 		}
 		else if (GameState.sWaveLevel == 2)
 		{
@@ -448,11 +869,35 @@ public class GameUtils {
 	{
 		if (GameState.sWaveLevel == 0)
 		{
-			return 1500;
+            switch(GameState.sCurrentLevel)
+            {
+                case 2:
+                    // no fire unless user takes too long!
+                    return 90000;
+                case 3:
+                    return 2000;
+                case 4:
+                    return 1700;
+                default:
+                    // no fire unless user takes too long!
+                    return 90000;
+            }
 		}
 		else if (GameState.sWaveLevel == 1)
 		{
-			return 1000;
+            switch(GameState.sCurrentLevel)
+            {
+                case 2:
+                    // no fire unless user takes too long!
+                    return 90000;
+                case 3:
+                    return 1000;
+                case 4:
+                    return 1000;
+                default:
+                    // no fire unless user takes too long!
+                    return 90000;
+            }
 		}
 		else if (GameState.sWaveLevel == 2)
 		{
@@ -503,9 +948,9 @@ public class GameUtils {
 					case 2:
 						return 2;
 					case 3:
-						return 2;
+						return 2.1f;
 					case 4:
-						return 3.5f;
+						return 2.2f;
 					default:
 						return 1;
 				}
@@ -521,7 +966,7 @@ public class GameUtils {
 					case 4:
 						return 5;
 					default:
-						return 2;
+						return 2.25f;
 				}
 			}
 		}
@@ -534,9 +979,9 @@ public class GameUtils {
 					case 2:
 						return 1.4f;
 					case 3:
-						return 1.4f;
+						return 1.75f;
 					case 4:
-						return 3;
+						return 2.2f;
 					default:
 						return 1;
 				}
@@ -548,11 +993,11 @@ public class GameUtils {
 					case 2:
 						return 2.3f;
 					case 3:
-						return 2.3f;
+						return 2.4f;
 					case 4:
 						return 4;
 					default:
-						return 2;
+						return 2.3f;
 				}
 			}
 		}

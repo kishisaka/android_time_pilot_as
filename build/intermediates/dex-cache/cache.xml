@@ -2,18 +2,18 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\test2\Documents\android_time_pilot_as\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\19.1.0\jars\classes.jar"
+        jar="C:\as-dev\Asteroids\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\19.1.0\jars\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28">
-        <dex dex="C:\Users\test2\Documents\android_time_pilot_as\app\build\intermediates\pre-dexed\debug\classes-f41a50699450fa5e1551a19d34101029d5dbc944.jar" />
+        <dex dex="C:\as-dev\Asteroids\app\build\intermediates\pre-dexed\debug\classes-f1d3fcc98bc250bf083df7cb8a262d9a56231189.jar" />
     </item>
     <item
-        jar="C:\Users\test2\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
+        jar="C:\Users\test\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
-        <dex dex="C:\Users\test2\Documents\android_time_pilot_as\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-9a84363033f205aefe66406e79f498df1e3f34ba.jar" />
+        <dex dex="C:\as-dev\Asteroids\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-b9707ab8e1931f677cf599dfb0a9cce627e38061.jar" />
     </item>
 
 </items>

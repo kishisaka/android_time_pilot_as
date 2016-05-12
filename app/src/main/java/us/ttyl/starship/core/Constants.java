@@ -3,7 +3,6 @@ package us.ttyl.starship.core;
 public class Constants {
 	public static final int EXPLOSION_PARTICLE = 1;
 	public static final int CLOUD_SMALL = 2;
-	public static final int CLOUD_BIG = 17;
 	public static final int PARACHUTE = 3;
 	public static final int MISSILE_SMOKE = 4;
 	public static final int BOSS_SMOKE = 5;
@@ -18,8 +17,11 @@ public class Constants {
 	public static final int PARACHUTE_SMALL = 14;
 	public static final int MISSILE_SMALL = 15;
 	public static final int TEXT = 16;
+	public static final int CLOUD_BIG = 17;
 	public static final int TEXT_ITEM_LINE = 21;
 	public static final int PLAYER_OPTION = 18;
+	public static final int ANIMATED_EXPLOSION = 19;
+	public static final int ANIMATED_BOSS_EXPLOSION = 22;
 
 	//player initialization
 	public static final int START_MISSILE_COUNT = 20;
@@ -49,4 +51,8 @@ public class Constants {
 
     // frames max for animation
     public static int sMaxFrame = 4;
+
+	public static int CURRENT_GAME_STATE_TITLE = 1;
+	public static int CURRENT_GAME_STATE_RUNNING = 2;
+
 }

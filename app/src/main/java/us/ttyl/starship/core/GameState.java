@@ -1,6 +1,7 @@
 package us.ttyl.starship.core;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import android.content.Context;
@@ -28,14 +29,36 @@ public class GameState
 	public static Vector <MovementEngine> _cloudListSmall = new Vector<MovementEngine>();
 	//large clouds
 	public static Vector <MovementEngine> _cloudListLarge = new Vector<MovementEngine>();
-	
+
+	//other images
+	public static Bitmap _smallParachute;
+	public static Bitmap _bigParachute;
+	public static Bitmap _smallMissile;
+	public static Bitmap _bossBullet;
+
 	//sprites
+	public static ArrayList <Bitmap> _1917_fighters_1;
+	public static ArrayList <Bitmap> _1917_fighters_2;
+	public static ArrayList <Bitmap> _1941_fighters_1;
+	public static ArrayList <Bitmap> _1941_fighters_2;
+	public static ArrayList <Bitmap> _1971_fighters_1;
+	public static ArrayList <Bitmap> _1971_fighters_2;
+	public static ArrayList <Bitmap> _1984_fighters_1;
+	public static ArrayList <Bitmap> _1984_fighters_2;
+	public static ArrayList <Bitmap> _missiles;
+	public static List <Bitmap> _bolts;
+	public static List <Bitmap> _enemy_bolts;
+
 	public static ArrayList <Bitmap> _sprites1;
     public static ArrayList <Bitmap> _sprites2;
 	public static ArrayList <Bitmap> _bossSprites1;
     public static ArrayList <Bitmap> _bossSprites2;
 	public static ArrayList <Bitmap> _cloudSprites;
-	public static Bitmap _bossBullet;
+	public static ArrayList <Bitmap> _explosionSprites;
+	public static ArrayList <Bitmap> _explosionBossSprites;
+
+	public static List<Bitmap> _missileSprites;
+	public static List<Bitmap> _playerSprites;
 	
 	//player score
 	public static int _playerScore = 0;
@@ -77,9 +100,25 @@ public class GameState
     // start time between bosses
     public static long sStartTimeBoss = System.currentTimeMillis();
 
-    public static boolean sShowCurrentTime = true;
-
 	public static boolean sShownLevelName = false;
 
+	public static int sCurrentGameState = Constants.CURRENT_GAME_STATE_TITLE;
+
+	public static void clearAll() {
+		_weaponList.clear();
+		_cloudListLarge.clear();
+		_cloudListSmall.clear();
+		_explosionParticleList.clear();
+		_lives = 2;
+		sFrame = 1;
+		sStartTimeBoss = System.currentTimeMillis();
+		sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;
+		sParachutePickupCount = 0;
+		sCurrentLevel = 1;
+		sWaveLevel = 0;
+		_playerScore = 0;
+		_playerBulletsShot = 0;
+		_playerEnemyShot = 0;
+	}
 }
 
