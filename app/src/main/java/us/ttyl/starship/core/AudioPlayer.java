@@ -12,7 +12,7 @@ import android.media.SoundPool;
  * helicopter: https://www.freesound.org/people/fridobeck/sounds/194250/
  * jets: https://www.freesound.org/people/qubodup/sounds/162445/
  * ww2 https://www.freesound.org/people/treyc/sounds/123919/
- * airship ttps://www.freesound.org/people/litewerx/sounds/113633/
+ * airship https://www.freesound.org/people/litewerx/sounds/113633/
  *
  */
 public class AudioPlayer 
@@ -189,6 +189,7 @@ public class AudioPlayer
     public static void pauseAll()
     {
         sSoundPool.autoPause();
+        sSoundPool.release();
     }
 
     public static void resumeAll()

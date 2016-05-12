@@ -87,6 +87,13 @@ public class EnemyBoss extends LineEngine {
 						GameState.sLastReleasedParachute = System.currentTimeMillis();
 					}
 				}
+
+				//show explosion
+				if (getHitpoints() <= 0) {
+					MovementEngine explosionAnimated = new ExplosionBossAnimated(getX(), getY(), getCurrentSpeed(), getCurrentDirection());
+					GameState._weaponList.add(explosionAnimated);
+				}
+
 				// create particle explosion for shot down boss
 				long intervalExplosion = System.currentTimeMillis() - GameState.sLastBossExplosion;
 				if (intervalExplosion > Constants.BOSS_EXPLOSION_INTERVAL) {

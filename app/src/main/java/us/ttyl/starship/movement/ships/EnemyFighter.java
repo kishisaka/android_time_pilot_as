@@ -22,7 +22,6 @@ public class EnemyFighter extends CircleEngine
 	@Override
 	public void onCollision(MovementEngine engine2)
 	{
-		Log.i("kurt_test", "Enemyfighter.onCollision() engine2: " + engine2.getWeaponName());
 		if (getWeaponName() != engine2.getWeaponName())
 		{
 			//on collision with player, player missile or player gun, kill fighter, show explosion 
@@ -49,7 +48,7 @@ public class EnemyFighter extends CircleEngine
 					int particleEndurance = (int)(Math.random() * Constants.EXPLOSION_ENDURANCE);
 					MovementEngine explosionParticle = new ExplosionParticle(particleDirection, particleDirection
 							, getX(), getY(), particleSpeed, 1, 1, 1, Constants.EXPLOSION_PARTICLE
-							, null, particleEndurance, 1); 
+							, null, particleEndurance, 1);
 					GameState._explosionParticleList.add(explosionParticle);
 				}
 			}

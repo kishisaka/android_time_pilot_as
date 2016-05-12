@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="C:\Users\test2\Documents\android_time_pilot_as\app\src\androidTest\res"/><source path="C:\Users\test2\Documents\android_time_pilot_as\app\build\generated\res\rs\androidTest\debug"/><source path="C:\Users\test2\Documents\android_time_pilot_as\app\build\generated\res\resValues\androidTest\debug"/></dataSet><mergedItems/></merger>
+<merger version="3"><dataSet config="main"><source path="C:\as-dev\Asteroids\app\src\androidTest\res"/><source path="C:\as-dev\Asteroids\app\build\generated\res\rs\androidTest\debug"/><source path="C:\as-dev\Asteroids\app\build\generated\res\resValues\androidTest\debug"/></dataSet><mergedItems/></merger>

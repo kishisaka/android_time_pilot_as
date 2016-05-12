@@ -64,6 +64,10 @@ public class PlayerFighter extends FreeEngine
 					// play death sound
 					AudioPlayer.playShipDeath();
 
+					//show explosion
+					MovementEngine explosionAnimated = new ExplosionBossAnimated(getX(), getY(), getCurrentSpeed(), getCurrentDirection());
+					GameState._weaponList.add(explosionAnimated);
+
 					// create particle explosion for shot down aircraft
 					// TODO move all explosion instances to utils.
 					for (int particleCount = 0; particleCount < Constants.EXPLOSION_PARTICLE_COUNT; particleCount++) {

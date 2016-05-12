@@ -9,7 +9,7 @@ public abstract class MovementEngine
 {
   boolean _destroyed = false;
   int _direction;
-  int _currentDirection;  
+  volatile int _currentDirection;
   double _turnMode;
   double _currentTurnMode;
   double _currentX;

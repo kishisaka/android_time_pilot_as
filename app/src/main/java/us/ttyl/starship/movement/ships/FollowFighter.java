@@ -11,6 +11,21 @@ import us.ttyl.starship.movement.MovementEngine;
  */
 public class FollowFighter extends FollowEngine
 {
+    private int mRotorRotationDeg = 0;
+
+    /**
+     * get the current rotor degrees if required. Only used for rotary wing enemy craft
+     * @return
+     */
+    public int getRotor() {
+        int tempRotorDeg = mRotorRotationDeg;
+        mRotorRotationDeg = mRotorRotationDeg + 23;
+        if (mRotorRotationDeg > 359) {
+            mRotorRotationDeg = 0;
+        }
+        return tempRotorDeg;
+    }
+
     public FollowFighter(int direction, int currentDirection,
                         double currentX, double currentY, double currentSpeed,
                         double maxSpeed, double acceleration, double turnMode, int name,
@@ -38,7 +53,10 @@ public class FollowFighter extends FollowEngine
 
                 // play death sound
                 AudioPlayer.playShipDeath();
+
                 // create particle explosion for shot down aircraft
+                MovementEngine explosionAnimated = new ExplosionAnimated(getX(), getY(), getCurrentSpeed(), getCurrentDirection());
+                GameState._weaponList.add(explosionAnimated);
                 for (int particleCount = 0; particleCount < Constants.EXPLOSION_PARTICLE_COUNT; particleCount++) {
                     int particleDirection = (int) (Math.random() * 360);
                     int particleSpeed = (int) (Math.random() * 10);

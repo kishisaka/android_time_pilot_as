@@ -3,6 +3,7 @@ package us.ttyl.asteroids;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,9 @@ import us.ttyl.starship.core.GameState;
  * Created by test2 on 9/13/2015.
  */
 public class TimefightersActivity  extends FragmentActivity {
+
+    private static String TAG = "TimeFighterActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,21 +104,21 @@ public class TimefightersActivity  extends FragmentActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new TimeFightersFragment()).commit();
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.container, new TimeFightersFragment()).commit();
+//        return false;
         return false;
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         // Register a listener for the sensor.
         super.onResume();
         try {
             AudioPlayer.resumeAll();
+            Log.d(TAG, "we are started");
         }
         catch(Exception e) {
-
         }
     }
 
@@ -124,10 +128,11 @@ public class TimefightersActivity  extends FragmentActivity {
         super.onPause();
         try {
             AudioPlayer.pauseAll();
+            Log.d(TAG, "we are stopped");
         }
         catch(Exception e) {
-
         }
+
     }
 
     /**
@@ -143,22 +148,6 @@ public class TimefightersActivity  extends FragmentActivity {
                                  Bundle savedInstanceState) {
             GameState.sScreenDesnity = getResources().getDisplayMetrics().density;
             View rootView = inflater.inflate(R.layout.fragment_main, container,
-                    false);
-            return rootView;
-        }
-
-
-    }
-
-    public static class TimeFightersTitleFragment extends Fragment {
-
-        public TimeFightersTitleFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.title, container,
                     false);
             return rootView;
         }

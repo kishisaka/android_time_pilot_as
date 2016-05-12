@@ -1,6 +1,8 @@
 
 package us.ttyl.starship.movement;
 
+import android.util.Log;
+
 import us.ttyl.starship.core.GameState;
 
 /**
