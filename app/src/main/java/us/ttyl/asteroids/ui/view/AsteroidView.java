@@ -497,7 +497,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 canvas.drawText("1-UP: " + GameState._playerScore, (int) (15 * density), (int) (70 * density), mTextColor);
 
                 // draw the frame rate
-                canvas.drawText("" + GameState.sFramerate, 500, 500, mTextColor);
+                if (GameState.sShowFrameRate == true) {
+                    canvas.drawText("" + GameState.sFramerate, 500, 500, mTextColor);
+                }
 
                 // draw the player life count
                 int counter = (getResources().getDisplayMetrics().widthPixels / density) - (50);
@@ -552,7 +554,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     GameState.sFrame = 1;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                // e.printStackTrace();
             }
         }
 

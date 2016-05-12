@@ -20,6 +20,8 @@ public class GameState
 	public static boolean sIsFireEnemyGuns = true;
 	//turn on player invulnerability (testing)
 	public static boolean sIsInvulnerable = false;
+	//turn on main loop frame rate
+	public static boolean sShowFrameRate = false;
 	
 	// guns, missiles, player ship, enemy ships, parachutes, etc.
 	public static Vector <MovementEngine> _weaponList = new Vector<MovementEngine>();
