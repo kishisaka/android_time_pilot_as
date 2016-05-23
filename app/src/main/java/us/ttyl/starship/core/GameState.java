@@ -24,13 +24,13 @@ public class GameState
 	public static boolean sShowFrameRate = false;
 	
 	// guns, missiles, player ship, enemy ships, parachutes, etc.
-	public static Vector <MovementEngine> _weaponList = new Vector<MovementEngine>();
+	public static List <MovementEngine> _weaponList = new ArrayList<MovementEngine>();
 	//explosion particles
-	public static Vector <MovementEngine> _explosionParticleList = new Vector<MovementEngine>();
+	public static List <MovementEngine> _explosionParticleList = new ArrayList<MovementEngine>();
 	//small clouds
-	public static Vector <MovementEngine> _cloudListSmall = new Vector<MovementEngine>();
+	public static List <MovementEngine> _cloudListSmall = new ArrayList<MovementEngine>();
 	//large clouds
-	public static Vector <MovementEngine> _cloudListLarge = new Vector<MovementEngine>();
+	public static List <MovementEngine> _cloudListLarge = new ArrayList<MovementEngine>();
 
 	//other images
 	public static Bitmap _smallParachute;
@@ -106,6 +106,9 @@ public class GameState
 
 	public static int sCurrentGameState = Constants.CURRENT_GAME_STATE_TITLE;
 
+	public static Score _highScore;
+	public static List <Score> _highScores;
+
 	public static void clearAll() {
 		_weaponList.clear();
 		_cloudListLarge.clear();
@@ -121,6 +124,7 @@ public class GameState
 		_playerScore = 0;
 		_playerBulletsShot = 0;
 		_playerEnemyShot = 0;
+
 	}
 }
 

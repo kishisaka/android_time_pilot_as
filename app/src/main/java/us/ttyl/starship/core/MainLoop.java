@@ -3,6 +3,7 @@ package us.ttyl.starship.core;
 import android.content.Context;
 import android.util.Log;
 
+import us.ttyl.asteroids.R;
 import us.ttyl.starship.env.EnvBuilder;
 import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.BossBullet;
@@ -47,7 +48,7 @@ public class MainLoop extends Thread
 		long startTimeEnemyMissile = startTime;
 		
 		//start player gun sound, this will run till player dies
-		if (GameState._weaponList.get(0).getWeaponName()==(Constants.PLAYER) && GameState._weaponList.get(0).getDestroyedFlag() == false)
+		if (GameState._weaponList.size() > 0 && GameState._weaponList.get(0).getWeaponName()==(Constants.PLAYER) && GameState._weaponList.get(0).getDestroyedFlag() == false)
 		{
 			AudioPlayer.resumePlayerGun();
 		}
@@ -68,28 +69,31 @@ public class MainLoop extends Thread
 					int random = (int)(Math.random() * 100);
 					if (random > 30)
 					{
-						EnvBuilder.generateSmallClouds(GameState._weaponList.get(0).getX(), GameState._weaponList.get(0).getY(), GameState._weaponList.get(0).getCurrentDirection());
+						EnvBuilder.generateSmallClouds(GameState._weaponList.get(0).getX(), GameState._weaponList.get(0).getY(), GameState._weaponList.get(0).getCurrentDirection(), _density);
 					}
 					else
 					{
-						EnvBuilder.generateLargeCloud(GameState._weaponList.get(0).getX(), GameState._weaponList.get(0).getY(), GameState._weaponList.get(0).getCurrentDirection());
+						EnvBuilder.generateLargeCloud(GameState._weaponList.get(0).getX(), GameState._weaponList.get(0).getY(), GameState._weaponList.get(0).getCurrentDirection(), _density);
 					}
 				}
 
 				if (GameState.sShownLevelName == false && GameState.mWaitTimeBetweenLevels == false)
 				{
-					// generateTextLine(String text, int speed, int endurance, int x, int y, int direction)
-					EnvBuilder.generateTextLine(GameUtils.getGameLevelName(mContext.getResources()),
-							2, 300, GameState._weaponList.get(0).getX(),
-							GameState._weaponList.get(0).getY() + 200, 180);
-					GameState.sShownLevelName = true;
+					if (GameState._weaponList.isEmpty() == false && GameState._weaponList.get(0).getWeaponName() == Constants.PLAYER) {
+						// generateTextLine(String text, int speed, int endurance, int x, int y, int direction)
+						String title = GameUtils.getGameLevelName(mContext.getResources());
+						EnvBuilder.generateTextLine(title,
+								2, 300, GameState._weaponList.get(0).getX(),
+								GameState._weaponList.get(0).getY() + 200, 180);
+						GameState.sShownLevelName = true;
+					}
 				}
 				//generate an enemy follow fighter.
 				int enemyCount = GameUtils.getTypeCount(Constants.ENEMY_FIGHTER, GameState._weaponList);
 				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - startTime) > 30 && enemyCount < 10)
 				{
 					EnvBuilder.generateEnemy(GameState._weaponList.get(0).getX()
-							, GameState._weaponList.get(0).getY(), true);
+							, GameState._weaponList.get(0).getY(), true, _density);
 					startTime = currentTime;
 				}
 				
@@ -199,11 +203,14 @@ public class MainLoop extends Thread
 				if (GameState._weaponList.get(0).getDestroyedFlag() == false && (GameState._weaponList.get(0).getWeaponName()==(Constants.PLAYER)))
 				{
 					long currentTimeGun = currentTime;
-					if (currentTimeGun - startTimeGun > 30)
+					if (currentTimeGun - startTimeGun > 25)
 					{
 						int gunDirection = GameState._weaponList.get(0).getCurrentDirection() + _gunModifier;
 						if (gunDirection > 360) {
 							gunDirection = gunDirection - 360;
+						}
+						if (gunDirection < 0) {
+							gunDirection = gunDirection + 360;
 						}
 						startTimeGun = currentTimeGun;
 						MovementEngine bullet = new Bullet(gunDirection, gunDirection
@@ -274,7 +281,7 @@ public class MainLoop extends Thread
 		    	{
 					try
 					{
-						if ((i > 0 && GameUtils.getRange(GameState._weaponList.get(0), GameState._weaponList.get(i)) >((GameState.sObjectCreationRadius * _density) + 100))
+						if ((i > 0 && GameUtils.getRange(GameState._weaponList.get(0), GameState._weaponList.get(i)) >((GameState.sObjectCreationRadius * _density) + 100 * _density))
 								|| (GameState._weaponList.get(i).getDestroyedFlag() == true))
 						{
 							GameState._weaponList.remove(i);
@@ -291,7 +298,7 @@ public class MainLoop extends Thread
 				{
 					try
 					{
-						if (( GameUtils.getRange(GameState._weaponList.get(0), GameState._explosionParticleList.get(i)) > ((GameState.sObjectCreationRadius)+ 100))
+						if (( GameUtils.getRange(GameState._weaponList.get(0), GameState._explosionParticleList.get(i)) > ((GameState.sObjectCreationRadius)+ 100 * _density))
 								|| (GameState._explosionParticleList.get(i).getDestroyedFlag() == true))
 						{
 							GameState._explosionParticleList.remove(i);
@@ -308,7 +315,7 @@ public class MainLoop extends Thread
 				{
 					try
 					{
-						if (GameUtils.getRange(GameState._weaponList.get(0), GameState._cloudListLarge.get(i)) > (GameState.sObjectCreationRadius + 100))
+						if (GameUtils.getRange(GameState._weaponList.get(0), GameState._cloudListLarge.get(i)) > (GameState.sObjectCreationRadius + 250 * _density))
 						{
 							GameState._cloudListLarge.remove(i);
 						}
@@ -324,7 +331,7 @@ public class MainLoop extends Thread
 				{
 					try
 					{
-						if (GameUtils.getRange(GameState._weaponList.get(0), GameState._cloudListSmall.get(i)) > (GameState.sObjectCreationRadius + 100))
+						if (GameUtils.getRange(GameState._weaponList.get(0), GameState._cloudListSmall.get(i)) > (GameState.sObjectCreationRadius + 250 * _density))
 						{
 							GameState._cloudListSmall.remove(i);
 						}
@@ -361,6 +368,7 @@ public class MainLoop extends Thread
 			}
 		}
 		Log.i("kurt_test", "main loop ended, shutting down");
+		GameState.clearAll();
 	}       
 	
 	/**
@@ -371,6 +379,7 @@ public class MainLoop extends Thread
 		if (_gunModifier == 0)
 		{
 			_gunModifier = (int)(-1 * _gunModifierSwivel * GameState._density);
+
 		}
 		else
 		{

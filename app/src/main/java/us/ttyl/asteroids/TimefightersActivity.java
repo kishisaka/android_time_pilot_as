@@ -1,5 +1,6 @@
 package us.ttyl.asteroids;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import us.ttyl.starship.core.AudioPlayer;
+import us.ttyl.starship.core.Constants;
+import us.ttyl.starship.core.DBHelper;
 import us.ttyl.starship.core.GameState;
 
 /**
@@ -25,11 +28,6 @@ public class TimefightersActivity  extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new TimeFightersFragment()).commit();
-		}
     }
 
     @Override
@@ -114,6 +112,11 @@ public class TimefightersActivity  extends FragmentActivity {
     public void onResume() {
         // Register a listener for the sensor.
         super.onResume();
+        DBHelper helper = new DBHelper(this);
+        GameState._highScore = helper.getTopScore();
+        GameState._highScores = helper.getTop10Scores();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, new TimeFightersFragment()).commit();
         try {
             AudioPlayer.resumeAll();
             Log.d(TAG, "we are started");

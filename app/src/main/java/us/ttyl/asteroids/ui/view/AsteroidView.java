@@ -1,10 +1,12 @@
 package us.ttyl.asteroids.ui.view;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -12,14 +14,20 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import us.ttyl.asteroids.R;
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.Constants;
+import us.ttyl.starship.core.DBHelper;
 import us.ttyl.starship.core.GameState;
 import us.ttyl.starship.core.GameUtils;
 import us.ttyl.starship.core.MainLoop;
+import us.ttyl.starship.core.Score;
+import us.ttyl.starship.env.EnvBuilder;
 import us.ttyl.starship.listener.GameStateListener;
 import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.Bullet;
@@ -45,7 +53,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
     int mSpecialWeaponY = 0;
 
     int _scale = 1;
-    int _selected = 0;
+    static final int SELECTED = 0;
 
     long mMissileLastLaunch = 0;
 
@@ -63,11 +71,19 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             if (GameState._lives >= 0) {
                 MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2d, 2d, 5, .1d, 0, Constants.PLAYER, -1, this);
                 player.setMissileCount(Constants.START_MISSILE_COUNT);
-                GameState._weaponList.set(0, player);
+                if (GameState._weaponList.isEmpty() == false) {
+                    GameState._weaponList.set(0, player);
+                    GameState.sShownLevelName = false;
+                }
                 AudioPlayer.resumePlayerGun();
             } else {
                 GameState._weaponList.remove(0);
                 GameState.sParachutePickupCount = 0;
+                GameState.sShownLevelName = false;
+                DBHelper helper = new DBHelper(getContext());
+                helper.writeScore(GameState._playerScore, GameState.sCurrentLevel, GameState.sWaveLevel);
+                GameState._highScore = helper.getTopScore();
+                GameState._highScores = helper.getTop10Scores();
             }
 
             //remove all enemy guns and missiles
@@ -91,15 +107,20 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
     public AsteroidView(Context context, AttributeSet attr) {
         super(context);
         SurfaceHolder holder = getHolder();
-        holder.addCallback(this);
-        // mBackground = BitmapFactory.decodeResource(getResources(), R.drawable.helicopter);
+        if (holder != null) {
+            holder.addCallback(this);
+            // mBackground = BitmapFactory.decodeResource(getResources(), R.drawable.helicopter);
 
-        // do game initialization (load sprites, start sounds, etc.)
-        init(context);
+            // do game initialization (load sprites, start sounds, etc.)
+            init(context);
 
-        // create view thread only; it will be started in surfaceCreated()
-        mAsteroidViewThread = new AsteroidViewThread(context, holder);
-        setFocusable(true); // make sure we get key events 
+            // create view thread only; it will be started in surfaceCreated()
+            mAsteroidViewThread = new AsteroidViewThread(context, holder);
+            setFocusable(true); // make sure we get key events
+        }
+        else {
+            Log.e(TAG, "holder is null");
+        }
     }
 
     /**
@@ -111,6 +132,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 
         GameState.clearAll();
 
+        long startTime = System.currentTimeMillis();
         //initialize sprite array
         GameState._cloudSprites = GameUtils.getCloudTiles(context);
         GameState._bossBullet = GameUtils.getBossBullet(context);
@@ -149,17 +171,18 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             GameState._cloudListSmall.clear();
             GameState._explosionParticleList.clear();
         }
-        MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2d, 2d, 5, .1d, 0, Constants.PLAYER, -1, mGameStateListener);
-        player.setMissileCount(Constants.START_MISSILE_COUNT);
-        GameState._weaponList.add(player);
+        // MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2d, 2d, 5, .1d, 0, Constants.PLAYER, -1, mGameStateListener);
+        EnvBuilder.generateEnemy(0, 0, false, getResources().getDisplayMetrics().density);
+        // player.setMissileCount(Constants.START_MISSILE_COUNT);
+        // GameState._weaponList.add(player);
 
         // start the game engine!
         float density = getResources().getDisplayMetrics().density;
         int height = getResources().getDisplayMetrics().heightPixels;
         int width = getResources().getDisplayMetrics().widthPixels;
-        int radius = (width - height) / 2;
-        GameState.sObjectCreationRadius = GameUtils.getRangeBetweenCoords(width / 2, height / 2, 0, (width - height) / 2);
-        new MainLoop(density, getContext());
+        GameState.sObjectCreationRadius = (int)(GameUtils.getRangeBetweenCoords(width / 2, height / 2, 0, (width - height) / 2) / density);
+        Log.i("kurt_test" , "object creation radius: " + GameState.sObjectCreationRadius);
+        Log.i("kurt_test" , "init before main loop start time: " + (System.currentTimeMillis() - startTime));
 
         //initialize deg map (reversed)
         _degrev = new int[360];
@@ -190,6 +213,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         Paint mMissileSmoke2 = new Paint();
         Paint mMissileSmoke3 = new Paint();
         Paint mTextColor = new Paint();
+        Paint mHighScoreColor = new Paint();
         Paint mControllerColor = new Paint();
         Paint mParticleExplosionBoss = new Paint();
         Paint mBorderColor = new Paint();
@@ -213,6 +237,11 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             mTextColor.setColor(Color.WHITE);
             mTextColor.setTextSize(20 * context.getResources().getDisplayMetrics().scaledDensity);
             mTextColor.setShadowLayer(2f, 2f, 2f, Color.GRAY);
+
+            mHighScoreColor.setColor(Color.WHITE);
+            mHighScoreColor.setTextSize(15 * context.getResources().getDisplayMetrics().scaledDensity);
+            mHighScoreColor.setShadowLayer(2f, 2f, 2f, Color.GRAY);
+
             mControllerColor.setColor(0x7f00988a);
             mBorderColor.setColor(Color.BLACK);
             mTextItemColor.setColor(Color.DKGRAY);
@@ -226,14 +255,11 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             //draw the player window to the screen
             Canvas canvas = null;
 
-            //start player gun sound here.
-            AudioPlayer.playPlayerGun();
-
             while (GameState.mIsRunning == true) {
                 //draw to the onscreen buffer using onDraw(), lock the canvas first
                 try {
                     if (mSurfaceHolder != null) {
-                        canvas = mSurfaceHolder.lockCanvas(null);
+                        canvas = mSurfaceHolder.lockCanvas();
                         if (canvas != null) {
                             synchronized (canvas) {
                                 doDraw(canvas);
@@ -246,10 +272,28 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     if (canvas != null) {
                         //post the canvas to the surface
                         mSurfaceHolder.unlockCanvasAndPost(canvas);
+
+                        // this is weird, we need to wait for a bit for post to finish before we
+                        // lock the canvas and write to it. See stack overflow below for possible explanation.
+                        // http://stackoverflow.com/questions/34305937/anr-in-surfaceview-on-specific-devices-only-the-only-fix-is-a-short-sleep-tim
+                        // if we don't do this, app will lock up on restart for a while. on Nexus 5x it may never start again. Samsung devices don't
+                        // seem to have this problem. Seems like this is happening only on > level 19 api devices (post kitkat)
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+                            try {
+                                sleep(0, 1);
+                            } catch (Exception e) {
+                                Log.e(TAG, e.getMessage(), e);
+                            }
+                        }
                     }
                 }
             }
             Log.d("kurt_test", "ending asteroid view thread");
+        }
+
+        @Override
+        public void setContextClassLoader(ClassLoader cl) {
+            super.setContextClassLoader(cl);
         }
 
         /**
@@ -297,7 +341,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             //draw the objects
             //set center target
             try {
-                me = GameState._weaponList.elementAt(_selected);
+                me = GameState._weaponList.get(SELECTED);
 
                 double centerX = (int) me.getX();
                 double centerY = (int) me.getY();
@@ -305,9 +349,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 int centerXCanvas = (int) (mAppContext.getResources().getDisplayMetrics().widthPixels / 2);
                 int centerYCanvas = (int) (mAppContext.getResources().getDisplayMetrics().heightPixels / 2);
 
-                // draw the large clouds
+                // draw the small clouds
                 for (int i = 0; i < GameState._cloudListSmall.size(); i++) {
-                    me = GameState._cloudListSmall.elementAt(i);
+                    me = GameState._cloudListSmall.get(i);
                     double x = GameUtils.getA(centerX, me.getX()) / _scale;
                     double y = GameUtils.getB(centerY, me.getY()) / _scale;
                     double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
@@ -317,18 +361,16 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.CLOUD_SMALL), (int) ((centerXCanvas + x) / 1.3), (int) ((centerYCanvas - y) / 1.3), null);
                 }
 
-                me = GameState._weaponList.elementAt(_selected);
+                me = GameState._weaponList.get(SELECTED);
 
-                //draw center target (selected)
                 int density = (int) getContext().getResources().getDisplayMetrics().density;
 
                 int pixelSize = 3 * density;
                 int misslePixel = 2 * density;
 
-                //draw all other targets relative to center target, don't draw center target
                 for (int i = 0; i < GameState._weaponList.size(); i++) {
                     try {
-                        me = GameState._weaponList.elementAt(i);
+                        me = GameState._weaponList.get(i);
                         double x = GameUtils.getA(centerX, me.getX()) / _scale;
                         double y = GameUtils.getB(centerY, me.getY()) / _scale;
                         double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
@@ -434,13 +476,14 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                             canvas.drawText(((TextItemLine) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemLineColor);
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
+                        Log.e(TAG, e.getMessage(), e);
                         // do nothing, simply continue to next weapon. this item might have already been destroyed by main loop
                     }
                 }
 
-                // draw the small clouds
+                // draw the large clouds
                 for (int i = 0; i < GameState._cloudListLarge.size(); i++) {
-                    me = GameState._cloudListLarge.elementAt(i);
+                    me = GameState._cloudListLarge.get(i);
                     double x = GameUtils.getA(centerX, me.getX()) / _scale;
                     double y = GameUtils.getB(centerY, me.getY()) / _scale;
                     double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
@@ -452,7 +495,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 
                 // draw all explosion particles (explosions, smoke, etc)
                 for (int i = 0; i < GameState._explosionParticleList.size(); i++) {
-                    me = GameState._explosionParticleList.elementAt(i);
+                    me = GameState._explosionParticleList.get(i);
                     double x = GameUtils.getA(centerX, me.getX()) / _scale;
                     double y = GameUtils.getB(centerY, me.getY()) / _scale;
                     double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
@@ -495,6 +538,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 
                 // draw the score
                 canvas.drawText("1-UP: " + GameState._playerScore, (int) (15 * density), (int) (70 * density), mTextColor);
+                if (GameState._highScore != null) {
+                    canvas.drawText("High Score: " + GameState._highScore.getScore(), (int) (15 * density), (int) (100 * density), mTextColor);
+                }
 
                 // draw the frame rate
                 if (GameState.sShowFrameRate == true) {
@@ -544,9 +590,70 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 mSpecialWeaponX = (int) (getContext().getResources().getDisplayMetrics().widthPixels * .85);
                 mSpecialWeaponY = getContext().getResources().getDisplayMetrics().heightPixels - (height / 2);
                 canvas.drawCircle(mSpecialWeaponX, mSpecialWeaponY, specialWeaponSize, mControllerColor);
+                int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getWidth();
+                int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getHeight();
+                canvas.drawBitmap(GameUtils.getImageType(90, Constants.MISSILE)
+                        , (int) (mSpecialWeaponX - (spriteXSize / 2))
+                        , (int) (mSpecialWeaponY - (spriteYSize / 2))
+                        , null);
 
+                // game over, game title and high score list
                 if (GameState._weaponList.get(0).getWeaponName() != (Constants.PLAYER)) {
-                    canvas.drawText("Game Over", centerXCanvas - (40 * density), centerYCanvas - (40 * density), mTextColor);
+                    canvas.drawText(getContext().getString(R.string.timefighters)
+                            , centerXCanvas - (100 * density)
+                            , centerYCanvas - (140 * density)
+                            , mTextColor);
+                    if (GameState._highScores != null) {
+                        int y = centerYCanvas - (100 * density);
+
+                        canvas.drawText(getResources().getString(R.string.score)
+                                , centerXCanvas - (140 * density)
+                                , y
+                                , mHighScoreColor);
+                        canvas.drawText(getResources().getString(R.string.level)
+                                , centerXCanvas - (140 * density) + (80 * density)
+                                , y
+                                , mHighScoreColor);
+                        canvas.drawText(getResources().getString(R.string.wave)
+                                , centerXCanvas - (140 * density) + (130 * density)
+                                , y
+                                , mHighScoreColor);
+                        canvas.drawText(getResources().getString(R.string.time)
+                                , centerXCanvas - (140 * density) + (180 * density)
+                                , y
+                                , mHighScoreColor);
+                        y = y + (20 * density);
+                        for (Score score : GameState._highScores) {
+                            canvas.drawText("" + score.getScore()
+                                    , centerXCanvas - (140 * density)
+                                    , y
+                                    , mHighScoreColor);
+                            canvas.drawText("" + GameUtils.getGameLevelNameString(getResources(), score.getLevel())
+                                    , centerXCanvas - (140 * density) + (80 * density)
+                                    , y
+                                    , mHighScoreColor);
+                            canvas.drawText("" + (score.getWave() + 1)
+                                    , centerXCanvas - (140 * density) + (145 * density)
+                                    , y
+                                    , mHighScoreColor);
+                            Date date = new Date(score.getTimeStamp());
+                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
+                            canvas.drawText(sdf.format(date)
+                                    , centerXCanvas - (140 * density) + (180 * density)
+                                    , y
+                                    , mHighScoreColor);
+                            y = y + (20 * density);
+                        }
+                    }
+                    canvas.drawText(getContext().getString(R.string.title)
+                            , centerXCanvas - (130 * density)
+                            , centerYCanvas + (130 * density)
+                            , mTextColor);
+                    canvas.drawText(getContext().getString(R.string.gameover)
+                            , centerXCanvas - (60 * density)
+                            , centerYCanvas + (160 * density)
+                            , mTextColor);
+
                 }
                 //increment frame counter
                 GameState.sFrame = GameState.sFrame + 1;
@@ -554,7 +661,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     GameState.sFrame = 1;
                 }
             } catch (Exception e) {
-                // e.printStackTrace();
+                Log.e(TAG, e.getMessage(), e);
             }
         }
 
@@ -574,6 +681,8 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             try
             {
                 mAsteroidViewThread.start();
+                new MainLoop(getContext().getResources().getDisplayMetrics().density, getContext());
+                GameState.sShownLevelName = false;
             }
             catch(Exception e)
             {
@@ -621,7 +730,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 				}
 
 			} catch (ArrayIndexOutOfBoundsException e) {
-				// ignore and continue;
+                Log.e(TAG, e.getMessage(), e);
 			}
 		}
 		
@@ -651,6 +760,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 			}
 			catch(ArrayIndexOutOfBoundsException e)
 			{
+                e.printStackTrace();
 				// ignore and continue;
 			}
 				
@@ -707,7 +817,12 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     GameState.sStartTimeBoss = System.currentTimeMillis();
 
                     //resume player gun sound
-					AudioPlayer.resumePlayerGun();
+					// AudioPlayer.resumePlayerGun();
+
+                    //start player gun sound here.
+                    //if (GameState._weaponList.get(0).getWeaponName() == Constants.PLAYER) {
+                        AudioPlayer.playPlayerGun();
+                    //}
 
 					//wipe the weapon list out
 					GameState._weaponList.clear();

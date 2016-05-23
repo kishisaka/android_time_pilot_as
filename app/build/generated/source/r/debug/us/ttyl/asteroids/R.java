@@ -1143,14 +1143,24 @@ containing a value of this type.
         public static final int action_settings=0x7f06000d;
         public static final int app_name=0x7f06000e;
         public static final int enemy_fire=0x7f06000f;
-        public static final int hello_world=0x7f060010;
+        public static final int gameover=0x7f060010;
         public static final int invulnerability=0x7f060011;
-        public static final int off=0x7f060012;
-        public static final int on=0x7f060013;
-        public static final int time_1917=0x7f060014;
-        public static final int time_1943=0x7f060015;
-        public static final int time_1972=0x7f060016;
-        public static final int time_1991=0x7f060017;
+        public static final int level=0x7f060012;
+        public static final int off=0x7f060013;
+        public static final int on=0x7f060014;
+        public static final int score=0x7f060015;
+        public static final int string_1917=0x7f060016;
+        public static final int string_1941=0x7f060017;
+        public static final int string_1972=0x7f060018;
+        public static final int string_1991=0x7f060019;
+        public static final int time=0x7f06001a;
+        public static final int time_1917=0x7f06001b;
+        public static final int time_1943=0x7f06001c;
+        public static final int time_1972=0x7f06001d;
+        public static final int time_1991=0x7f06001e;
+        public static final int timefighters=0x7f06001f;
+        public static final int title=0x7f060020;
+        public static final int wave=0x7f060021;
     }
     public static final class style {
         /**  API 11 theme customizations can go here. 
