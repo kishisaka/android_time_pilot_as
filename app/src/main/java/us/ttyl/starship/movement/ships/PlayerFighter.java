@@ -99,7 +99,7 @@ public class PlayerFighter extends FreeEngine
 									mGameStateListener.onPlayerDied();
 									mWaiting = false;
 								} catch (InterruptedException ie) {
-									// ignore and continue!
+									Log.e(TAG, ie.getMessage(), ie);
 								}
 							}
 						});

@@ -1,5 +1,7 @@
 package us.ttyl.starship.movement.ships;
 
+import android.util.Log;
+
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
@@ -14,6 +16,8 @@ import us.ttyl.starship.movement.MovementEngine;
  */
 public class Parachute extends LineEngine
 {
+	private static final String TAG = "LineEngine";
+
 	public Parachute(int direction, int currentDirection, double currentX,
 			double currentY, double currentSpeed, double maxSpeed,
 			double acceleration, int turnMode, int name, MovementEngine origin,
@@ -62,7 +66,7 @@ public class Parachute extends LineEngine
 							Thread.sleep(3500);
 							GameState.mWaitTimeBetweenLevels = false;
 						} catch (Exception e) {
-							// do nothing, continue
+							Log.e(TAG, e.getMessage(), e);
 						}
 					}
 				});

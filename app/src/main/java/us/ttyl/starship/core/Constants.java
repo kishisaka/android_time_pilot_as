@@ -55,4 +55,7 @@ public class Constants {
 	public static int CURRENT_GAME_STATE_TITLE = 1;
 	public static int CURRENT_GAME_STATE_RUNNING = 2;
 
+	// high score stuff
+	public static String HIGH_SCORE = "high_score";
+
 }

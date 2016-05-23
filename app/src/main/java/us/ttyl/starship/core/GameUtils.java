@@ -183,7 +183,7 @@ public class GameUtils {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
         }
         return tileList;
     }
@@ -497,7 +497,7 @@ public class GameUtils {
             tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.other_cloud_small));
             tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.other_cloud_big));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
         }
         return tileList;
     }
@@ -664,7 +664,7 @@ public class GameUtils {
     private static List<Bitmap> rotateBitmaps(Context context, Bitmap bitmap) {
         List<Bitmap> bitmapList = new ArrayList<Bitmap>();
         for(int i = 360; i > -1; i --) {
-            Log.i("kurt_test", "rotating bitmap: " + i);
+            // Log.i("kurt_test", "rotating bitmap: " + i);
             bitmapList.add(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix(bitmap, i), false));
         }
         bitmap.recycle();
@@ -675,7 +675,7 @@ public class GameUtils {
     private static List<Bitmap> rotateRotorBitmaps(Context context, Bitmap bitmap) {
         List<Bitmap> bitmapList = new ArrayList<Bitmap>();
         for(int i = 10; i > -1; i --) {
-            Log.i("kurt_test", "rotating bitmap: " + i);
+            // Log.i("kurt_test", "rotating bitmap: " + i);
             bitmapList.add(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix(bitmap, i), false));
         }
         bitmap.recycle();
@@ -1009,6 +1009,23 @@ public class GameUtils {
         switch (GameState.sCurrentLevel)
         {
             case 1:
+                return getGameLevelName(res, 1);
+            case 2:
+                return getGameLevelName(res, 2);
+            case 3:
+                return getGameLevelName(res, 3);
+            case 4:
+                return getGameLevelName(res, 4);
+            default:
+                return "";
+        }
+    }
+
+    public static String getGameLevelName(Resources res, int level)
+    {
+        switch (level)
+        {
+            case 1:
                 return res.getString(R.string.time_1917);
             case 2:
                 return res.getString(R.string.time_1943);
@@ -1021,5 +1038,21 @@ public class GameUtils {
         }
     }
 
+    public static String getGameLevelNameString(Resources res, int level)
+    {
+        switch (level)
+        {
+            case 1:
+                return res.getString(R.string.string_1917);
+            case 2:
+                return res.getString(R.string.string_1941);
+            case 3:
+                return res.getString(R.string.string_1972);
+            case 4:
+                return res.getString(R.string.string_1991);
+            default:
+                return "";
+        }
+    }
 
 }

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Asteroids</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Time Fighters!</string>
     <string name="action_settings">Settings</string>
     <string name="enemy_fire">turn %s enemy fire</string>
     <string name="invulnerability">turn %s invulnerability</string>
@@ -12,5 +11,16 @@
     <string name="time_1943">Great Britan 1941 AD</string>
     <string name="time_1972">Vietnam 1972 AD</string>
     <string name="time_1991">Persian Gulf 1991 AD</string>
+    <string name="title">Press missile button to start!</string>
+    <string name="gameover">Game Over</string>
+    <string name="timefighters">Play Time Fighters!</string>
+    <string name="level">level</string>
+    <string name="time">time</string>
+    <string name="score">score</string>
+    <string name="wave">wave</string>
+    <string name="string_1917">1917</string>
+    <string name="string_1941">1941</string>
+    <string name="string_1972">1972</string>
+    <string name="string_1991">1991</string>
 
 </resources>

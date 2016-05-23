@@ -1,5 +1,7 @@
 package us.ttyl.starship.movement;
 
+import android.util.Log;
+
 /**
  * all engines extend this and override the movement methods. 
  * @author kurt ishisaka
@@ -7,6 +9,8 @@ package us.ttyl.starship.movement;
  */
 public abstract class MovementEngine
 {
+  private static String TAG = "MovementEngine";
+
   boolean _destroyed = false;
   int _direction;
   volatile int _currentDirection;
@@ -152,7 +156,7 @@ public abstract class MovementEngine
       }
       catch (Exception e)
       {
-    	  e.printStackTrace();
+        Log.e(TAG, e.getMessage(), e);
       }
   }
 

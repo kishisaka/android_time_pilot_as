@@ -31,8 +31,17 @@ public class FollowFighter extends FollowEngine
                         double maxSpeed, double acceleration, double turnMode, int name,
                         int endurance) {
         super(direction, currentDirection, currentX, currentY, currentSpeed, maxSpeed,
-                acceleration, 1, name, GameState._weaponList.get(0),null, -1);
+                acceleration, 1, name, FollowFighter.getPlayer() ,null, -1);
         // TODO Auto-generated constructor stub
+    }
+
+    public static MovementEngine getPlayer() {
+        if (GameState._weaponList.isEmpty() ) {
+            return null;
+        }
+        else {
+            return GameState._weaponList.get(0);
+        }
     }
 
     @Override
