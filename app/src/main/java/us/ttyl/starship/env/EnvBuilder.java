@@ -46,15 +46,15 @@ public class EnvBuilder
 	 * @param turnmode
 	 * @param speed
 	 */
-	private static void generateShipBoss(double playerPositionX, double playerPositionY, int turnmode, float speed)
+	private static void generateShipBoss(double playerPositionX, double playerPositionY, int turnmode, float speed, float density)
 	{
 		//determine direction of boss
 		int direction = 180;
-		int xOffset = GameState.sObjectCreationRadius;
+		int xOffset = (int)(GameState.sObjectCreationRadius + (100 * density));
 		if (Math.random() * 100 > 50)
 		{
 			direction = 0;
-			xOffset = -GameState.sObjectCreationRadius;
+			xOffset = -1 * (xOffset);
 		}
 
 		if (GameUtils.getTypeCount(Constants.ENEMY_BOSS, GameState._weaponList) <= 0)
@@ -67,22 +67,7 @@ public class EnvBuilder
 	}
 
 	public static int generateDirection() {
-		int track = 0;
-		int random = (int)((Math.random()) * 4);
-		switch (random) {
-			case 1:
-				track = 0;
-				break;
-			case 2:
-				track = 180;
-				break;
-			case 3:
-				track = 90;
-				break;
-			case 4:
-				track = 270;
-				break;
-		}
+		int track = (int)((Math.random()) * 360);
 		return track;
 	}
 
@@ -101,11 +86,11 @@ public class EnvBuilder
 		generateShip((int) playerPositionX + coord[0], (int) playerPositionY + coord[1], 0, speed, follow);
 	}
 	
-	public static void generateEnemyBoss(double playerPositionX, double playerPositionY)
+	public static void generateEnemyBoss(double playerPositionX, double playerPositionY, float density)
 	{
 		// the enemy boss
 		float speed = GameUtils.getPlaneSpeed(Constants.ENEMY_BOSS);
-		generateShipBoss((int) playerPositionX, (int) playerPositionY, 1, speed);
+		generateShipBoss((int) playerPositionX, (int) playerPositionY, 1, speed, density);
 	}
 	
 	/**
@@ -118,13 +103,13 @@ public class EnvBuilder
 	{		
 		// the cloud
 		int track = ((int)(Math.random() * 359));
-		double[] coord = GameUtils.getCoordsGivenTrackAndDistance(track, GameState.sObjectCreationRadius + (int)(250 * density));
+		double[] coord = GameUtils.getCoordsGivenTrackAndDistance(track, GameState.sObjectCreationRadius + (int)(Constants.SMALL_CLOUD_OFFSET * density));
 		int direction = 0;
 		if (Math.random() * 100 > 50)
 		{
 			direction = 180;
 		}
-		double speed = 0;
+		double speed = (Math.random() * Constants.SMALL_CLOUD_SPEED) + Constants.SMALL_CLOUD_SPEED;
 		GameState._cloudListSmall.add(new Cloud(direction, direction, coord[0] + playerPositionX
 				, coord[1] + playerPositionY, speed
 				, speed, .1d, 0, Constants.CLOUD_SMALL, null, -1, 1));
@@ -140,13 +125,13 @@ public class EnvBuilder
 	{
 		// the cloud
 		int track = ((int)(Math.random() * 359));
-		double[] coord = GameUtils.getCoordsGivenTrackAndDistance(track, GameState.sObjectCreationRadius +  (int)(250 * density));
+		double[] coord = GameUtils.getCoordsGivenTrackAndDistance(track, GameState.sObjectCreationRadius +  (int)(Constants.LARGE_CLOUD_OFFSET * density));
 		int direction = 0;
 		if (Math.random() * 100 > 50)
 		{
 			direction = 180;
 		}
-		double speed = 0;
+		double speed = (Math.random() * Constants.LARGE_CLOUD_SPEED) + Constants.LARGE_CLOUD_SPEED;
 		GameState._cloudListLarge.add(new Cloud(direction, direction, coord[0] + playerPositionX
 				, coord[1] + playerPositionY, speed
 				, speed, .1d, 0, Constants.CLOUD_BIG, null, -1, 1));

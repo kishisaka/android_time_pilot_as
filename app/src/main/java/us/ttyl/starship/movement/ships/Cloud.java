@@ -1,5 +1,6 @@
 package us.ttyl.starship.movement.ships;
 
+import us.ttyl.starship.core.GameState;
 import us.ttyl.starship.movement.LineEngine;
 import us.ttyl.starship.movement.MovementEngine;
 

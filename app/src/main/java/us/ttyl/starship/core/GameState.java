@@ -109,6 +109,8 @@ public class GameState
 	public static Score _highScore;
 	public static List <Score> _highScores;
 
+	public static final int MAX_CLOUDS = 50;
+
 	public static void clearAll() {
 		_weaponList.clear();
 		_cloudListLarge.clear();

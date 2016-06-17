@@ -63,7 +63,7 @@ public class MainLoop extends Thread
 				int cloudCount = GameUtils.getTypeCount(Constants.CLOUD_BIG, GameState._cloudListLarge);
 				cloudCount = cloudCount + GameUtils.getTypeCount(Constants.CLOUD_SMALL, GameState._cloudListSmall);
 				long currentTimeClouds = currentTime;
-				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < 40)
+				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < GameState.MAX_CLOUDS)
 				{
 					startTimeClouds = currentTimeClouds;
 					int random = (int)(Math.random() * 100);
@@ -90,7 +90,7 @@ public class MainLoop extends Thread
 				}
 				//generate an enemy follow fighter.
 				int enemyCount = GameUtils.getTypeCount(Constants.ENEMY_FIGHTER, GameState._weaponList);
-				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - startTime) > 30 && enemyCount < 10)
+				if (GameState.mWaitTimeBetweenLevels == false && (currentTime - startTime) > 30 && enemyCount < GameUtils.getFighterCount())
 				{
 					EnvBuilder.generateEnemy(GameState._weaponList.get(0).getX()
 							, GameState._weaponList.get(0).getY(), true, _density);
@@ -103,7 +103,7 @@ public class MainLoop extends Thread
                         && bossCount < 1)
 				{
 					EnvBuilder.generateEnemyBoss(GameState._weaponList.get(0).getX()
-					 		, GameState._weaponList.get(0).getY());
+					 		, GameState._weaponList.get(0).getY(), _density);
                     GameState.sStartTimeBoss = currentTime;
 				}
 				
@@ -310,12 +310,12 @@ public class MainLoop extends Thread
 					}
 				}
 
-				//check cloud(large) list and remove if over 700 units away from the player
+				//check cloud(large) list and remove if over some units away from the player
 				for(int i = 0; i < GameState._cloudListLarge.size(); i ++)
 				{
 					try
 					{
-						if (GameUtils.getRange(GameState._weaponList.get(0), GameState._cloudListLarge.get(i)) > (GameState.sObjectCreationRadius + 250 * _density))
+						if (GameUtils.getRange(GameState._weaponList.get(0), GameState._cloudListLarge.get(i)) > (GameState.sObjectCreationRadius + Constants.LARGE_CLOUD_OFFSET * _density))
 						{
 							GameState._cloudListLarge.remove(i);
 						}
@@ -326,12 +326,12 @@ public class MainLoop extends Thread
 					}
 				}
 
-				//check cloud(small) list if so and remove if 700 units away from the player
+				//check cloud(small) list if so and remove if over some units away from the player
 				for(int i = 0; i < GameState._cloudListSmall.size(); i ++)
 				{
 					try
 					{
-						if (GameUtils.getRange(GameState._weaponList.get(0), GameState._cloudListSmall.get(i)) > (GameState.sObjectCreationRadius + 250 * _density))
+						if (GameUtils.getRange(GameState._weaponList.get(0), GameState._cloudListSmall.get(i)) > (GameState.sObjectCreationRadius + Constants.SMALL_CLOUD_OFFSET * _density))
 						{
 							GameState._cloudListSmall.remove(i);
 						}
