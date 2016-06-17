@@ -58,4 +58,9 @@ public class Constants {
 	// high score stuff
 	public static String HIGH_SCORE = "high_score";
 
+	//offscreen offsets
+	public static final int LARGE_CLOUD_OFFSET = 250;
+	public static final int SMALL_CLOUD_OFFSET = 550;
+	public static final double LARGE_CLOUD_SPEED = .3;
+	public static final double SMALL_CLOUD_SPEED = .1;
 }

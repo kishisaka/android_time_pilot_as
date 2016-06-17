@@ -110,7 +110,6 @@ public class TimefightersActivity  extends FragmentActivity {
 
     @Override
     public void onResume() {
-        // Register a listener for the sensor.
         super.onResume();
         DBHelper helper = new DBHelper(this);
         GameState._highScore = helper.getTopScore();

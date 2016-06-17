@@ -69,7 +69,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         public void onPlayerDied() {
             GameState._lives = GameState._lives - 1;
             if (GameState._lives >= 0) {
-                MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2d, 2d, 5, .1d, 0, Constants.PLAYER, -1, this);
+                MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2.5d, 2.5d, 5, .1d, 0, Constants.PLAYER, -1, this);
                 player.setMissileCount(Constants.START_MISSILE_COUNT);
                 if (GameState._weaponList.isEmpty() == false) {
                     GameState._weaponList.set(0, player);
@@ -358,7 +358,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     double range = GameUtils.getRange(x, y);
                     x = range * Math.cos(Math.toRadians(track));
                     y = range * Math.sin(Math.toRadians(track));
-                    canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.CLOUD_SMALL), (int) ((centerXCanvas + x) / 1.3), (int) ((centerYCanvas - y) / 1.3), null);
+                    canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.CLOUD_SMALL), (int) ((centerXCanvas + x) / 1.7), (int) ((centerYCanvas - y) / 1.7), null);
                 }
 
                 me = GameState._weaponList.get(SELECTED);
@@ -810,7 +810,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 					GameState.sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;
                     GameState.sShownLevelName = false;
 
-					MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2d, 2d, 5, .1d, 0, Constants.PLAYER, -1, mGameStateListener);
+					MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2.5d, 2.5d, 5, .1d, 0, Constants.PLAYER, -1, mGameStateListener);
 					player.setMissileCount(Constants.START_MISSILE_COUNT);
 
                     //reset timers

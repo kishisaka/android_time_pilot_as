@@ -932,6 +932,37 @@ public class GameUtils {
 		}
 	}
 
+    public static int getFighterCount() {
+        if (GameState.sWaveLevel == 0)
+        {
+            switch(GameState.sCurrentLevel)
+            {
+                case 2:
+                    return 6;
+                case 3:
+                    return 7;
+                case 4:
+                    return 8;
+                default:
+                    return 5;
+            }
+        }
+        else
+        {
+            switch(GameState.sCurrentLevel)
+            {
+                case 2:
+                    return 9;
+                case 3:
+                    return 10;
+                case 4:
+                    return 11;
+                default:
+                    return 8;
+            }
+        }
+    }
+
 	/**
 	 * get the current enemy boss speed based on current and wave leveels
 	 * @param weaponType
