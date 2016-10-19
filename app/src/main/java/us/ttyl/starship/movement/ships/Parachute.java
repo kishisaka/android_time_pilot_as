@@ -42,9 +42,9 @@ public class Parachute extends LineEngine
 			if ((int) (Math.random() * 100) > 40) {
 				engine2.setMissileCount(engine2.getMissileCount() + 20);
 			} else {
-				EnvBuilder.generatePlayerOption(0, (int)(3 * GameState.sScreenDesnity), (int)(50 * GameState.sScreenDesnity));
-				EnvBuilder.generatePlayerOption(120,(int)(3 * GameState.sScreenDesnity), (int)(50 * GameState.sScreenDesnity));
-				EnvBuilder.generatePlayerOption(240,(int)(3 * GameState.sScreenDesnity), (int)(50 * GameState.sScreenDesnity));
+				EnvBuilder.generatePlayerOption(0, (int)(3 * GameState.sScreenDensity), (int)(50 * GameState.sScreenDensity));
+				EnvBuilder.generatePlayerOption(120,(int)(3 * GameState.sScreenDensity), (int)(50 * GameState.sScreenDensity));
+				EnvBuilder.generatePlayerOption(240,(int)(3 * GameState.sScreenDensity), (int)(50 * GameState.sScreenDensity));
 			}
 
 			decrementHitPoints(1);

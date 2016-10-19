@@ -11,7 +11,7 @@ import us.ttyl.starship.movement.MovementEngine;
 
 public class GameState 
 {
-	public static double sScreenDesnity = 0;
+	public static double sScreenDensity = 0;
 	public static boolean mIsRunning = false;
 	public static boolean mIsThrottlePressed = false;
 	public static boolean mWaitTimeBetweenLevels = false;

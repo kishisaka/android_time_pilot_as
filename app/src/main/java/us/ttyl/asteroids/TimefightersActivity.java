@@ -1,6 +1,5 @@
 package us.ttyl.asteroids;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import us.ttyl.starship.core.AudioPlayer;
-import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.DBHelper;
 import us.ttyl.starship.core.GameState;
 
@@ -61,42 +59,42 @@ public class TimefightersActivity  extends FragmentActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.invulnerarbility) {
-            if (GameState.sIsInvulnerable == true)
-            {
-                GameState.sIsInvulnerable = false;
-            }
-            else
-            {
-                GameState.sIsInvulnerable = true;
-            }
-            String invulnerabilityString = getString(R.string.invulnerability);
-            String invulnerabilityStringSetting = getString(R.string.off);
-            if (GameState.sIsInvulnerable == false)
-            {
-                invulnerabilityStringSetting = getString(R.string.on);
-            }
-            item.setTitle(String.format(invulnerabilityString, invulnerabilityStringSetting));
-        }
-        if (id == R.id.enemy_fire)
-        {
-            if (GameState.sIsFireEnemyGuns == true)
-            {
-                GameState.sIsFireEnemyGuns = false;
-            }
-            else
-            {
-                GameState.sIsFireEnemyGuns = true;
-            }
-            String enemyFireString = getString(R.string.enemy_fire);
-            String enemyFireStringSetting = getString(R.string.off);
-            if (GameState.sIsFireEnemyGuns == false)
-            {
-                enemyFireStringSetting = getString(R.string.on);
-            }
-            item.setTitle(String.format(enemyFireString, enemyFireStringSetting));
-        }
+//        int id = item.getItemId();
+//        if (id == R.id.invulnerarbility) {
+//            if (GameState.sIsInvulnerable == true)
+//            {
+//                GameState.sIsInvulnerable = false;
+//            }
+//            else
+//            {
+//                GameState.sIsInvulnerable = true;
+//            }
+//            String invulnerabilityString = getString(R.string.invulnerability);
+//            String invulnerabilityStringSetting = getString(R.string.off);
+//            if (GameState.sIsInvulnerable == false)
+//            {
+//                invulnerabilityStringSetting = getString(R.string.on);
+//            }
+//            item.setTitle(String.format(invulnerabilityString, invulnerabilityStringSetting));
+//        }
+//        if (id == R.id.enemy_fire)
+//        {
+//            if (GameState.sIsFireEnemyGuns == true)
+//            {
+//                GameState.sIsFireEnemyGuns = false;
+//            }
+//            else
+//            {
+//                GameState.sIsFireEnemyGuns = true;
+//            }
+//            String enemyFireString = getString(R.string.enemy_fire);
+//            String enemyFireStringSetting = getString(R.string.off);
+//            if (GameState.sIsFireEnemyGuns == false)
+//            {
+//                enemyFireStringSetting = getString(R.string.on);
+//            }
+//            item.setTitle(String.format(enemyFireString, enemyFireStringSetting));
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -148,7 +146,7 @@ public class TimefightersActivity  extends FragmentActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            GameState.sScreenDesnity = getResources().getDisplayMetrics().density;
+            GameState.sScreenDensity = getResources().getDisplayMetrics().density;
             View rootView = inflater.inflate(R.layout.fragment_main, container,
                     false);
             return rootView;
