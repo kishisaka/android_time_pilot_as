@@ -601,7 +601,11 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 if (GameState._weaponList.get(0).getWeaponName() != (Constants.PLAYER)) {
                     canvas.drawText(getContext().getString(R.string.timefighters)
                             , centerXCanvas - (100 * density)
-                            , centerYCanvas - (140 * density)
+                            , centerYCanvas - (160 * density)
+                            , mTextColor);
+                    canvas.drawText(getContext().getString(R.string.mfr_name)
+                            , centerXCanvas - (140 * density)
+                            , centerYCanvas - (130 * density)
                             , mTextColor);
                     if (GameState._highScores != null) {
                         int y = centerYCanvas - (100 * density);
@@ -646,7 +650,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                         }
                     }
                     canvas.drawText(getContext().getString(R.string.title)
-                            , centerXCanvas - (130 * density)
+                            , centerXCanvas - (140 * density)
                             , centerYCanvas + (130 * density)
                             , mTextColor);
                     canvas.drawText(getContext().getString(R.string.gameover)
