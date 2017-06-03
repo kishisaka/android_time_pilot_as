@@ -2,11 +2,8 @@ package us.ttyl.starship.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.SoundPool;
 import us.ttyl.starship.movement.MovementEngine;
 
 public class GameState 
@@ -21,7 +18,7 @@ public class GameState
 	//turn on player invulnerability (testing)
 	public static boolean sIsInvulnerable = false;
 	//turn on main loop frame rate
-	public static boolean sShowFrameRate = true;
+	public static boolean sShowFrameRate = false;
 	
 	// guns, missiles, player ship, enemy ships, parachutes, etc.
 	public static List <MovementEngine> _weaponList = new ArrayList<MovementEngine>();
