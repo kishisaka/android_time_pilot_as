@@ -1,6 +1,5 @@
 package us.ttyl.starship.core;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +8,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.shapes.Shape;
 import android.util.Log;
 
 import us.ttyl.asteroids.R;
 import us.ttyl.starship.movement.MovementEngine;
-import us.ttyl.starship.movement.ships.Parachute;
 
 public class GameUtils {
 
@@ -506,7 +503,7 @@ public class GameUtils {
         return BitmapFactory.decodeResource(context.getResources(), R.drawable.other_boss_bullet);
     }
 
-    public static Bitmap getAndScaleBitmap(int bitmapId, Context context, int width) {
+    private static Bitmap getAndScaleBitmap(int bitmapId, Context context, int width) {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
         return Bitmap.createScaledBitmap(bitmap, width, width, false);
     }
@@ -610,43 +607,6 @@ public class GameUtils {
         return null;
     }
 
-//    public static List<Bitmap> getPlayerFighter(Context context) {
-//        float density = context.getResources().getDisplayMetrics().density;
-//        Bitmap fighter = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_fighter_3);
-//        fighter = fighter.createScaledBitmap(fighter, (int)(36 * density), (int)(36 * density), false);
-//        return rotateBitmaps(context, fighter);
-//    }
-
-//    public static List<Bitmap> get1917Enemy(Context context) {
-//        float density = context.getResources().getDisplayMetrics().density;
-//        Bitmap testBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.biplane_1917);
-//        testBitmap = testBitmap.createScaledBitmap(testBitmap, (int)(36 * density) , (int)(36 * density), false);
-//        return rotateBitmaps(context,testBitmap);
-//    }
-//
-//    public static List<Bitmap> get1941Enemy(Context context) {
-//        float density = context.getResources().getDisplayMetrics().density;
-//        Bitmap testBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.fighter_1941);
-//        testBitmap = testBitmap.createScaledBitmap(testBitmap, (int)(36 * density) , (int)(36 * density), false);
-//        return rotateBitmaps(context,testBitmap);
-//    }
-//
-//    public static List<Bitmap> get1971EnemyRotor(Context context) {
-//        float density = context.getResources().getDisplayMetrics().density;
-//        Bitmap testBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.rotor_1971_1);
-//        testBitmap = testBitmap.createScaledBitmap(testBitmap, (int)(60 * density) , (int)(60 * density), false);
-//        return rotateBitmaps(context, testBitmap);
-//    }
-//
-//    public static List<Bitmap> get1971Enemy(Context context) {
-//        float density = context.getResources().getDisplayMetrics().density;
-//        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.helicopter_1971);
-//        Bitmap scaledBitmap = bitmap.createScaledBitmap(bitmap, (int) (60 * density), (int) (60 * density), false);
-//        bitmap.recycle();
-//        bitmap = null;
-//        return rotateBitmaps(context,scaledBitmap);
-//    }
-
     public static void getBoltBitmaps(Context context) {
         Bitmap bolt = BitmapFactory.decodeResource
                 (context.getResources(), R.drawable.bolt);
@@ -682,20 +642,6 @@ public class GameUtils {
         bitmap = null;
         return bitmapList;
     }
-
-//    public static List<Bitmap> getAwacs(Context context) {
-//        float density = context.getResources().getDisplayMetrics().density;
-//        List<Bitmap> bitmapList = new ArrayList<Bitmap>();
-//        Bitmap awacsLeft = BitmapFactory.decodeResource(context.getResources(), R.drawable.awacs_left_1981);
-//        Bitmap awacsRight = BitmapFactory.decodeResource(context.getResources(), R.drawable.awacs_right_1981);
-//        bitmapList.add(awacsLeft.createScaledBitmap(awacsLeft,(int)(200 * density), (int)(200 * density), false));
-//        bitmapList.add(awacsLeft.createScaledBitmap(awacsRight,(int)(200 * density), (int)(200 * density), false));
-//        awacsLeft.recycle();
-//        awacsLeft = null;
-//        awacsRight.recycle();
-//        awacsRight = null;
-//        return bitmapList;
-//    }
 
     private static Matrix rotateMatrix(Bitmap bitmap, int rotation) {
         Matrix rotateMatrix = new Matrix();
@@ -752,9 +698,6 @@ public class GameUtils {
 	 */
 	public static int[] getSmokeTrailXY(int track)
 	{
-//        double[] smokeCoords = getCoordsGivenTrackAndDistance(track, 4);
-//        return new int[]{(int)(smokeCoords[0] * -1), (int)(smokeCoords[1] * -1)};
-
 		if (track >= 0 && track < 30)
 		{
 			// +3
@@ -1083,6 +1026,21 @@ public class GameUtils {
                 return res.getString(R.string.string_1991);
             default:
                 return "";
+        }
+    }
+
+    /**
+     * used only for landmass placement
+     * @param x
+     * @return
+     */
+    public int wrap(int x) {
+        if (x > 10000) {
+            return 0;
+        } else if (x < 0) {
+            return 10000;
+        } else {
+            return x;
         }
     }
 

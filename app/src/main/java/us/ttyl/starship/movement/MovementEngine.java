@@ -229,4 +229,48 @@ public abstract class MovementEngine
   {
 	  _missileCount = missileCount;
   }
+
+  public void setDestroyed(boolean _destroyed) {
+    this._destroyed = _destroyed;
+  }
+
+  public void setCurrentDirection(int _currentDirection) {
+    this._currentDirection = _currentDirection;
+  }
+
+  public void setTurnMode(double _turnMode) {
+    this._turnMode = _turnMode;
+  }
+
+  public void setCurrentTurnMode(double _currentTurnMode) {
+    this._currentTurnMode = _currentTurnMode;
+  }
+
+  public void setCurrentX(double _currentX) {
+    this._currentX = _currentX;
+  }
+
+  public void setCurrentY(double _currentY) {
+    this._currentY = _currentY;
+  }
+
+  public void setMaxSpeed(double _maxSpeed) {
+    this._maxSpeed = _maxSpeed;
+  }
+
+  public void setCurrentSpeed(double _currentSpeed) {
+    this._currentSpeed = _currentSpeed;
+  }
+
+  public void setAcceleration(double _acceleration) {
+    this._acceleration = _acceleration;
+  }
+
+  public void setName(int _name) {
+    this._name = _name;
+  }
+
+  public void setOrigin(MovementEngine _origin) {
+    this._origin = _origin;
+  }
 }

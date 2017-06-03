@@ -43,8 +43,8 @@ public class Constants {
 	//boss initialization
 	public static final int BOSS_STARTING_HITPOINT = 100;
 
-	public static final int ENEMY_BOSS_FIRE_RADIUS = 700;
-	public static final int ENEMY_FIGHTER_FiRE_RADIUS = 800;
+	public static final int ENEMY_BOSS_FIRE_RADIUS = 500;
+	public static final int ENEMY_FIGHTER_FiRE_RADIUS = 500;
 
 	//minimum frame rate allowed before fire rate limitation imposed
 	public static final int FRAME_RATE_MIN = 45;
@@ -54,9 +54,6 @@ public class Constants {
 
 	public static int CURRENT_GAME_STATE_TITLE = 1;
 	public static int CURRENT_GAME_STATE_RUNNING = 2;
-
-	// high score stuff
-	public static String HIGH_SCORE = "high_score";
 
 	//offscreen offsets
 	public static final int LARGE_CLOUD_OFFSET = 250;

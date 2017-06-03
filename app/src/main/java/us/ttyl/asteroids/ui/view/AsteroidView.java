@@ -1,7 +1,6 @@
 package us.ttyl.asteroids.ui.view;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -45,7 +44,6 @@ import us.ttyl.starship.movement.ships.TextItemLine;
  */
 public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback {
     AsteroidViewThread mAsteroidViewThread = null;
-    Bitmap mBackground = null;
     int mControllerCircleX = 0;
     int mControllerCircleY = 0;
 
@@ -114,6 +112,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             // do game initialization (load sprites, start sounds, etc.)
             init(context);
 
+            //start the main loop
+            new MainLoop(getContext().getResources().getDisplayMetrics().density, getContext());
+
             // create view thread only; it will be started in surfaceCreated()
             mAsteroidViewThread = new AsteroidViewThread(context, holder);
             setFocusable(true); // make sure we get key events
@@ -131,6 +132,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
     public void init(Context context) {
 
         GameState.clearAll();
+
+        // choose random level for attract mode
+        GameState.sCurrentLevel = (int)((Math.random() * 4) + 1);
 
         long startTime = System.currentTimeMillis();
         //initialize sprite array
@@ -171,10 +175,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             GameState._cloudListSmall.clear();
             GameState._explosionParticleList.clear();
         }
-        // MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2d, 2d, 5, .1d, 0, Constants.PLAYER, -1, mGameStateListener);
         EnvBuilder.generateEnemy(0, 0, false, getResources().getDisplayMetrics().density);
-        // player.setMissileCount(Constants.START_MISSILE_COUNT);
-        // GameState._weaponList.add(player);
 
         // start the game engine!
         float density = getResources().getDisplayMetrics().density;
@@ -369,115 +370,101 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 int misslePixel = 2 * density;
 
                 for (int i = 0; i < GameState._weaponList.size(); i++) {
-                    try {
-                        me = GameState._weaponList.get(i);
-                        double x = GameUtils.getA(centerX, me.getX()) / _scale;
-                        double y = GameUtils.getB(centerY, me.getY()) / _scale;
-                        double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
-                        double range = GameUtils.getRange(x, y);
-                        x = range * Math.cos(Math.toRadians(track));
-                        y = range * Math.sin(Math.toRadians(track));
+                    if (i < GameState._weaponList.size()) {
+                        try {
+                            me = GameState._weaponList.get(i);
+                            if (me != null) {
+                                double x = GameUtils.getA(centerX, me.getX()) / _scale;
+                                double y = GameUtils.getB(centerY, me.getY()) / _scale;
+                                double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
+                                double range = GameUtils.getRange(x, y);
+                                x = range * Math.cos(Math.toRadians(track));
+                                y = range * Math.sin(Math.toRadians(track));
 
-                        if (me.getWeaponName() == Constants.PLAYER && me.getDestroyedFlag() == false) {
-                            int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.PLAYER).getWidth();
-                            int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.PLAYER).getHeight();
-                            canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.PLAYER), centerXCanvas - (spriteXSize / 2), centerYCanvas - (spriteYSize / 2), null);
-                        }
-                        if (me.getWeaponName() == Constants.PLAYER_OPTION) {
-                            int spriteXSize = GameState._bossBullet.getWidth();
-                            int spriteYSize = GameState._bossBullet.getHeight();
-                            canvas.drawBitmap(GameState._bossBullet, (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
-                        }
-                        if (me.getWeaponName() == (Constants.ENEMY_FIGHTER)) {
-                            // int rotorRandom = (int)(Math.random() * 360);
-//                            int rotorDeg = ((FollowFighter)me).getRotor();
-//                            int spriteXSizeHeli = GameState._enemy1971Sprites.get(me.getCurrentDirection()).getWidth();
-//                            int spriteYSizeHeli = GameState._enemy1971Sprites.get(me.getCurrentDirection()).getHeight();
-//                            int spriteXSizeRotor = GameState._enemy1971RotorSprites.get(rotorDeg).getWidth();
-//                            int spriteYSizeRotor = GameState._enemy1971RotorSprites.get(rotorDeg).getHeight();
-//                            canvas.drawBitmap(GameState._enemy1971Sprites.get(me.getCurrentDirection()),
-//                                    (int) (centerXCanvas - (spriteXSizeHeli / 2) + x), (int) (centerYCanvas - (spriteYSizeHeli / 2) - y), null);
-//                            canvas.drawBitmap(GameState._enemy1971RotorSprites.get(rotorDeg),
-//                                    (int) (centerXCanvas - (spriteXSizeRotor / 2) + x), (int) (centerYCanvas - (spriteYSizeRotor / 2) - y), null);
-//                            canvas.drawBitmap(GameState._enemy1971RotorSprites.get(rotorDeg),
-//                                    (int) (centerXCanvas - (spriteXSizeRotor / 2) + x), (int) (centerYCanvas - (spriteYSizeRotor / 2) - y), null);
-                            int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_FIGHTER).getWidth();
-                            int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_FIGHTER).getHeight();
-                            canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_FIGHTER), (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
-                        }
-                        if (me.getWeaponName() == (Constants.PARACHUTE)) {
-                            int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.PARACHUTE).getWidth();
-                            int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.PARACHUTE).getHeight();
-                            canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.PARACHUTE), (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
-                        }
-                        if (me.getWeaponName() == (Constants.ANIMATED_EXPLOSION)) {
-                            Bitmap animatedExplosion = GameUtils.getImageType(me.getEndurance(), Constants.ANIMATED_EXPLOSION);
-                            int spriteXSize = animatedExplosion.getWidth();
-                            int spriteYSize = animatedExplosion.getHeight();
-                            canvas.drawBitmap(animatedExplosion, (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
-                        }
-
-                        if (me.getWeaponName() == (Constants.ANIMATED_BOSS_EXPLOSION)) {
-                            Bitmap animatedExplosion = GameUtils.getImageType(me.getEndurance(), Constants.ANIMATED_BOSS_EXPLOSION);
-                            int spriteXSize = animatedExplosion.getWidth();
-                            int spriteYSize = animatedExplosion.getHeight();
-                            canvas.drawBitmap(animatedExplosion, (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
-                        }
-                        if (me.getWeaponName() == (Constants.ENEMY_BOSS)) {
-//                            int spriteXSize = GameState._awacs.get(0).getWidth();
-//                            int spriteYSize = GameState._awacs.get(0).getHeight();
-//                            canvas.drawBitmap(GameState._awacs.get(0), (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
-                            int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_BOSS).getWidth();
-                            int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_BOSS).getHeight();
-                            canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_BOSS), (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
-                        } else if (me.getWeaponName() == (Constants.GUN_ENEMY)) {
-                            if (me.getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER) {
-                                int spriteXSize = GameState._enemy_bolts.get(me.getCurrentDirection()).getWidth();
-                                int spriteYSize = GameState._enemy_bolts.get(me.getCurrentDirection()).getHeight();
-                                canvas.drawBitmap(GameState._enemy_bolts.get(me.getCurrentDirection())
-                                        , (int) (centerXCanvas - (spriteXSize / 2) + x)
-                                        , (int) (centerYCanvas - (spriteYSize / 2) - y)
-                                        , null);
-                                // canvas.drawRect((int) (centerXCanvas + x), (int) (centerYCanvas - y), (int) (centerXCanvas + pixelSize + x), (int) (centerYCanvas + pixelSize - y), mGunEnemy);
-                        } else {
-                            if (me instanceof Bullet) {
-                                int spriteXSize = GameState._enemy_bolts.get(me.getCurrentDirection()).getWidth();
-                                int spriteYSize = GameState._enemy_bolts.get(me.getCurrentDirection()).getHeight();
-                                canvas.drawBitmap(GameState._enemy_bolts.get(me.getCurrentDirection())
-                                        , (int) (centerXCanvas - (spriteXSize / 2) + x)
-                                        , (int) (centerYCanvas - (spriteYSize / 2) - y)
-                                        , null);
-                                // canvas.drawRect((int) (centerXCanvas + x), (int) (centerYCanvas - y), (int) (centerXCanvas + pixelSize + x), (int) (centerYCanvas + pixelSize - y), mGunEnemy);
-                            } else {
-                                int spriteXSize = GameState._bossBullet.getWidth();
+                                if (me.getWeaponName() == Constants.PLAYER && me.getDestroyedFlag() == false) {
+                                    int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.PLAYER).getWidth();
+                                    int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.PLAYER).getHeight();
+                                    canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.PLAYER), centerXCanvas - (spriteXSize / 2), centerYCanvas - (spriteYSize / 2), null);
+                                }
+                                if (me.getWeaponName() == Constants.PLAYER_OPTION) {
+                                    int spriteXSize = GameState._bossBullet.getWidth();
                                     int spriteYSize = GameState._bossBullet.getHeight();
                                     canvas.drawBitmap(GameState._bossBullet, (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
                                 }
-                            }
-                        } else if (me.getWeaponName() == (Constants.GUN_PLAYER)) {
-                            int spriteXSize = GameState._bolts.get(me.getCurrentDirection()).getWidth();
-                            int spriteYSize = GameState._bolts.get(me.getCurrentDirection()).getHeight();
-                            canvas.drawBitmap(GameState._bolts.get(me.getCurrentDirection())
-                                    , (int) (centerXCanvas - (spriteXSize / 2) + x)
-                                    , (int) (centerYCanvas - (spriteYSize / 2) - y)
-                                    , null);
-                            // canvas.drawRect((int) (centerXCanvas + x), (int) (centerYCanvas - y), (int) (centerXCanvas + pixelSize + x), (int) (centerYCanvas + pixelSize - y), mGunPlayer);
+                                if (me.getWeaponName() == (Constants.ENEMY_FIGHTER)) {
+                                    int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_FIGHTER).getWidth();
+                                    int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_FIGHTER).getHeight();
+                                    canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_FIGHTER), (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
+                                }
+                                if (me.getWeaponName() == (Constants.PARACHUTE)) {
+                                    int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.PARACHUTE).getWidth();
+                                    int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.PARACHUTE).getHeight();
+                                    canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.PARACHUTE), (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
+                                }
+                                if (me.getWeaponName() == (Constants.ANIMATED_EXPLOSION)) {
+                                    Bitmap animatedExplosion = GameUtils.getImageType(me.getEndurance(), Constants.ANIMATED_EXPLOSION);
+                                    int spriteXSize = animatedExplosion.getWidth();
+                                    int spriteYSize = animatedExplosion.getHeight();
+                                    canvas.drawBitmap(animatedExplosion, (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
+                                }
 
-                        } else if (me.getWeaponName() == (Constants.MISSILE_PLAYER) || me.getWeaponName() == (Constants.MISSILE_ENEMY)) {
-                            int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getWidth();
-                            int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getHeight();
-                            canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE)
-                                    , (int) (centerXCanvas - (spriteXSize / 2) + x)
-                                    , (int) (centerYCanvas - (spriteYSize / 2) - y)
-                                    , null);
-                        } else if (me.getWeaponName() == (Constants.TEXT)) {
-                            canvas.drawText(((TextItem) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemColor);
-                        } else if (me.getWeaponName() == (Constants.TEXT_ITEM_LINE)) {
-                            canvas.drawText(((TextItemLine) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemLineColor);
+                                if (me.getWeaponName() == (Constants.ANIMATED_BOSS_EXPLOSION)) {
+                                    Bitmap animatedExplosion = GameUtils.getImageType(me.getEndurance(), Constants.ANIMATED_BOSS_EXPLOSION);
+                                    int spriteXSize = animatedExplosion.getWidth();
+                                    int spriteYSize = animatedExplosion.getHeight();
+                                    canvas.drawBitmap(animatedExplosion, (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
+                                }
+                                if (me.getWeaponName() == (Constants.ENEMY_BOSS)) {
+                                    int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_BOSS).getWidth();
+                                    int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_BOSS).getHeight();
+                                    canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.ENEMY_BOSS), (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
+                                } else if (me.getWeaponName() == (Constants.GUN_ENEMY)) {
+                                    if (me.getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER) {
+                                        int spriteXSize = GameState._enemy_bolts.get(me.getCurrentDirection()).getWidth();
+                                        int spriteYSize = GameState._enemy_bolts.get(me.getCurrentDirection()).getHeight();
+                                        canvas.drawBitmap(GameState._enemy_bolts.get(me.getCurrentDirection())
+                                                , (int) (centerXCanvas - (spriteXSize / 2) + x)
+                                                , (int) (centerYCanvas - (spriteYSize / 2) - y)
+                                                , null);
+                                    } else {
+                                        if (me instanceof Bullet) {
+                                            int spriteXSize = GameState._enemy_bolts.get(me.getCurrentDirection()).getWidth();
+                                            int spriteYSize = GameState._enemy_bolts.get(me.getCurrentDirection()).getHeight();
+                                            canvas.drawBitmap(GameState._enemy_bolts.get(me.getCurrentDirection())
+                                                    , (int) (centerXCanvas - (spriteXSize / 2) + x)
+                                                    , (int) (centerYCanvas - (spriteYSize / 2) - y)
+                                                    , null);
+                                        } else {
+                                            int spriteXSize = GameState._bossBullet.getWidth();
+                                            int spriteYSize = GameState._bossBullet.getHeight();
+                                            canvas.drawBitmap(GameState._bossBullet, (int) (centerXCanvas - (spriteXSize / 2) + x), (int) (centerYCanvas - (spriteYSize / 2) - y), null);
+                                        }
+                                    }
+                                } else if (me.getWeaponName() == (Constants.GUN_PLAYER)) {
+                                    int spriteXSize = GameState._bolts.get(me.getCurrentDirection()).getWidth();
+                                    int spriteYSize = GameState._bolts.get(me.getCurrentDirection()).getHeight();
+                                    canvas.drawBitmap(GameState._bolts.get(me.getCurrentDirection())
+                                            , (int) (centerXCanvas - (spriteXSize / 2) + x)
+                                            , (int) (centerYCanvas - (spriteYSize / 2) - y)
+                                            , null);
+
+                                } else if (me.getWeaponName() == (Constants.MISSILE_PLAYER) || me.getWeaponName() == (Constants.MISSILE_ENEMY)) {
+                                    int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getWidth();
+                                    int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getHeight();
+                                    canvas.drawBitmap(GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE)
+                                            , (int) (centerXCanvas - (spriteXSize / 2) + x)
+                                            , (int) (centerYCanvas - (spriteYSize / 2) - y)
+                                            , null);
+                                } else if (me.getWeaponName() == (Constants.TEXT)) {
+                                    canvas.drawText(((TextItem) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemColor);
+                                } else if (me.getWeaponName() == (Constants.TEXT_ITEM_LINE)) {
+                                    canvas.drawText(((TextItemLine) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemLineColor);
+                                }
+                            }
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            Log.e(TAG, e.getMessage(), e);
+                            // do nothing, simply continue to next weapon. this item might have already been destroyed by main loop
                         }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        Log.e(TAG, e.getMessage(), e);
-                        // do nothing, simply continue to next weapon. this item might have already been destroyed by main loop
                     }
                 }
 
@@ -495,37 +482,41 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 
                 // draw all explosion particles (explosions, smoke, etc)
                 for (int i = 0; i < GameState._explosionParticleList.size(); i++) {
-                    me = GameState._explosionParticleList.get(i);
-                    double x = GameUtils.getA(centerX, me.getX()) / _scale;
-                    double y = GameUtils.getB(centerY, me.getY()) / _scale;
-                    double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
-                    double range = GameUtils.getRange(x, y);
-                    x = range * Math.cos(Math.toRadians(track));
-                    y = range * Math.sin(Math.toRadians(track));
-                    if (me.getWeaponName() == Constants.EXPLOSION_PARTICLE) {
-                        canvas.drawRect((int) (centerXCanvas + x), (int) (centerYCanvas - y),
-                                (int) (centerXCanvas + pixelSize + x), (int) (centerYCanvas + pixelSize - y), mParticleExplosion);
-                    } else if (me.getWeaponName() == (Constants.MISSILE_SMOKE)) {
-                        Paint smokeColor = null;
-                        if (me.getEndurance() > 10) {
-                            smokeColor = mMissileSmoke1;
-                        }
-                        if (me.getEndurance() >= 7 && me.getEndurance() <= 10) {
-                            smokeColor = mMissileSmoke2;
-                        }
-                        if (me.getEndurance() < 7) {
-                            smokeColor = mMissileSmoke3;
-                        }
+                    if (i < GameState._explosionParticleList.size()) {
+                        me = GameState._explosionParticleList.get(i);
+                        if (me != null) {
+                            double x = GameUtils.getA(centerX, me.getX()) / _scale;
+                            double y = GameUtils.getB(centerY, me.getY()) / _scale;
+                            double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
+                            double range = GameUtils.getRange(x, y);
+                            x = range * Math.cos(Math.toRadians(track));
+                            y = range * Math.sin(Math.toRadians(track));
+                            if (me.getWeaponName() == Constants.EXPLOSION_PARTICLE) {
+                                canvas.drawRect((int) (centerXCanvas + x), (int) (centerYCanvas - y),
+                                        (int) (centerXCanvas + pixelSize + x), (int) (centerYCanvas + pixelSize - y), mParticleExplosion);
+                            } else if (me.getWeaponName() == (Constants.MISSILE_SMOKE)) {
+                                Paint smokeColor = null;
+                                if (me.getEndurance() > 10) {
+                                    smokeColor = mMissileSmoke1;
+                                }
+                                if (me.getEndurance() >= 7 && me.getEndurance() <= 10) {
+                                    smokeColor = mMissileSmoke2;
+                                }
+                                if (me.getEndurance() < 7) {
+                                    smokeColor = mMissileSmoke3;
+                                }
 
-                        int[] smokeOffset = GameUtils.getSmokeTrailXY(me.getCurrentDirection());
-                        int x1 = (int) (centerXCanvas + x) + (density * smokeOffset[0]);
-                        int y1 = (int) (centerYCanvas - y) + (density * smokeOffset[1]);
-                        int x2 = x1 + misslePixel;
-                        int y2 = y1 + misslePixel;
-                        canvas.drawRect(x1, y1, x2, y2, smokeColor);
-                    } else if (me.getWeaponName() == (Constants.BOSS_SMOKE)) {
-                        canvas.drawRect((int) (centerXCanvas + x), (int) (centerYCanvas - y),
-                                (int) (centerXCanvas + pixelSize + x), (int) (centerYCanvas + pixelSize - y), mParticleExplosionBoss);
+                                int[] smokeOffset = GameUtils.getSmokeTrailXY(me.getCurrentDirection());
+                                int x1 = (int) (centerXCanvas + x) + (density * smokeOffset[0]);
+                                int y1 = (int) (centerYCanvas - y) + (density * smokeOffset[1]);
+                                int x2 = x1 + misslePixel;
+                                int y2 = y1 + misslePixel;
+                                canvas.drawRect(x1, y1, x2, y2, smokeColor);
+                            } else if (me.getWeaponName() == (Constants.BOSS_SMOKE)) {
+                                canvas.drawRect((int) (centerXCanvas + x), (int) (centerYCanvas - y),
+                                        (int) (centerXCanvas + pixelSize + x), (int) (centerYCanvas + pixelSize - y), mParticleExplosionBoss);
+                            }
+                        }
                     }
                 }
 
@@ -590,12 +581,14 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 mSpecialWeaponX = (int) (getContext().getResources().getDisplayMetrics().widthPixels * .85);
                 mSpecialWeaponY = getContext().getResources().getDisplayMetrics().heightPixels - (height / 2);
                 canvas.drawCircle(mSpecialWeaponX, mSpecialWeaponY, specialWeaponSize, mControllerColor);
-                int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getWidth();
-                int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getHeight();
-                canvas.drawBitmap(GameUtils.getImageType(90, Constants.MISSILE)
-                        , (int) (mSpecialWeaponX - (spriteXSize / 2))
-                        , (int) (mSpecialWeaponY - (spriteYSize / 2))
-                        , null);
+                if (me != null) {
+                    int spriteXSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getWidth();
+                    int spriteYSize = GameUtils.getImageType(me.getCurrentDirection(), Constants.MISSILE).getHeight();
+                    canvas.drawBitmap(GameUtils.getImageType(90, Constants.MISSILE)
+                            , (int) (mSpecialWeaponX - (spriteXSize / 2))
+                            , (int) (mSpecialWeaponY - (spriteYSize / 2))
+                            , null);
+                }
 
                 // game over, game title and high score list
                 if (GameState._weaponList.get(0).getWeaponName() != (Constants.PLAYER)) {
@@ -678,14 +671,13 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         // start the thread here so that we don't busy-wait in run()
-        // waiting for the surface to be created    	
+        // waiting for the surface to be created
         Log.w(this.getClass().getName(), "surface created, starting main game loop");
         if (mAsteroidViewThread.isAlive() == false) {
             mAsteroidViewThread.mIsRunning = true;
             try
             {
                 mAsteroidViewThread.start();
-                new MainLoop(getContext().getResources().getDisplayMetrics().density, getContext());
                 GameState.sShownLevelName = false;
             }
             catch(Exception e)
@@ -820,13 +812,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     //reset timers
                     GameState.sStartTimeBoss = System.currentTimeMillis();
 
-                    //resume player gun sound
-					// AudioPlayer.resumePlayerGun();
-
-                    //start player gun sound here.
-                    //if (GameState._weaponList.get(0).getWeaponName() == Constants.PLAYER) {
-                        AudioPlayer.playPlayerGun();
-                    //}
+                    AudioPlayer.playPlayerGun();
 
 					//wipe the weapon list out
 					GameState._weaponList.clear();
@@ -846,7 +832,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 							GameState._weaponList.get(0).decrementMissileCount();
 
 							mMissileLastLaunch = currentTime;
-							for (int z = 0; z < 4; z++) {
+							for (int z = 0; z < GameState._missilesPerVolley; z++) {
 								// find closest target
 								MovementEngine closestTarget = findClosestTarget();
 								int targetTrack = (int) (GameUtils.getTargetTrack(GameState._weaponList.get(0), closestTarget));

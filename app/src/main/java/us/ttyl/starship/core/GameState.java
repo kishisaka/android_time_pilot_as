@@ -21,7 +21,7 @@ public class GameState
 	//turn on player invulnerability (testing)
 	public static boolean sIsInvulnerable = false;
 	//turn on main loop frame rate
-	public static boolean sShowFrameRate = false;
+	public static boolean sShowFrameRate = true;
 	
 	// guns, missiles, player ship, enemy ships, parachutes, etc.
 	public static List <MovementEngine> _weaponList = new ArrayList<MovementEngine>();
@@ -47,14 +47,10 @@ public class GameState
 	public static ArrayList <Bitmap> _1971_fighters_2;
 	public static ArrayList <Bitmap> _1984_fighters_1;
 	public static ArrayList <Bitmap> _1984_fighters_2;
-	public static ArrayList <Bitmap> _missiles;
 	public static List <Bitmap> _bolts;
 	public static List <Bitmap> _enemy_bolts;
 
-	public static ArrayList <Bitmap> _sprites1;
-    public static ArrayList <Bitmap> _sprites2;
 	public static ArrayList <Bitmap> _bossSprites1;
-    public static ArrayList <Bitmap> _bossSprites2;
 	public static ArrayList <Bitmap> _cloudSprites;
 	public static ArrayList <Bitmap> _explosionSprites;
 	public static ArrayList <Bitmap> _explosionBossSprites;
@@ -65,7 +61,10 @@ public class GameState
 	//player score
 	public static int _playerScore = 0;
 	public static int _playerBulletsShot = 0;
-	public static int _playerEnemyShot = 0; 
+	public static int _playerEnemyShot = 0;
+
+	// missiles per volley
+	public static int _missilesPerVolley = 4;
 	
 	//sound settings
 	public static boolean _muted = false;

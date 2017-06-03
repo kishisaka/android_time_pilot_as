@@ -3,13 +3,14 @@ package us.ttyl.starship.core;
 import android.content.Context;
 import android.util.Log;
 
-import us.ttyl.asteroids.R;
 import us.ttyl.starship.env.EnvBuilder;
 import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.BossBullet;
 import us.ttyl.starship.movement.ships.Bullet;
 import us.ttyl.starship.movement.ships.ExplosionParticle;
 import us.ttyl.starship.movement.ships.Missile;
+import us.ttyl.starship.pools.BulletPool;
+import us.ttyl.starship.pools.ParticlePool;
 
 /**
  * The main game loop, game states is updated here. State is updated to the 
@@ -27,6 +28,7 @@ public class MainLoop extends Thread
 
 	public MainLoop(float density, Context context)
 	{
+		Log.d("kurt_test", "main loop stared");
 		mContext = context;
 		_density = density;
 		initGame();
@@ -52,7 +54,7 @@ public class MainLoop extends Thread
 		{
 			AudioPlayer.resumePlayerGun();
 		}
-		Log.i("kurt_test", "starting main loop");
+		Log.d("kurt_test", "starting main loop");
 		//main game loop
 		while(GameState.mIsRunning == true)
 		{
@@ -63,7 +65,7 @@ public class MainLoop extends Thread
 				int cloudCount = GameUtils.getTypeCount(Constants.CLOUD_BIG, GameState._cloudListLarge);
 				cloudCount = cloudCount + GameUtils.getTypeCount(Constants.CLOUD_SMALL, GameState._cloudListSmall);
 				long currentTimeClouds = currentTime;
-				if (currentTimeClouds - startTimeClouds > 30 && cloudCount < GameState.MAX_CLOUDS)
+				if (currentTimeClouds - startTimeClouds > 10 && cloudCount < GameState.MAX_CLOUDS)
 				{
 					startTimeClouds = currentTimeClouds;
 					int random = (int)(Math.random() * 100);
@@ -80,7 +82,6 @@ public class MainLoop extends Thread
 				if (GameState.sShownLevelName == false && GameState.mWaitTimeBetweenLevels == false)
 				{
 					if (GameState._weaponList.isEmpty() == false && GameState._weaponList.get(0).getWeaponName() == Constants.PLAYER) {
-						// generateTextLine(String text, int speed, int endurance, int x, int y, int direction)
 						String title = GameUtils.getGameLevelName(mContext.getResources());
 						EnvBuilder.generateTextLine(title,
 								2, 300, GameState._weaponList.get(0).getX(),
@@ -116,15 +117,14 @@ public class MainLoop extends Thread
 						// get range to target (from current ship to player)
 						int rangeToTarget = GameUtils.getRange(GameState._weaponList.get(i), GameState._weaponList.get(0));
 
-						// Log.d("MainLoop", "current time: "+ currentTime + " | startTimeBossBullet: " + startTimeBossBullet + " diff: " + (currentTime - startTimeBossBullet));
 						if (GameState._weaponList.get(i).getWeaponName() == Constants.ENEMY_BOSS
 								&& rangeToTarget < Constants.ENEMY_BOSS_FIRE_RADIUS
 								&& (currentTime - startTimeBossBullet > GameUtils.getEnemyGunFireRate()))
 						{
-							// Log.d("MainLoop", "fire boss");
 							int targetTrack = (int)GameUtils.getTargetTrack(GameState._weaponList.get(i), GameState._weaponList.get(0));
-							if (GameState.sWaveLevel > 0)
+							if (GameState.sWaveLevel > 1)
 							{
+								// boss bullet
 								MovementEngine bossBullet = new BossBullet(targetTrack, targetTrack
 										, (int) GameState._weaponList.get(i).getX()
 										, (int) GameState._weaponList.get(i).getY()
@@ -137,13 +137,14 @@ public class MainLoop extends Thread
 								}
 								startTimeBossBullet = currentTime;
 							}
-							else if (GameState.sWaveLevel > 1)
+							else if (GameState.sWaveLevel == 1)
 							{
-								MovementEngine bullet = new Bullet(targetTrack, targetTrack
+								// boss big gun
+								MovementEngine bullet = BulletPool.obtain(targetTrack, targetTrack
 										, (int) GameState._weaponList.get(i).getX()
 										, (int) GameState._weaponList.get(i).getY()
 										, 3, 3, 1, 1
-										, Constants.GUN_ENEMY, GameState._weaponList.get(i), 50, 1);
+										, Constants.GUN_ENEMY, GameState._weaponList.get(i), 50);
 								GameState._weaponList.add(bullet);
 								if (GameState._muted == false)
 								{
@@ -159,14 +160,13 @@ public class MainLoop extends Thread
 								&& (currentTime - startTimeEnemyGun  > GameUtils.getEnemyGunFireRate()))
 						{
 
-							// Log.d("MainLoop", "fire enemy gun");
 							// get player track
 							int targetTrack = (int) GameUtils.getTargetTrack(GameState._weaponList.get(i), GameState._weaponList.get(0));
-							MovementEngine bullet = new Bullet(targetTrack, targetTrack
+							MovementEngine bullet = BulletPool.obtain(targetTrack, targetTrack
 									, (int) GameState._weaponList.get(i).getX()
 									, (int) GameState._weaponList.get(i).getY()
 									, 3, 3, 1, 1
-									, Constants.GUN_ENEMY, GameState._weaponList.get(i), 100, 1);
+									, Constants.GUN_ENEMY, GameState._weaponList.get(i), 100);
 							GameState._weaponList.add(bullet);
 							if (GameState._muted == false)
 							{
@@ -180,7 +180,6 @@ public class MainLoop extends Thread
 								&& GameUtils.shouldFireWeapon()
 								&& (currentTime - startTimeEnemyMissile  > GameUtils.getEnemyMissileFireRate()))
 						{
-							// Log.d("MainLoop", "fire enemy missile");
 							// get player track
 							int targetTrack = (int)GameUtils.getTargetTrack(GameState._weaponList.get(i), GameState._weaponList.get(0));
 
@@ -213,10 +212,10 @@ public class MainLoop extends Thread
 							gunDirection = gunDirection + 360;
 						}
 						startTimeGun = currentTimeGun;
-						MovementEngine bullet = new Bullet(gunDirection, gunDirection
+						MovementEngine bullet =  BulletPool.obtain(gunDirection, gunDirection
 								, (int)GameState._weaponList.get(0).getX()
 								, (int)GameState._weaponList.get(0).getY(),10, 10, 1, 1,
-								Constants.GUN_PLAYER, GameState._weaponList.get(0), 30, 1);
+								Constants.GUN_PLAYER, GameState._weaponList.get(0), 30);
 						GameState._weaponList.add(bullet);
 						gunModifier();
 					}
@@ -229,7 +228,7 @@ public class MainLoop extends Thread
 		    		if(ship.getWeaponName()==(Constants.MISSILE_PLAYER) || ship.getWeaponName()==(Constants.MISSILE_ENEMY))
 					{
 		    			// make smoke trail
-		    			MovementEngine missileSmokeTrail = new ExplosionParticle(ship.getCurrentDirection(), ship.getCurrentDirection()
+		    			MovementEngine missileSmokeTrail = ParticlePool.obtain(ship.getCurrentDirection(), ship.getCurrentDirection()
 								, (int)ship.getX()
 								, (int)ship.getY(),0, 0, 0, 0, Constants.MISSILE_SMOKE, null, Constants.SMOKE_ENDURANCE_MISSLE, 1);
 		    			GameState._explosionParticleList.add(missileSmokeTrail);
@@ -243,7 +242,7 @@ public class MainLoop extends Thread
 							int particleDirection = (int)(Math.random() * 360);
 							int particleSpeed = (int)(Math.random() * 10);
 							int particleEndurance = (int)(Math.random() * Constants.SMOKE_ENDURANCE_BOSS);
-							MovementEngine explosionParticle = new ExplosionParticle(particleDirection, particleDirection
+							MovementEngine explosionParticle = ParticlePool.obtain(particleDirection, particleDirection
 									, ship.getX(), ship.getY(), particleSpeed, 1, 1, 1, Constants.BOSS_SMOKE
 									, null, particleEndurance, 1);
 							GameState._explosionParticleList.add(explosionParticle);
@@ -284,7 +283,11 @@ public class MainLoop extends Thread
 						if ((i > 0 && GameUtils.getRange(GameState._weaponList.get(0), GameState._weaponList.get(i)) >((GameState.sObjectCreationRadius * _density) + 100 * _density))
 								|| (GameState._weaponList.get(i).getDestroyedFlag() == true))
 						{
+							MovementEngine engine = GameState._weaponList.get(i);
 							GameState._weaponList.remove(i);
+							if (engine != null && engine instanceof Bullet) {
+								BulletPool.recycle((Bullet) engine);
+							}
 						}
 					}
 					catch(ArrayIndexOutOfBoundsException e)
@@ -301,7 +304,11 @@ public class MainLoop extends Thread
 						if (( GameUtils.getRange(GameState._weaponList.get(0), GameState._explosionParticleList.get(i)) > ((GameState.sObjectCreationRadius)+ 100 * _density))
 								|| (GameState._explosionParticleList.get(i).getDestroyedFlag() == true))
 						{
+							MovementEngine engine = GameState._explosionParticleList.get(i);
 							GameState._explosionParticleList.remove(i);
+							if (engine != null && engine instanceof ExplosionParticle) {
+								ParticlePool.recycle((ExplosionParticle) engine);
+							}
 						}
 					}
 					catch(ArrayIndexOutOfBoundsException e)
@@ -367,7 +374,7 @@ public class MainLoop extends Thread
 				e.printStackTrace();
 			}
 		}
-		Log.i("kurt_test", "main loop ended, shutting down");
+		Log.d("kurt_test", "main loop ended, shutting down");
 		GameState.clearAll();
 	}       
 	

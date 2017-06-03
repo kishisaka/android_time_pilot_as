@@ -1,12 +1,10 @@
 package us.ttyl.starship.movement.ships;
 
-import android.util.Log;
-
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
-import us.ttyl.starship.core.GameUtils;
 import us.ttyl.starship.movement.LineEngine;
 import us.ttyl.starship.movement.MovementEngine;
+import us.ttyl.starship.pools.BulletPool;
 
 public class BossBullet extends LineEngine
 {
@@ -28,9 +26,9 @@ public class BossBullet extends LineEngine
 				int particleDirection = (int)(Math.random() * 360);
 				int particleSpeed = (int)(Math.random() * 10);
 				int particleEndurance = (int)(Math.random() * 100);
-				MovementEngine bullet = new Bullet(particleDirection, particleDirection
+				MovementEngine bullet =  BulletPool.obtain(particleDirection, particleDirection
 						, getX(), getY(), particleSpeed, 1, 1, 1, Constants.GUN_ENEMY
-						, this.getOrigin(), particleEndurance, 1);
+						, this.getOrigin(), particleEndurance);
 				GameState._weaponList.add(bullet);
 			}
 			_endurance = 0;
