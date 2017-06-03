@@ -1,13 +1,12 @@
 package us.ttyl.starship.movement.ships;
 
-import android.util.Log;
-
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
 import us.ttyl.starship.core.GameUtils;
 import us.ttyl.starship.movement.LineEngine;
 import us.ttyl.starship.movement.MovementEngine;
+import us.ttyl.starship.pools.ParticlePool;
 
 public class EnemyBoss extends LineEngine {
     public EnemyBoss(int direction, int currentDirection, double currentX,
@@ -101,7 +100,7 @@ public class EnemyBoss extends LineEngine {
 						int particleDirection = (int) (Math.random() * 360);
 						int particleSpeed = (int) (Math.random() * 10);
 						int particleEndurance = (int) (Math.random() * Constants.EXPLOSION_ENDURANCE);
-						MovementEngine explosionParticle = new ExplosionParticle(particleDirection, particleDirection
+						MovementEngine explosionParticle = ParticlePool.obtain(particleDirection, particleDirection
 								, getX(), getY(), particleSpeed, 1, 1, 1, Constants.EXPLOSION_PARTICLE
 								, null, particleEndurance, 1);
 						GameState._explosionParticleList.add(explosionParticle);

@@ -9,7 +9,7 @@ public class Bullet extends LineEngine
 	public Bullet(int direction, int currentDirection, double currentX,
 			double currentY, double currentSpeed, double maxSpeed,
 			double acceleration, int turnMode, int name, MovementEngine origin,
-			int endurance, int hitpoints) 
+			int endurance, int hitpoints)
 	{
 		super(direction, currentDirection, currentX, currentY, currentSpeed, maxSpeed,
 				acceleration, turnMode, name, origin, endurance, hitpoints);
@@ -26,7 +26,7 @@ public class Bullet extends LineEngine
 					|| engine2.getWeaponName() == Constants.MISSILE_PLAYER
 					|| engine2.getWeaponName() == Constants.MISSILE_ENEMY
 					|| engine2.getWeaponName() == Constants.PLAYER_OPTION)
-			{				
+			{
 				if (engine2.getWeaponName() == Constants.ENEMY_BOSS || engine2.getWeaponName() == Constants.ENEMY_FIGHTER)
 				{
 					decrementHitPoints(1);

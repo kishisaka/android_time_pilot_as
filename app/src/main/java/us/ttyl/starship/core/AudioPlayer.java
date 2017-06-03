@@ -46,7 +46,6 @@ public class AudioPlayer
 	 */
 	public static void initSound(Context context)
 	{
-        long startTime = System.currentTimeMillis();
         sSoundPool = new SoundPool(30, AudioManager.STREAM_MUSIC, 0);
 		sPlayerGunSoundId = sSoundPool.load(context, R.raw.gun3, 1);
         sHelicopterBoss = sSoundPool.load(context, R.raw.helicopter, 1);
@@ -58,7 +57,6 @@ public class AudioPlayer
 		sParachutePickup = sSoundPool.load(context, R.raw.parachute_pickup, 2);
 		sLevelChange = sSoundPool.load(context, R.raw.level_change, 2);
 		sEnemyGunSound = sSoundPool.load(context, R.raw.enemy_gun, 2);
-        Log.i("kurt_test", "initSound start time: " + (System.currentTimeMillis() - startTime));
 	}
 	
 	/**

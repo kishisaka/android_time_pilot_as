@@ -147,8 +147,5 @@ public class EnvBuilder
 	{
 		GameState._weaponList.add(new TextItemLine(text, speed, endurance, x, y, direction ));
 	}
-	public static void generateBullets() {
-
-	}
 
 }
