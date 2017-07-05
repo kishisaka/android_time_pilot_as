@@ -18,6 +18,8 @@ public abstract class MovementEngine
   double _currentTurnMode;
   double _currentX;
   double _currentY;
+  int _currentMapX;
+  int _currentMapY;
   double _maxSpeed;
   double _currentSpeed;
   double _acceleration;
@@ -90,7 +92,7 @@ public abstract class MovementEngine
 	  this._desiredSpeed = _desiredSpeed;
   }
 
-   public void setDestroyedFlag(boolean setting)
+  public void setDestroyedFlag(boolean setting)
   {
     _destroyed = setting;
   }
@@ -139,6 +141,10 @@ public abstract class MovementEngine
   {
     return _currentY;
   }
+
+  public int getMapX() { return _currentMapX; }
+
+  public int getMapY() { return _currentMapY; }
   
 /**
    * MainLoop runs this method to update the weapon's state
@@ -252,6 +258,14 @@ public abstract class MovementEngine
 
   public void setCurrentY(double _currentY) {
     this._currentY = _currentY;
+  }
+
+  public void setCurrentMapX(int _currentMapX) {
+    this._currentMapX = _currentMapX;
+  }
+
+  public void setCurrentMapY(int _currentMapY) {
+    this._currentMapY = _currentMapY;
   }
 
   public void setMaxSpeed(double _maxSpeed) {

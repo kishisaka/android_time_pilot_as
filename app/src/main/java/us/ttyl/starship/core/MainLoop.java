@@ -348,14 +348,24 @@ public class MainLoop extends Thread
 						// ignore and continue
 					}
 				}
-
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally {
 				// get sleep time
 				long singleLoopTime = System.currentTimeMillis() - currentTime;
 
 				//sleep if needed (over 60fps)
 				if (singleLoopTime < 16)
 				{
-					sleep(16 - singleLoopTime);
+					try {
+						sleep(16 - singleLoopTime);
+					}
+					catch(InterruptedException ie) {
+						// ignore and continue;
+					}
 				}
 
 				//calculate the framerate
@@ -368,10 +378,6 @@ public class MainLoop extends Thread
 				if (singleLoopTime > 1) {
 					GameState.sFramerate = (int) (1000 / singleLoopTime);
 				}
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
 			}
 		}
 		Log.d("kurt_test", "main loop ended, shutting down");

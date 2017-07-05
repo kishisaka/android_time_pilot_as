@@ -2,6 +2,7 @@ package us.ttyl.asteroids.ui.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -60,7 +61,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 
     private static int[] _degrev = null;
 
-    private static String TAG ="AsteroidView";
+    private static String TAG = "AsteroidView";
 
     private GameStateListener mGameStateListener = new GameStateListener() {
         @Override
@@ -118,8 +119,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             // create view thread only; it will be started in surfaceCreated()
             mAsteroidViewThread = new AsteroidViewThread(context, holder);
             setFocusable(true); // make sure we get key events
-        }
-        else {
+        } else {
             Log.e(TAG, "holder is null");
         }
     }
@@ -134,7 +134,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         GameState.clearAll();
 
         // choose random level for attract mode
-        GameState.sCurrentLevel = (int)((Math.random() * 4) + 1);
+        GameState.sCurrentLevel = (int) ((Math.random() * 4) + 1);
 
         long startTime = System.currentTimeMillis();
         //initialize sprite array
@@ -164,6 +164,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         GameState._1984_fighters_2 = GameUtils.getFighters1984FromFile(context, 2);
         GameState._bossSprites1 = GameUtils.getBossTilesFromFile(context);
         GameState._missileSprites = GameUtils.getMissileBitmaps(context);
+        GameState._water = GameUtils.getBitmap(context, R.drawable.water);
+        GameState._land = GameUtils.getBitmap(context, R.drawable.land);
+        GameState._landmass = GameUtils.getLandMass();
 
         //initalize sound
         AudioPlayer.initSound(context);
@@ -181,9 +184,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         float density = getResources().getDisplayMetrics().density;
         int height = getResources().getDisplayMetrics().heightPixels;
         int width = getResources().getDisplayMetrics().widthPixels;
-        GameState.sObjectCreationRadius = (int)(GameUtils.getRangeBetweenCoords(width / 2, height / 2, 0, (width - height) / 2) / density);
-        Log.i("kurt_test" , "object creation radius: " + GameState.sObjectCreationRadius);
-        Log.i("kurt_test" , "init before main loop start time: " + (System.currentTimeMillis() - startTime));
+        GameState.sObjectCreationRadius = (int) (GameUtils.getRangeBetweenCoords(width / 2, height / 2, 0, (width - height) / 2) / density);
+        Log.i("kurt_test", "object creation radius: " + GameState.sObjectCreationRadius);
+        Log.i("kurt_test", "init before main loop start time: " + (System.currentTimeMillis() - startTime));
 
         //initialize deg map (reversed)
         _degrev = new int[360];
@@ -303,8 +306,6 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
          * @param canvas
          */
         public void doDraw(Canvas canvas) {
-            // draw background
-            // canvas.drawBitmap(mBackground, 0, 0, null);
 
             if (GameState.mWaitTimeBetweenLevels == false) {
                 opacityLevel = 255;
@@ -349,6 +350,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 
                 int centerXCanvas = (int) (mAppContext.getResources().getDisplayMetrics().widthPixels / 2);
                 int centerYCanvas = (int) (mAppContext.getResources().getDisplayMetrics().heightPixels / 2);
+
+                // draw landmass
+                drawLandmass(canvas);
 
                 // draw the small clouds
                 for (int i = 0; i < GameState._cloudListSmall.size(); i++) {
@@ -668,6 +672,84 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         }
     }
 
+    public void drawLandmass(Canvas canvas) {
+        MovementEngine playerShip = GameState._weaponList.get(0);
+        int tileBufferX = 10;
+        int tileBufferY = 10;
+        int mapX = playerShip.getMapX();
+        int mapY = playerShip.getMapY();
+
+        // get the center tile
+        int tileX = (mapX/Constants.tileSize);
+        int tileY = (mapY/Constants.tileSize);
+
+        // find the x,y coords within the center tile, this is the offset to start cutting at
+        int tileXCenterInt = (mapX % Constants.tileSize);
+        int tileYCenterInt = (mapY % Constants.tileSize);
+        Log.i("kurt_test", "centerTileX: " + tileXCenterInt + " | centerTileY: " + tileYCenterInt);
+
+        // get startTileX
+        int startX = (tileX - tileBufferX);
+        if (startX < 0) {
+            startX = startX + (Constants.xMax / Constants.tileSize);
+        }
+        //get endTileY
+        int endY = (tileY + tileBufferY);
+        if (endY >= (Constants.yMax / Constants.tileSize)) {
+            endY = endY - (Constants.yMax / Constants.tileSize);
+        }
+
+        // build the landmass buffer from tiles for the current area (startX, endY)
+        Bitmap landmass = Bitmap.createBitmap((tileBufferX) * Constants.tileSize, (tileBufferY) * Constants.tileSize,
+                Bitmap.Config.ARGB_8888);
+        Canvas canvasLandmass = new Canvas(landmass);
+        float currentX = 0;
+        float currentY = 0;
+        int currentTileX = startX;
+        int currentTileY = endY;
+
+        for (int y = 0; y < tileBufferY; y++) {
+            for (int x = 0; x < tileBufferX; x++) {
+                if (currentTileY < 0) {
+                    currentTileY = endY;
+                }
+                int landType = GameState._landmass[currentTileX][currentTileY];
+                currentTileX++;
+                if (currentTileX >= (Constants.xMax / Constants.tileSize)) {
+                    currentTileX = startX;
+                }
+                if (landType == 1) {
+                    canvasLandmass.drawBitmap(GameState._land, currentX, currentY, null);
+                } else {
+                    canvasLandmass.drawBitmap(GameState._water, currentX, currentY, null);
+                }
+                currentX = currentX + Constants.tileSize;
+            }
+            currentTileY = currentTileY - 1;
+            currentTileX = startX;
+
+            currentX = 0;
+            currentY = currentY + Constants.tileSize;
+        }
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        height = (height - width) / 2;
+        int playFieldHeight = getResources().getDisplayMetrics().heightPixels - (height * 2);
+
+        // cut the viewable square from the landmass buffer and paste it onto the playfield (canvas)
+        canvas.drawBitmap(
+                Bitmap.createScaledBitmap(Bitmap.createBitmap(
+                        landmass,
+                        tileXCenterInt,
+                        Constants.tileSize - tileYCenterInt,
+                        (tileBufferX - 1) * Constants.tileSize,
+                        (tileBufferY - 1) * Constants.tileSize
+                ), getContext().getResources().getDisplayMetrics().widthPixels,
+                        playFieldHeight,
+                        false),
+                0, height, null);
+    }
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         // start the thread here so that we don't busy-wait in run()

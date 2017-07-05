@@ -60,4 +60,9 @@ public class Constants {
 	public static final int SMALL_CLOUD_OFFSET = 550;
 	public static final double LARGE_CLOUD_SPEED = .3;
 	public static final double SMALL_CLOUD_SPEED = .1;
+
+	//landmas3
+	public static final int xMax = 12*30;
+	public static final int yMax = 12*30;
+	public static final int tileSize = 30;
 }

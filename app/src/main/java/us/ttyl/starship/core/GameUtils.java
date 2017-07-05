@@ -191,7 +191,7 @@ public class GameUtils {
         GameState._smallMissile = BitmapFactory.decodeResource(context.getResources(), R.drawable.other_player_missile_indicator);
     }
 
-    public static ArrayList<Bitmap>getPlayerSprites(Context context) {
+    public static ArrayList<Bitmap> getPlayerSprites(Context context) {
         ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
         tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_3));
         tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_player_2));
@@ -208,7 +208,7 @@ public class GameUtils {
         return tileList;
     }
 
-    public static ArrayList<Bitmap>getFighters1917FromFile(Context context, int id) {
+    public static ArrayList<Bitmap> getFighters1917FromFile(Context context, int id) {
         ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
         if (id == 1) {
             tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1917_fighter_3));
@@ -241,7 +241,7 @@ public class GameUtils {
         return tileList;
     }
 
-    public static ArrayList<Bitmap>getFighters1941FromFile(Context context, int id) {
+    public static ArrayList<Bitmap> getFighters1941FromFile(Context context, int id) {
         ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
         if (id == 1) {
             tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1941_fighter_3));
@@ -274,7 +274,7 @@ public class GameUtils {
         return tileList;
     }
 
-    public static ArrayList<Bitmap>getFighters1971FromFile(Context context, int id) {
+    public static ArrayList<Bitmap> getFighters1971FromFile(Context context, int id) {
         ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
         if (id == 1) {
             tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1971_fighter_3));
@@ -307,7 +307,7 @@ public class GameUtils {
         return tileList;
     }
 
-    public static ArrayList<Bitmap>getFighters1984FromFile(Context context, int id) {
+    public static ArrayList<Bitmap> getFighters1984FromFile(Context context, int id) {
         ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
         if (id == 1) {
             tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_1984_fighter_3));
@@ -369,6 +369,7 @@ public class GameUtils {
 
     /**
      * get the explosion sprites (50 x 50, 24 frames)
+     *
      * @param context
      * @return
      */
@@ -408,8 +409,7 @@ public class GameUtils {
             explosionList.add(getAndScaleBitmap(R.drawable.explosion_8a, context, width));
             explosionList.add(getAndScaleBitmap(R.drawable.explosion_8a, context, width));
             explosionList.add(getAndScaleBitmap(R.drawable.explosion_8a, context, width));
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, "", e);
         }
         return explosionList;
@@ -417,6 +417,7 @@ public class GameUtils {
 
     /**
      * get the explosion sprites (400 x 400, 24 frames)
+     *
      * @param context
      * @return
      */
@@ -458,8 +459,7 @@ public class GameUtils {
             explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_16, context, width));
             explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_17, context, width));
             explosionList.add(getAndScaleBitmap(R.drawable.boss_explosion_17, context, width));
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, "", e);
         }
         return explosionList;
@@ -499,6 +499,17 @@ public class GameUtils {
         return tileList;
     }
 
+    /**
+     * get some bitmap by id
+     *
+     * @param context
+     * @param id
+     * @return
+     */
+    public static Bitmap getBitmap(Context context, int id) {
+        return BitmapFactory.decodeResource(context.getResources(), id);
+    }
+
     public static Bitmap getBossBullet(Context context) {
         return BitmapFactory.decodeResource(context.getResources(), R.drawable.other_boss_bullet);
     }
@@ -507,10 +518,12 @@ public class GameUtils {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
         return Bitmap.createScaledBitmap(bitmap, width, width, false);
     }
+
     /**
      * given a track and a ship type, return the appropriate sprite for rendering
-     *
+     * <p>
      * 6103458
+     *
      * @param track (can be either track or endurance)
      * @param type
      * @return sprite (BufferedImage)
@@ -582,7 +595,7 @@ public class GameUtils {
         } else if (track >= 0 && track < 30) {
             return getFrameBitmap(frame, type, 0);
         } else if (track >= 30 && track < 60) {
-            return getFrameBitmap(frame, type,1);
+            return getFrameBitmap(frame, type, 1);
         } else if (track >= 60 && track < 90) {
             return getFrameBitmap(frame, type, 2);
         } else if (track >= 90 && track < 120) {
@@ -610,20 +623,20 @@ public class GameUtils {
     public static void getBoltBitmaps(Context context) {
         Bitmap bolt = BitmapFactory.decodeResource
                 (context.getResources(), R.drawable.bolt);
-        bolt = bolt.createScaledBitmap(bolt, (int)(10 * context.getResources().getDisplayMetrics().density) , (int)(10 * context.getResources().getDisplayMetrics().density), false);
-        GameState._bolts = rotateBitmaps(context,bolt);
+        bolt = bolt.createScaledBitmap(bolt, (int) (10 * context.getResources().getDisplayMetrics().density), (int) (10 * context.getResources().getDisplayMetrics().density), false);
+        GameState._bolts = rotateBitmaps(context, bolt);
     }
 
     public static void getEnemyBoltBitmaps(Context context) {
         Bitmap bolt = BitmapFactory.decodeResource
                 (context.getResources(), R.drawable.enemy_bolt);
-        bolt = bolt.createScaledBitmap(bolt, (int)(10 * context.getResources().getDisplayMetrics().density) , (int)(10 * context.getResources().getDisplayMetrics().density), false);
-        GameState._enemy_bolts = rotateBitmaps(context,bolt);
+        bolt = bolt.createScaledBitmap(bolt, (int) (10 * context.getResources().getDisplayMetrics().density), (int) (10 * context.getResources().getDisplayMetrics().density), false);
+        GameState._enemy_bolts = rotateBitmaps(context, bolt);
     }
 
     private static List<Bitmap> rotateBitmaps(Context context, Bitmap bitmap) {
         List<Bitmap> bitmapList = new ArrayList<Bitmap>();
-        for(int i = 360; i > -1; i --) {
+        for (int i = 360; i > -1; i--) {
             // Log.i("kurt_test", "rotating bitmap: " + i);
             bitmapList.add(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix(bitmap, i), false));
         }
@@ -634,7 +647,7 @@ public class GameUtils {
 
     private static List<Bitmap> rotateRotorBitmaps(Context context, Bitmap bitmap) {
         List<Bitmap> bitmapList = new ArrayList<Bitmap>();
-        for(int i = 10; i > -1; i --) {
+        for (int i = 10; i > -1; i--) {
             // Log.i("kurt_test", "rotating bitmap: " + i);
             bitmapList.add(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix(bitmap, i), false));
         }
@@ -645,7 +658,7 @@ public class GameUtils {
 
     private static Matrix rotateMatrix(Bitmap bitmap, int rotation) {
         Matrix rotateMatrix = new Matrix();
-        rotateMatrix.postRotate(rotation, bitmap.getWidth()/2, bitmap.getHeight()/2);
+        rotateMatrix.postRotate(rotation, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
         rotateMatrix.postTranslate(bitmap.getWidth(), bitmap.getHeight());
         return rotateMatrix;
     }
@@ -691,88 +704,63 @@ public class GameUtils {
         }
         return null;
     }
-	/**
-	 * given a missle track, return the appropriate x,y offset for the smoke
-	 * @param track
-	 * @return sprite (BufferedImage)
-	 */
-	public static int[] getSmokeTrailXY(int track)
-	{
-		if (track >= 0 && track < 30)
-		{
-			// +3
-			return new int[]{-9, 0};
-		}
-		else if (track >= 30 && track < 60)
-		{
-			// + 2
-			return new int[]{-8, 5};
-		}
 
-		else if (track >= 60 && track < 90)
-		{
-			// + 1
-			return new int[]{-4,7};
-		}
-		else if (track >= 90 && track < 120)
-		{
-			// 0
-			return new int[]{0,9};
-		}
-		else if (track >= 120 && track < 150)
-		{
-			// + 11
-			return new int[]{4,7};
-		}
-		else if (track >= 150 && track < 180)
-		{
-			// + 10
-			return new int[]{7,4};
-		}
-		else if (track >= 180 && track < 210)
-		{
-			// + 9
-			return new int[]{9,0};
-		}
-		else if (track >= 210 && track < 240)
-		{
-			// + 8
-			return new int[]{7,-4};
-		}
-		else if (track >= 240 && track < 270)
-		{
-			// + 7
-			return new int[]{5,-7};
-		}
-		else if (track >= 270 && track < 300)
-		{
-			// + 6
-			return new int[]{0,-9};
-		}
-		else if (track >= 300 && track < 330)
-		{
-			// + 5
-			return new int[]{-4,-7};
-		}
-		else if (track >= 330 && track < 360)
-		{
-			// + 4
-			return new int[]{-7,-4};
-		}
-		return new int[]{0,0};
-	}
+    /**
+     * given a missle track, return the appropriate x,y offset for the smoke
+     *
+     * @param track
+     * @return sprite (BufferedImage)
+     */
+    public static int[] getSmokeTrailXY(int track) {
+        if (track >= 0 && track < 30) {
+            // +3
+            return new int[]{-9, 0};
+        } else if (track >= 30 && track < 60) {
+            // + 2
+            return new int[]{-8, 5};
+        } else if (track >= 60 && track < 90) {
+            // + 1
+            return new int[]{-4, 7};
+        } else if (track >= 90 && track < 120) {
+            // 0
+            return new int[]{0, 9};
+        } else if (track >= 120 && track < 150) {
+            // + 11
+            return new int[]{4, 7};
+        } else if (track >= 150 && track < 180) {
+            // + 10
+            return new int[]{7, 4};
+        } else if (track >= 180 && track < 210) {
+            // + 9
+            return new int[]{9, 0};
+        } else if (track >= 210 && track < 240) {
+            // + 8
+            return new int[]{7, -4};
+        } else if (track >= 240 && track < 270) {
+            // + 7
+            return new int[]{5, -7};
+        } else if (track >= 270 && track < 300) {
+            // + 6
+            return new int[]{0, -9};
+        } else if (track >= 300 && track < 330) {
+            // + 5
+            return new int[]{-4, -7};
+        } else if (track >= 330 && track < 360) {
+            // + 4
+            return new int[]{-7, -4};
+        }
+        return new int[]{0, 0};
+    }
 
-	/**
-	 * return the enemy gun fire rate based on the current wave level
-	 * increases difficulty for game
-	 * @return fire rate interval in ms
-	 */
-	public static int getEnemyGunFireRate()
-	{
-		if (GameState.sWaveLevel == 0)
-		{
-            switch(GameState.sCurrentLevel)
-            {
+    /**
+     * return the enemy gun fire rate based on the current wave level
+     * increases difficulty for game
+     *
+     * @return fire rate interval in ms
+     */
+    public static int getEnemyGunFireRate() {
+        if (GameState.sWaveLevel == 0) {
+            switch (GameState.sCurrentLevel) {
                 case 2:
                     return 470;
                 case 3:
@@ -782,11 +770,8 @@ public class GameUtils {
                 default:
                     return 500;
             }
-		}
-		else if (GameState.sWaveLevel == 1)
-		{
-            switch(GameState.sCurrentLevel)
-            {
+        } else if (GameState.sWaveLevel == 1) {
+            switch (GameState.sCurrentLevel) {
                 case 2:
                     return 380;
                 case 3:
@@ -796,24 +781,20 @@ public class GameUtils {
                 default:
                     return 400;
             }
-		}
-		else if (GameState.sWaveLevel == 2)
-		{
-			return 300;
-		}
-		return 200;
-	}
+        } else if (GameState.sWaveLevel == 2) {
+            return 300;
+        }
+        return 200;
+    }
 
-	/**
-	 * return the enemy missile fire rate based on the current wave level
-	 * @return fire rate interval in ms
-	 */
-	public static int getEnemyMissileFireRate()
-	{
-		if (GameState.sWaveLevel == 0)
-		{
-            switch(GameState.sCurrentLevel)
-            {
+    /**
+     * return the enemy missile fire rate based on the current wave level
+     *
+     * @return fire rate interval in ms
+     */
+    public static int getEnemyMissileFireRate() {
+        if (GameState.sWaveLevel == 0) {
+            switch (GameState.sCurrentLevel) {
                 case 2:
                     // no fire unless user takes too long!
                     return 90000;
@@ -825,11 +806,8 @@ public class GameUtils {
                     // no fire unless user takes too long!
                     return 90000;
             }
-		}
-		else if (GameState.sWaveLevel == 1)
-		{
-            switch(GameState.sCurrentLevel)
-            {
+        } else if (GameState.sWaveLevel == 1) {
+            switch (GameState.sCurrentLevel) {
                 case 2:
                     // no fire unless user takes too long!
                     return 90000;
@@ -841,45 +819,35 @@ public class GameUtils {
                     // no fire unless user takes too long!
                     return 90000;
             }
-		}
-		else if (GameState.sWaveLevel == 2)
-		{
-			return 800;
-		}
-		return 500;
-	}
+        } else if (GameState.sWaveLevel == 2) {
+            return 800;
+        }
+        return 500;
+    }
 
-	/**
-	 * should we fire a particular weapon or should we not based on the current wave level
-	 * used for the boss gun and missile for fighters.
-	 * @return true for fire, false for not fire
-	 */
-	public static boolean shouldFireWeapon()
-	{
-		int randomFireFactor = 1;
-		if (GameState.sWaveLevel == 2)
-		{
-			randomFireFactor = 3;
-		}
-		else if (GameState.sWaveLevel > 2)
-		{
-			randomFireFactor = 10;
-		}
-		if (Math.random() * 100 < randomFireFactor)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+    /**
+     * should we fire a particular weapon or should we not based on the current wave level
+     * used for the boss gun and missile for fighters.
+     *
+     * @return true for fire, false for not fire
+     */
+    public static boolean shouldFireWeapon() {
+        int randomFireFactor = 1;
+        if (GameState.sWaveLevel == 2) {
+            randomFireFactor = 3;
+        } else if (GameState.sWaveLevel > 2) {
+            randomFireFactor = 10;
+        }
+        if (Math.random() * 100 < randomFireFactor) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static int getFighterCount() {
-        if (GameState.sWaveLevel == 0)
-        {
-            switch(GameState.sCurrentLevel)
-            {
+        if (GameState.sWaveLevel == 0) {
+            switch (GameState.sCurrentLevel) {
                 case 2:
                     return 6;
                 case 3:
@@ -889,11 +857,8 @@ public class GameUtils {
                 default:
                     return 5;
             }
-        }
-        else
-        {
-            switch(GameState.sCurrentLevel)
-            {
+        } else {
+            switch (GameState.sCurrentLevel) {
                 case 2:
                     return 9;
                 case 3:
@@ -906,82 +871,67 @@ public class GameUtils {
         }
     }
 
-	/**
-	 * get the current enemy boss speed based on current and wave leveels
-	 * @param weaponType
-	 * @return speed
-	 */
-	public static float getPlaneSpeed(int weaponType)
-	{
-		if (weaponType == Constants.ENEMY_BOSS)
-		{
-			if (GameState.sWaveLevel == 0)
-			{
-				switch(GameState.sCurrentLevel)
-				{
-					case 2:
-						return 2;
-					case 3:
-						return 2.1f;
-					case 4:
-						return 2.2f;
-					default:
-						return 1;
-				}
-			}
-			else
-			{
-				switch(GameState.sCurrentLevel)
-				{
-					case 2:
-						return 3;
-					case 3:
-						return 4;
-					case 4:
-						return 5;
-					default:
-						return 2.25f;
-				}
-			}
-		}
-		else if (weaponType == Constants.ENEMY_FIGHTER)
-		{
-			if (GameState.sWaveLevel == 0)
-			{
-				switch(GameState.sCurrentLevel)
-				{
-					case 2:
-						return 1.4f;
-					case 3:
-						return 1.75f;
-					case 4:
-						return 2.2f;
-					default:
-						return 1;
-				}
-			}
-			else
-			{
-				switch(GameState.sCurrentLevel)
-				{
-					case 2:
-						return 2.3f;
-					case 3:
-						return 2.4f;
-					case 4:
-						return 4;
-					default:
-						return 2.3f;
-				}
-			}
-		}
-		return 1;
-	}
+    /**
+     * get the current enemy boss speed based on current and wave leveels
+     *
+     * @param weaponType
+     * @return speed
+     */
+    public static float getPlaneSpeed(int weaponType) {
+        if (weaponType == Constants.ENEMY_BOSS) {
+            if (GameState.sWaveLevel == 0) {
+                switch (GameState.sCurrentLevel) {
+                    case 2:
+                        return 2;
+                    case 3:
+                        return 2.1f;
+                    case 4:
+                        return 2.2f;
+                    default:
+                        return 1;
+                }
+            } else {
+                switch (GameState.sCurrentLevel) {
+                    case 2:
+                        return 3;
+                    case 3:
+                        return 4;
+                    case 4:
+                        return 5;
+                    default:
+                        return 2.25f;
+                }
+            }
+        } else if (weaponType == Constants.ENEMY_FIGHTER) {
+            if (GameState.sWaveLevel == 0) {
+                switch (GameState.sCurrentLevel) {
+                    case 2:
+                        return 1.4f;
+                    case 3:
+                        return 1.75f;
+                    case 4:
+                        return 2.2f;
+                    default:
+                        return 1;
+                }
+            } else {
+                switch (GameState.sCurrentLevel) {
+                    case 2:
+                        return 2.3f;
+                    case 3:
+                        return 2.4f;
+                    case 4:
+                        return 4;
+                    default:
+                        return 2.3f;
+                }
+            }
+        }
+        return 1;
+    }
 
-    public static String getGameLevelName(Resources res)
-    {
-        switch (GameState.sCurrentLevel)
-        {
+    public static String getGameLevelName(Resources res) {
+        switch (GameState.sCurrentLevel) {
             case 1:
                 return getGameLevelName(res, 1);
             case 2:
@@ -995,10 +945,8 @@ public class GameUtils {
         }
     }
 
-    public static String getGameLevelName(Resources res, int level)
-    {
-        switch (level)
-        {
+    public static String getGameLevelName(Resources res, int level) {
+        switch (level) {
             case 1:
                 return res.getString(R.string.time_1917);
             case 2:
@@ -1012,10 +960,8 @@ public class GameUtils {
         }
     }
 
-    public static String getGameLevelNameString(Resources res, int level)
-    {
-        switch (level)
-        {
+    public static String getGameLevelNameString(Resources res, int level) {
+        switch (level) {
             case 1:
                 return res.getString(R.string.string_1917);
             case 2:
@@ -1029,19 +975,17 @@ public class GameUtils {
         }
     }
 
-    /**
-     * used only for landmass placement
-     * @param x
-     * @return
-     */
-    public int wrap(int x) {
-        if (x > 10000) {
-            return 0;
-        } else if (x < 0) {
-            return 10000;
-        } else {
-            return x;
+    public static int[][] getLandMass() {
+        int[][] landmass = new int[Constants.xMax / (int)Constants.tileSize][(int)Constants.yMax / (int)Constants.tileSize];
+        for(int y =0; y < Constants.yMax / Constants.tileSize; y ++) {
+            for (int x = 0; x < Constants.xMax / Constants.tileSize; x++) {
+                if (Math.random() * 100 > 90) {
+                    landmass[x][y] = 1;
+                } else {
+                    landmass[x][y] = 0;
+                }
+            }
         }
+        return landmass;
     }
-
 }

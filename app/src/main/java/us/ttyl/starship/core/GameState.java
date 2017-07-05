@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Bitmap;
+import android.util.Pair;
+
 import us.ttyl.starship.movement.MovementEngine;
 
 public class GameState 
@@ -16,9 +18,9 @@ public class GameState
 	//turn off enemy weapon systems (testing)
 	public static boolean sIsFireEnemyGuns = true;
 	//turn on player invulnerability (testing)
-	public static boolean sIsInvulnerable = false;
+	public static boolean sIsInvulnerable = true;
 	//turn on main loop frame rate
-	public static boolean sShowFrameRate = false;
+	public static boolean sShowFrameRate = true;
 	
 	// guns, missiles, player ship, enemy ships, parachutes, etc.
 	public static List <MovementEngine> _weaponList = new ArrayList<MovementEngine>();
@@ -34,6 +36,8 @@ public class GameState
 	public static Bitmap _bigParachute;
 	public static Bitmap _smallMissile;
 	public static Bitmap _bossBullet;
+	public static Bitmap _land;
+	public static Bitmap _water;
 
 	//sprites
 	public static ArrayList <Bitmap> _1917_fighters_1;
@@ -107,6 +111,9 @@ public class GameState
 
 	public static final int MAX_CLOUDS = 50;
 
+    // land mass stuff
+	public static int[][] _landmass;
+
 	public static void clearAll() {
 		_weaponList.clear();
 		_cloudListLarge.clear();
@@ -122,7 +129,6 @@ public class GameState
 		_playerScore = 0;
 		_playerBulletsShot = 0;
 		_playerEnemyShot = 0;
-
 	}
 }
 

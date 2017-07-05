@@ -1,5 +1,6 @@
 package us.ttyl.starship.movement;
 
+import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
 
 /**
@@ -42,8 +43,25 @@ public class CircleEngine extends MovementEngine
   {
     if (_currentSpeed > 0)
     {
-    	_currentX = _currentX + (GameState._density * (Math.cos(Math.toRadians(_currentDirection)) * (_currentSpeed / layer)));
-	    _currentY = _currentY + (GameState._density * (Math.sin(Math.toRadians(_currentDirection)) * (_currentSpeed / layer)));
+		double xChange = (GameState._density * (Math.cos(Math.toRadians(_currentDirection)) * (_currentSpeed / layer)));
+		double yChange = (GameState._density * (Math.sin(Math.toRadians(_currentDirection)) * (_currentSpeed / layer)));
+		_currentX = _currentX + xChange;
+		_currentY = _currentY + yChange;
+
+		_currentMapX = _currentMapX + (int)xChange;
+		if (_currentMapX < 0) {
+			_currentMapX = _currentMapX + Constants.xMax;
+		}
+		if (_currentMapX > Constants.xMax) {
+			_currentMapX = _currentMapX - Constants.xMax;
+		}
+		_currentMapY = _currentMapY + (int)yChange;
+		if (_currentMapY < 0) {
+			_currentMapY = _currentMapY + Constants.yMax;
+		}
+		if (_currentMapY > Constants.yMax) {
+			_currentMapY = _currentMapY - Constants.yMax;
+		}
     }
   }
 
