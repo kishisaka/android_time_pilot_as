@@ -1,6 +1,7 @@
 package us.ttyl.starship.core;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -17,13 +18,13 @@ public class GameState
 	public static boolean sIsFireEnemyGuns = true;
 	//turn on player invulnerability (testing)
 	public static boolean sIsInvulnerable = false;
-	//turn on main loop frame rate
-	public static boolean sShowFrameRate = false;
+	//turn on main loop frame
+	public static boolean sShowFrameRate = true;
 	
 	// guns, missiles, player ship, enemy ships, parachutes, etc.
 	public static List <MovementEngine> _weaponList = new ArrayList<MovementEngine>();
 	//explosion particles
-	public static List <MovementEngine> _explosionParticleList = new ArrayList<MovementEngine>();
+	public static LinkedListHolder <MovementEngine> _explosionParticleList = new LinkedListHolder<>();
 	//small clouds
 	public static List <MovementEngine> _cloudListSmall = new ArrayList<MovementEngine>();
 	//large clouds
@@ -54,6 +55,8 @@ public class GameState
 
 	public static List<Bitmap> _missileSprites;
 	public static List<Bitmap> _playerSprites;
+
+	public static List<Bitmap> _mapTiles;
 	
 	//player score
 	public static int _playerScore = 0;
@@ -112,7 +115,7 @@ public class GameState
 		_cloudListLarge.clear();
 		_cloudListSmall.clear();
 		_explosionParticleList.clear();
-		_lives = 2;
+		_lives = 5;
 		sFrame = 1;
 		sStartTimeBoss = System.currentTimeMillis();
 		sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;

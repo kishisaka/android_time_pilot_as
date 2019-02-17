@@ -3,6 +3,8 @@ package us.ttyl.starship.core;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.Iterator;
+
 import us.ttyl.starship.env.EnvBuilder;
 import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.BossBullet;
@@ -60,7 +62,7 @@ public class MainLoop extends Thread
 		{
 			long currentTime = System.currentTimeMillis();
 			try
-			{	
+			{
 				//create clouds 
 				int cloudCount = GameUtils.getTypeCount(Constants.CLOUD_BIG, GameState._cloudListLarge);
 				cloudCount = cloudCount + GameUtils.getTypeCount(Constants.CLOUD_SMALL, GameState._cloudListSmall);
@@ -110,7 +112,7 @@ public class MainLoop extends Thread
 				
 				// fire enemy guns constantly
 				if (GameState._weaponList.get(0).getWeaponName()==(Constants.PLAYER) == true
-						&& GameState.sIsFireEnemyGuns == true && GameState.sFramerate > Constants.FRAME_RATE_MIN)
+						&& GameState.sIsFireEnemyGuns == true && GameState.sFramerate < Constants.FRAME_RATE_MIN)
 				{
 					for(int i = 0; i < GameState._weaponList.size(); i ++)
 					{
@@ -231,7 +233,8 @@ public class MainLoop extends Thread
 		    			MovementEngine missileSmokeTrail = ParticlePool.obtain(ship.getCurrentDirection(), ship.getCurrentDirection()
 								, (int)ship.getX()
 								, (int)ship.getY(),0, 0, 0, 0, Constants.MISSILE_SMOKE, null, Constants.SMOKE_ENDURANCE_MISSLE, 1);
-		    			GameState._explosionParticleList.add(missileSmokeTrail);
+		    			Node node = new Node(missileSmokeTrail);
+		    			GameState._explosionParticleList.add(node);
 					}
 
 		    		// make boss damage smoke trail
@@ -245,7 +248,8 @@ public class MainLoop extends Thread
 							MovementEngine explosionParticle = ParticlePool.obtain(particleDirection, particleDirection
 									, ship.getX(), ship.getY(), particleSpeed, 1, 1, 1, Constants.BOSS_SMOKE
 									, null, particleEndurance, 1);
-							GameState._explosionParticleList.add(explosionParticle);
+							Node node = new Node(explosionParticle);
+							GameState._explosionParticleList.add(node);
 			    		}
 		    		}
 		    		ship.run(1);
@@ -255,10 +259,11 @@ public class MainLoop extends Thread
 		    	}
 
 				//run the explosions particles also!
-				for(int i = 0; i < GameState._explosionParticleList.size(); i ++)
-				{
-					MovementEngine ship = GameState._explosionParticleList.get(i);
+				Node<MovementEngine> head = GameState._explosionParticleList.getHead();
+				while (head != null) {
+					MovementEngine ship = head.getValue();
 					ship.run(1);
+					head = head.next();
 				}
 
 				//run the clouds (large)
@@ -292,28 +297,32 @@ public class MainLoop extends Thread
 					}
 					catch(ArrayIndexOutOfBoundsException e)
 					{
+						e.printStackTrace();
 						// ignore and continue
 					}
 		    	}
 
 				//check destroyed and remove from explosion list if so and remove if over screen radius units away from the player
-				for(int i = 0; i < GameState._explosionParticleList.size(); i ++)
-				{
+				Node <MovementEngine> explosionStart = GameState._explosionParticleList.getHead();
+				while (explosionStart != null) {
+					MovementEngine me = explosionStart.getValue();
+					Node <MovementEngine> temp = explosionStart;
+					explosionStart = explosionStart.next();
 					try
 					{
-						if (( GameUtils.getRange(GameState._weaponList.get(0), GameState._explosionParticleList.get(i)) > ((GameState.sObjectCreationRadius)+ 100 * _density))
-								|| (GameState._explosionParticleList.get(i).getDestroyedFlag() == true))
+						if (( GameUtils.getRange(GameState._weaponList.get(0), me) > ((GameState.sObjectCreationRadius)+ 100 * _density))
+								|| (me.getDestroyedFlag() == true))
 						{
-							MovementEngine engine = GameState._explosionParticleList.get(i);
-							GameState._explosionParticleList.remove(i);
-							if (engine != null && engine instanceof ExplosionParticle) {
-								ParticlePool.recycle((ExplosionParticle) engine);
+							GameState._explosionParticleList.remove(temp);
+							if (me != null && me instanceof ExplosionParticle) {
+								if (me != null ) {
+									ParticlePool.recycle((ExplosionParticle) me);
+								}
 							}
 						}
 					}
 					catch(ArrayIndexOutOfBoundsException e)
 					{
-						// ignore and continue
 					}
 				}
 
@@ -329,6 +338,7 @@ public class MainLoop extends Thread
 					}
 					catch(ArrayIndexOutOfBoundsException e)
 					{
+						e.printStackTrace();
 						// ignore and continue
 					}
 				}
@@ -345,6 +355,7 @@ public class MainLoop extends Thread
 					}
 					catch(ArrayIndexOutOfBoundsException e)
 					{
+						e.printStackTrace();
 						// ignore and continue
 					}
 				}
@@ -358,16 +369,8 @@ public class MainLoop extends Thread
 					sleep(16 - singleLoopTime);
 				}
 
-				//calculate the framerate
-				if (singleLoopTime < 16)
-				{
-					singleLoopTime = 16;
-				}
-
 				//calculate sleep time based on 60fps
-				if (singleLoopTime > 1) {
-					GameState.sFramerate = (int) (1000 / singleLoopTime);
-				}
+				GameState.sFramerate = (int) singleLoopTime;
 			}
 			catch(Exception e)
 			{
@@ -465,6 +468,7 @@ public class MainLoop extends Thread
 					}
 					catch(ArrayIndexOutOfBoundsException e)
 					{
+						e.printStackTrace();
 						// ignore and continue
 					}
 				}

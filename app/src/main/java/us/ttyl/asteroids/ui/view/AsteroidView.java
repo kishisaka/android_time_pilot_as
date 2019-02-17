@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.os.Trace;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.SurfaceView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import us.ttyl.asteroids.R;
@@ -25,6 +27,7 @@ import us.ttyl.starship.core.DBHelper;
 import us.ttyl.starship.core.GameState;
 import us.ttyl.starship.core.GameUtils;
 import us.ttyl.starship.core.MainLoop;
+import us.ttyl.starship.core.Node;
 import us.ttyl.starship.core.Score;
 import us.ttyl.starship.env.EnvBuilder;
 import us.ttyl.starship.listener.GameStateListener;
@@ -58,6 +61,8 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
     int mControllerX = 0;
     int mControllerY = 0;
 
+    int mPreviousTouch = MotionEvent.ACTION_UP;
+
     private static int[] _degrev = null;
 
     private static String TAG ="AsteroidView";
@@ -67,7 +72,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         public void onPlayerDied() {
             GameState._lives = GameState._lives - 1;
             if (GameState._lives >= 0) {
-                MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2.5d, 2.5d, 5, .1d, 0, Constants.PLAYER, -1, this);
+                MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 0d, 2.5d, 2.5, .001d, 0, Constants.PLAYER, -1, mGameStateListener);
                 player.setMissileCount(Constants.START_MISSILE_COUNT);
                 if (GameState._weaponList.isEmpty() == false) {
                     GameState._weaponList.set(0, player);
@@ -107,7 +112,6 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         SurfaceHolder holder = getHolder();
         if (holder != null) {
             holder.addCallback(this);
-            // mBackground = BitmapFactory.decodeResource(getResources(), R.drawable.helicopter);
 
             // do game initialization (load sprites, start sounds, etc.)
             init(context);
@@ -164,6 +168,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         GameState._1984_fighters_2 = GameUtils.getFighters1984FromFile(context, 2);
         GameState._bossSprites1 = GameUtils.getBossTilesFromFile(context);
         GameState._missileSprites = GameUtils.getMissileBitmaps(context);
+        GameState._mapTiles = GameUtils.getMapTiles(context);
 
         //initalize sound
         AudioPlayer.initSound(context);
@@ -181,6 +186,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         float density = getResources().getDisplayMetrics().density;
         int height = getResources().getDisplayMetrics().heightPixels;
         int width = getResources().getDisplayMetrics().widthPixels;
+        System.out.println("kurt_test displayMetrics: " + height + " : " +  width);
         GameState.sObjectCreationRadius = (int)(GameUtils.getRangeBetweenCoords(width / 2, height / 2, 0, (width - height) / 2) / density);
         Log.i("kurt_test" , "object creation radius: " + GameState.sObjectCreationRadius);
         Log.i("kurt_test" , "init before main loop start time: " + (System.currentTimeMillis() - startTime));
@@ -261,11 +267,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 try {
                     if (mSurfaceHolder != null) {
                         canvas = mSurfaceHolder.lockCanvas();
-                        if (canvas != null) {
-                            synchronized (canvas) {
-                                doDraw(canvas);
-                            }
-                        }
+                        doDraw(canvas);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "canvas or surface null, forget this one and continue", e);
@@ -279,13 +281,13 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                         // http://stackoverflow.com/questions/34305937/anr-in-surfaceview-on-specific-devices-only-the-only-fix-is-a-short-sleep-tim
                         // if we don't do this, app will lock up on restart for a while. on Nexus 5x it may never start again. Samsung devices don't
                         // seem to have this problem. Seems like this is happening only on > level 19 api devices (post kitkat)
-                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-                            try {
-                                sleep(0, 1);
-                            } catch (Exception e) {
-                                Log.e(TAG, e.getMessage(), e);
-                            }
-                        }
+//                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+//                            try {
+//                                sleep(0, 1);
+//                            } catch (Exception e) {
+//                                Log.e(TAG, e.getMessage(), e);
+//                            }
+//                        }
                     }
                 }
             }
@@ -305,6 +307,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         public void doDraw(Canvas canvas) {
             // draw background
             // canvas.drawBitmap(mBackground, 0, 0, null);
+
+            Trace.beginSection("AndroidView.doDraw()");
+            long startTime = System.currentTimeMillis();
 
             if (GameState.mWaitTimeBetweenLevels == false) {
                 opacityLevel = 255;
@@ -370,6 +375,11 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 int misslePixel = 2 * density;
 
                 for (int i = 0; i < GameState._weaponList.size(); i++) {
+                    if (mPreviousTouch == MotionEvent.ACTION_UP) {
+                        GameState._weaponList.get(0).updateSpeedDecrease();
+                    } else {
+                        GameState._weaponList.get(0).updateSpeedIncrease();
+                    }
                     if (i < GameState._weaponList.size()) {
                         try {
                             me = GameState._weaponList.get(i);
@@ -481,10 +491,11 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 }
 
                 // draw all explosion particles (explosions, smoke, etc)
-                for (int i = 0; i < GameState._explosionParticleList.size(); i++) {
-                    if (i < GameState._explosionParticleList.size()) {
-                        me = GameState._explosionParticleList.get(i);
-                        if (me != null) {
+                Node<MovementEngine> node = GameState._explosionParticleList.getHead();
+                while (node != null) {
+                    try {
+                        me = node.getValue();
+                        if (me != null && !me.checkDestroyed()) {
                             double x = GameUtils.getA(centerX, me.getX()) / _scale;
                             double y = GameUtils.getB(centerY, me.getY()) / _scale;
                             double track = GameUtils.track(centerX, centerY, me.getX(), me.getY());
@@ -517,7 +528,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                                         (int) (centerXCanvas + pixelSize + x), (int) (centerYCanvas + pixelSize - y), mParticleExplosionBoss);
                             }
                         }
+                    } catch(Exception e ) {
                     }
+                    node = node.next();
                 }
 
                 // draw the top and bottom borders
@@ -531,11 +544,6 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 canvas.drawText("1-UP: " + GameState._playerScore, (int) (15 * density), (int) (70 * density), mTextColor);
                 if (GameState._highScore != null) {
                     canvas.drawText("High Score: " + GameState._highScore.getScore(), (int) (15 * density), (int) (100 * density), mTextColor);
-                }
-
-                // draw the frame rate
-                if (GameState.sShowFrameRate == true) {
-                    canvas.drawText("" + GameState.sFramerate, 500, 500, mTextColor);
                 }
 
                 // draw the player life count
@@ -657,9 +665,15 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 if (GameState.sFrame > Constants.sMaxFrame) {
                     GameState.sFrame = 1;
                 }
+                // draw the frame rate
+                if (GameState.sShowFrameRate == true) {
+                    canvas.drawText("" + GameState.sFramerate + ":" + (System.currentTimeMillis() - startTime), 500, 500, mTextColor);
+                }
+
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
             }
+            Trace.endSection();
         }
 
         public void stopAsteroidViewThread() {
@@ -682,6 +696,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             }
             catch(Exception e)
             {
+                e.printStackTrace();
             }
         }
     }
@@ -782,12 +797,13 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 
 			// process the events! 
 			if (rangeController <= (100 * density)) {
-				x = x - mControllerCircleX;
-				y = y - mControllerCircleY;
-				mControllerX = x;
-				mControllerY = y;
-				int track = _degrev[(int) GameUtils.track(0, 0, x, y)];
-				GameState._weaponList.get(0).setDirection(track);
+                x = x - mControllerCircleX;
+                y = y - mControllerCircleY;
+                mControllerX = x;
+                mControllerY = y;
+                int track = _degrev[(int) GameUtils.track(0, 0, x, y)];
+                GameState._weaponList.get(0).setDirection(track);
+                mPreviousTouch = motionEvent.getAction();
 			}
 			if (rangeSpecialWeapon <= (50 * density)) {
 				if ((GameState._weaponList.get(0).getWeaponName() != (Constants.PLAYER))) {
@@ -806,7 +822,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 					GameState.sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;
                     GameState.sShownLevelName = false;
 
-					MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 2.5d, 2.5d, 5, .1d, 0, Constants.PLAYER, -1, mGameStateListener);
+					MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 0d, 2.5d, 2.5, .001d, 0, Constants.PLAYER, -1, mGameStateListener);
 					player.setMissileCount(Constants.START_MISSILE_COUNT);
 
                     //reset timers

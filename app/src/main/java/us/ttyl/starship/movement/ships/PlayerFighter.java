@@ -4,6 +4,7 @@ import android.util.Log;
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
+import us.ttyl.starship.core.Node;
 import us.ttyl.starship.listener.GameStateListener;
 import us.ttyl.starship.movement.FreeEngine;
 import us.ttyl.starship.movement.MovementEngine;
@@ -56,6 +57,7 @@ public class PlayerFighter extends FreeEngine
 							}
 							catch(Exception e)
 							{
+								e.printStackTrace();
 								// do nothing, maan loop might have done this already.
 							}
 						}
@@ -77,7 +79,8 @@ public class PlayerFighter extends FreeEngine
 						MovementEngine explosionParticle = ParticlePool.obtain(particleDirection, particleDirection
 								, getX(), getY(), particleSpeed, 1, 1, 1, Constants.EXPLOSION_PARTICLE
 								, null, particleEndurance, 1);
-						GameState._explosionParticleList.add(explosionParticle);
+						Node<MovementEngine> node = new Node(explosionParticle);
+						GameState._explosionParticleList.add(node);
 					}
 					//pause the player gun sound
 					try {

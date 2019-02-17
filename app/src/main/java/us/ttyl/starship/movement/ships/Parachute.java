@@ -5,6 +5,7 @@ import android.util.Log;
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
+import us.ttyl.starship.core.Node;
 import us.ttyl.starship.env.EnvBuilder;
 import us.ttyl.starship.movement.LineEngine;
 import us.ttyl.starship.movement.MovementEngine;
@@ -96,7 +97,8 @@ public class Parachute extends LineEngine
 							MovementEngine explosionParticle = ParticlePool.obtain(particleDirection, particleDirection
 									, ship.getX(), ship.getY(), particleSpeed, 1, 1, 1, Constants.EXPLOSION_PARTICLE
 									, null, particleEndurance, 1);
-							GameState._explosionParticleList.add(explosionParticle);
+							Node<MovementEngine> node = new Node(explosionParticle);
+							GameState._explosionParticleList.add(node);
 						}
 					}
 				}

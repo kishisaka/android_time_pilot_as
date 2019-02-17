@@ -6,7 +6,7 @@ import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.ExplosionParticle;
 
 public class ParticlePool {
-    private static final Pools.SynchronizedPool<ExplosionParticle> particlePool = new Pools.SynchronizedPool<ExplosionParticle>(400);
+    private static final Pools.SynchronizedPool<ExplosionParticle> particlePool = new Pools.SynchronizedPool<ExplosionParticle>(1000);
 
     public static ExplosionParticle obtain(int direction, int currentDirection, double currentX,
                                 double currentY, double currentSpeed, double maxSpeed,
@@ -36,6 +36,11 @@ public class ParticlePool {
     }
 
     public static void recycle(ExplosionParticle explosionParticle) {
-        particlePool.release(explosionParticle);
+        if (explosionParticle != null) {
+            try {
+                particlePool.release(explosionParticle);
+            } catch(Exception e) {
+            }
+        }
     }
 }

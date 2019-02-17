@@ -22,6 +22,7 @@ public class Constants {
 	public static final int PLAYER_OPTION = 18;
 	public static final int ANIMATED_EXPLOSION = 19;
 	public static final int ANIMATED_BOSS_EXPLOSION = 22;
+	public static final int FIREBALL = 23;
 
 	//player initialization
 	public static final int START_MISSILE_COUNT = 20;
@@ -47,7 +48,7 @@ public class Constants {
 	public static final int ENEMY_FIGHTER_FiRE_RADIUS = 500;
 
 	//minimum frame rate allowed before fire rate limitation imposed
-	public static final int FRAME_RATE_MIN = 45;
+	public static final int FRAME_RATE_MIN = 25;
 
     // frames max for animation
     public static int sMaxFrame = 4;

@@ -6,7 +6,7 @@ import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.Bullet;
 
 public class BulletPool {
-    private static final Pools.SynchronizedPool<Bullet> bulletPool = new Pools.SynchronizedPool<Bullet>(400);
+    private static final Pools.SynchronizedPool<Bullet> bulletPool = new Pools.SynchronizedPool<Bullet>(1000);
 
     public static Bullet obtain(int direction, int currentDirection, double currentX,
                                 double currentY, double currentSpeed, double maxSpeed,

@@ -4,6 +4,7 @@ import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.Constants;
 import us.ttyl.starship.core.GameState;
 import us.ttyl.starship.core.GameUtils;
+import us.ttyl.starship.core.Node;
 import us.ttyl.starship.movement.LineEngine;
 import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.pools.ParticlePool;
@@ -103,7 +104,8 @@ public class EnemyBoss extends LineEngine {
 						MovementEngine explosionParticle = ParticlePool.obtain(particleDirection, particleDirection
 								, getX(), getY(), particleSpeed, 1, 1, 1, Constants.EXPLOSION_PARTICLE
 								, null, particleEndurance, 1);
-						GameState._explosionParticleList.add(explosionParticle);
+						Node<MovementEngine> node = new Node<>(explosionParticle);
+						GameState._explosionParticleList.add(node);
 						GameState.sLastBossExplosion = System.currentTimeMillis();
 					}
 				}
