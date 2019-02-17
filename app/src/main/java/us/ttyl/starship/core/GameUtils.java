@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.Log;
 
@@ -480,6 +481,54 @@ public class GameUtils {
         tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_5));
         tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.sprite1_missile_4));
         return tileList;
+    }
+
+    public static List<Bitmap> getMapTiles(Context context) {
+        ArrayList<Bitmap> tileList = new ArrayList<Bitmap>();
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.water));
+        tileList.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.land));
+        return tileList;
+    }
+
+    private static int [][] section = new int[6][6];
+    private static int [][] world = new int[][]{
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    };
+    /**
+     * return a 6x6 piece of the world
+     * @param x
+     * @param y
+     * @return
+     */
+    public static Bitmap getWorldAsBitmap(Context context, int centerX, int centerY) {
+        Bitmap bitmap = Bitmap.createBitmap(6*30, 6*30, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        float currentX = 0;
+        float currentY = 0;
+        for(int y = 0; y < 5; y ++) {
+            for(int x = 0; x < 5; x ++) {
+                Bitmap tile =  GameState._mapTiles.get(world[x][y]);
+                canvas.drawBitmap(tile, currentX * 30, currentY * 30, null);
+            }
+        }
+        return bitmap;
     }
 
     /**
@@ -1043,5 +1092,4 @@ public class GameUtils {
             return x;
         }
     }
-
 }

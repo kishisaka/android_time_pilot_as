@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.DBHelper;
@@ -18,11 +19,34 @@ import us.ttyl.starship.core.GameState;
 public class TimefightersActivity  extends FragmentActivity {
 
     private static String TAG = "TimeFighterActivity";
+    private static DBHelper dbHelper;
+    private static Fragment timeFighterFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        init();
+    }
+
+    public void init() {
+        if (dbHelper == null) {
+            dbHelper = new DBHelper(this);
+        }
+        if (timeFighterFragment == null) {
+            timeFighterFragment = new TimeFightersFragment();
+        }
+        GameState._highScore = dbHelper.getTopScore();
+        GameState._highScores = dbHelper.getTop10Scores();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, timeFighterFragment).commit();
+        try {
+            AudioPlayer.resumeAll();
+            Log.d(TAG, "we are started");
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -43,17 +67,6 @@ public class TimefightersActivity  extends FragmentActivity {
     @Override
     public void onResume() {
         super.onResume();
-        DBHelper helper = new DBHelper(this);
-        GameState._highScore = helper.getTopScore();
-        GameState._highScores = helper.getTop10Scores();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new TimeFightersFragment()).commit();
-        try {
-            AudioPlayer.resumeAll();
-            Log.d(TAG, "we are started");
-        }
-        catch(Exception e) {
-        }
     }
 
     @Override
@@ -65,6 +78,7 @@ public class TimefightersActivity  extends FragmentActivity {
             Log.d(TAG, "we are stopped");
         }
         catch(Exception e) {
+            e.printStackTrace();
         }
 
     }
