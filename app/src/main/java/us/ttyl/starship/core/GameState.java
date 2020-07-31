@@ -1,7 +1,6 @@
 package us.ttyl.starship.core;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import android.graphics.Bitmap;
@@ -19,7 +18,7 @@ public class GameState
 	//turn on player invulnerability (testing)
 	public static boolean sIsInvulnerable = false;
 	//turn on main loop frame
-	public static boolean sShowFrameRate = true;
+	public static boolean sShowFrameRate = false;
 	
 	// guns, missiles, player ship, enemy ships, parachutes, etc.
 	public static List <MovementEngine> _weaponList = new ArrayList<MovementEngine>();
@@ -90,7 +89,7 @@ public class GameState
 	public static long sLastBossExplosion = 0;
 
 	// Enemy Boss hitpoints
-	public static int sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;
+	public static int sBossHitPoints = GameUtils.getBossHitpoints();
 
 	// object creation radius
 	public static int sObjectCreationRadius = 0;
@@ -118,14 +117,13 @@ public class GameState
 		_lives = 5;
 		sFrame = 1;
 		sStartTimeBoss = System.currentTimeMillis();
-		sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;
 		sParachutePickupCount = 0;
 		sCurrentLevel = 1;
 		sWaveLevel = 0;
 		_playerScore = 0;
 		_playerBulletsShot = 0;
 		_playerEnemyShot = 0;
-
+		sBossHitPoints = GameUtils.getBossHitpoints();
 	}
 }
 

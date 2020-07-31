@@ -42,7 +42,10 @@ public class Constants {
 	public static final int BOSS_EXPLOSION_INTERVAL = 100;
 
 	//boss initialization
-	public static final int BOSS_STARTING_HITPOINT = 100;
+	public static final int BOSS_STARTING_HITPOINT_0 = 75;
+	public static final int BOSS_STARTING_HITPOINT_1 = 125;
+	public static final int BOSS_STARTING_HITPOINT_2 = 175;
+	public static final int BOSS_STARTING_HITPOINT_3_PLUS = 250;
 
 	public static final int ENEMY_BOSS_FIRE_RADIUS = 500;
 	public static final int ENEMY_FIGHTER_FiRE_RADIUS = 500;
@@ -61,4 +64,6 @@ public class Constants {
 	public static final int SMALL_CLOUD_OFFSET = 550;
 	public static final double LARGE_CLOUD_SPEED = .3;
 	public static final double SMALL_CLOUD_SPEED = .1;
+
+	public static final int CHANGE_LEVEL_PARACHUTE_COUNT = 4;
 }

@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
-import android.os.Trace;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,9 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import us.ttyl.asteroids.R;
@@ -72,7 +68,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         public void onPlayerDied() {
             GameState._lives = GameState._lives - 1;
             if (GameState._lives >= 0) {
-                MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 0d, 2.5d, 2.5, .001d, 0, Constants.PLAYER, -1, mGameStateListener);
+                MovementEngine player = new PlayerFighter(0, 0, 0d,
+                        0d, 0d, 2.5d, 2.5,
+                        .001d, 0, Constants.PLAYER, -1, mGameStateListener);
                 player.setMissileCount(Constants.START_MISSILE_COUNT);
                 if (GameState._weaponList.isEmpty() == false) {
                     GameState._weaponList.set(0, player);
@@ -170,7 +168,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         GameState._missileSprites = GameUtils.getMissileBitmaps(context);
         GameState._mapTiles = GameUtils.getMapTiles(context);
 
-        //initalize sound
+        //initialize sound
         AudioPlayer.initSound(context);
 
         // wipe weapon list and add player to ship list if not already there
@@ -186,10 +184,10 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         float density = getResources().getDisplayMetrics().density;
         int height = getResources().getDisplayMetrics().heightPixels;
         int width = getResources().getDisplayMetrics().widthPixels;
-        System.out.println("kurt_test displayMetrics: " + height + " : " +  width);
+        Log.i(TAG, "displayMetrics: " + height + " : " +  width);
         GameState.sObjectCreationRadius = (int)(GameUtils.getRangeBetweenCoords(width / 2, height / 2, 0, (width - height) / 2) / density);
-        Log.i("kurt_test" , "object creation radius: " + GameState.sObjectCreationRadius);
-        Log.i("kurt_test" , "init before main loop start time: " + (System.currentTimeMillis() - startTime));
+        Log.i(TAG, "object creation radius: " + GameState.sObjectCreationRadius);
+        Log.i(TAG , "init before main loop start time: " + (System.currentTimeMillis() - startTime));
 
         //initialize deg map (reversed)
         _degrev = new int[360];
@@ -258,7 +256,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
         }
 
         public void run() {
-            Log.d("kurt_test", "started asteroid view thread");
+            Log.d(TAG, "started asteroid view thread");
             //draw the player window to the screen
             Canvas canvas = null;
 
@@ -272,7 +270,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 } catch (Exception e) {
                     Log.e(TAG, "canvas or surface null, forget this one and continue", e);
                 } finally {
-                    if (canvas != null) {
+                    if (canvas != null && !mSurfaceHolder.isCreating()) {
                         //post the canvas to the surface
                         mSurfaceHolder.unlockCanvasAndPost(canvas);
 
@@ -291,7 +289,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     }
                 }
             }
-            Log.d("kurt_test", "ending asteroid view thread");
+            Log.d(TAG, "ending asteroid view thread");
         }
 
         @Override
@@ -308,7 +306,6 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
             // draw background
             // canvas.drawBitmap(mBackground, 0, 0, null);
 
-            Trace.beginSection("AndroidView.doDraw()");
             long startTime = System.currentTimeMillis();
 
             if (GameState.mWaitTimeBetweenLevels == false) {
@@ -466,13 +463,13 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                                             , (int) (centerYCanvas - (spriteYSize / 2) - y)
                                             , null);
                                 } else if (me.getWeaponName() == (Constants.TEXT)) {
-                                    canvas.drawText(((TextItem) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemColor);
+                                     canvas.drawText(((TextItem) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemColor);
                                 } else if (me.getWeaponName() == (Constants.TEXT_ITEM_LINE)) {
-                                    canvas.drawText(((TextItemLine) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemLineColor);
+                                     canvas.drawText(((TextItemLine) me).getText(), (int) (centerXCanvas + x), (int) (centerYCanvas - y), mTextItemLineColor);
                                 }
                             }
                         } catch (ArrayIndexOutOfBoundsException e) {
-                            Log.e(TAG, e.getMessage(), e);
+                            Log.e("kurt_test", e.getMessage(), e);
                             // do nothing, simply continue to next weapon. this item might have already been destroyed by main loop
                         }
                     }
@@ -540,6 +537,8 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 canvas.drawRect(0, 0, width, height, mBorderColor);
                 canvas.drawRect(0, getResources().getDisplayMetrics().heightPixels - height, width, getResources().getDisplayMetrics().heightPixels, mBorderColor);
 
+                long textStartTime = System.currentTimeMillis();
+
                 // draw the score
                 canvas.drawText("1-UP: " + GameState._playerScore, (int) (15 * density), (int) (70 * density), mTextColor);
                 if (GameState._highScore != null) {
@@ -579,6 +578,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 int directionControllerSize = height / 2;
                 mControllerCircleX = getContext().getResources().getDisplayMetrics().widthPixels / 2;
                 mControllerCircleY = getContext().getResources().getDisplayMetrics().heightPixels - (height / 2);
+
                 canvas.drawCircle(mControllerCircleX, mControllerCircleY, directionControllerSize, mControllerColor);
 
                 // draw the controller direction circle
@@ -641,9 +641,8 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                                     , centerXCanvas - (140 * density) + (145 * density)
                                     , y
                                     , mHighScoreColor);
-                            Date date = new Date(score.getTimeStamp());
                             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
-                            canvas.drawText(sdf.format(date)
+                            canvas.drawText("" + sdf.format(score.getTimeStamp())
                                     , centerXCanvas - (140 * density) + (180 * density)
                                     , y
                                     , mHighScoreColor);
@@ -660,6 +659,9 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                             , mTextColor);
 
                 }
+
+                // Log.i("kurt_test", "text drawing time: " + (System.currentTimeMillis() - textStartTime));
+
                 //increment frame counter
                 GameState.sFrame = GameState.sFrame + 1;
                 if (GameState.sFrame > Constants.sMaxFrame) {
@@ -669,11 +671,11 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                 if (GameState.sShowFrameRate == true) {
                     canvas.drawText("" + GameState.sFramerate + ":" + (System.currentTimeMillis() - startTime), 500, 500, mTextColor);
                 }
+                // Log.i(TAG, GameState.sFramerate + ":" + (System.currentTimeMillis() - startTime ));
 
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
             }
-            Trace.endSection();
         }
 
         public void stopAsteroidViewThread() {
@@ -819,10 +821,11 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                     GameState.sCurrentLevel = 1;
                     GameState.sWaveLevel = 0;
 					GameState.sParachutePickupCount = 0;
-					GameState.sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;
+					GameState.sBossHitPoints = GameUtils.getBossHitpoints();
                     GameState.sShownLevelName = false;
 
-					MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 0d, 2.5d, 2.5, .001d, 0, Constants.PLAYER, -1, mGameStateListener);
+					MovementEngine player = new PlayerFighter(0, 0, 0d, 0d, 0d,
+                            2.5d, 2.5, .001d, 0, Constants.PLAYER, -1, mGameStateListener);
 					player.setMissileCount(Constants.START_MISSILE_COUNT);
 
                     //reset timers
@@ -857,8 +860,10 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
 								if (closestTarget != null && targetTrack != -1) {
 									MovementEngine missile = new Missile(targetTrack
 											, targetTrack
-											, (int) GameState._weaponList.get(0).getX(), (int) GameState._weaponList.get(0).getY(), .01, 10, .1, 1
+											, (int) GameState._weaponList.get(0).getX(), (int) GameState._weaponList.get(0).getY(),
+                                            .01, 10, .1, 1
 											, Constants.MISSILE_PLAYER, closestTarget, GameState._weaponList.get(0), 250);
+									missile.setHitPoints(3);
 									GameState._weaponList.add(missile);
 								}
 							}

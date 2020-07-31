@@ -673,7 +673,6 @@ public class GameUtils {
     private static List<Bitmap> rotateBitmaps(Context context, Bitmap bitmap) {
         List<Bitmap> bitmapList = new ArrayList<Bitmap>();
         for(int i = 360; i > -1; i --) {
-            // Log.i("kurt_test", "rotating bitmap: " + i);
             bitmapList.add(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix(bitmap, i), false));
         }
         bitmap.recycle();
@@ -684,7 +683,6 @@ public class GameUtils {
     private static List<Bitmap> rotateRotorBitmaps(Context context, Bitmap bitmap) {
         List<Bitmap> bitmapList = new ArrayList<Bitmap>();
         for(int i = 10; i > -1; i --) {
-            // Log.i("kurt_test", "rotating bitmap: " + i);
             bitmapList.add(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), rotateMatrix(bitmap, i), false));
         }
         bitmap.recycle();
@@ -955,6 +953,18 @@ public class GameUtils {
         }
     }
 
+    public static int getBossHitpoints() {
+	    switch(GameState.sWaveLevel) {
+            case 0:
+                return Constants.BOSS_STARTING_HITPOINT_0;
+            case 1:
+                return Constants.BOSS_STARTING_HITPOINT_1;
+            case 2:
+                return Constants.BOSS_STARTING_HITPOINT_2;
+            default:
+                return Constants.BOSS_STARTING_HITPOINT_3_PLUS;
+        }
+    }
 	/**
 	 * get the current enemy boss speed based on current and wave leveels
 	 * @param weaponType

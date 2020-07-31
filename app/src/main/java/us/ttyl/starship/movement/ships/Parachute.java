@@ -56,7 +56,7 @@ public class Parachute extends LineEngine
 			GameState.sParachutePickupCount = GameState.sParachutePickupCount + 1;
 			
 			// if we got 4 parachutes, remove all ships, change level! 
-			if (GameState.sParachutePickupCount > 3) {
+			if (GameState.sParachutePickupCount >= Constants.CHANGE_LEVEL_PARACHUTE_COUNT) {
 				AudioPlayer.playLevelChange();
 				GameState._playerScore = GameState._playerScore + 10000;
 				Thread levelWait = new Thread(new Runnable() {

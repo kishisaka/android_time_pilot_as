@@ -18,9 +18,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "high_score";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_NAME = "highscore";
+    private static final String HIGHSCORE_TABLE = "highscore";
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE "+TABLE_NAME+" (" +
+            "CREATE TABLE "+ HIGHSCORE_TABLE +" (" +
                     "id INTEGER PRIMARY KEY, " +
                     "score INTEGER ," +
                     "time LONG, "+
@@ -61,7 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put("level", level);
             values.put("wave", wave);
             values.put("time", System.currentTimeMillis());
-            db.insert(TABLE_NAME, null, values);
+            db.insert(HIGHSCORE_TABLE, null, values);
         }
         catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -85,7 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String limit = "10";
         try {
             Cursor cursor = db.query(
-                    TABLE_NAME
+                    HIGHSCORE_TABLE
                     , select
                     , null
                     , null
@@ -125,7 +125,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String limit = "1";
         try {
             Cursor cursor = db.query(
-                    TABLE_NAME
+                    HIGHSCORE_TABLE
                     , select
                     , null
                     , null

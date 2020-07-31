@@ -24,6 +24,8 @@ import us.ttyl.starship.pools.ParticlePool;
 public class MainLoop extends Thread
 {
 	private int _gunModifier = 0;
+	// in milliseconds, lower is fires faster
+	private int _gunFireSpeed = 40;
 	private int _gunModifierSwivel = 3;
 	private float _density;
 	private Context mContext;
@@ -200,11 +202,11 @@ public class MainLoop extends Thread
 					}
 				}
 				
-				// fire gun constantly
+				// fire player gun constantly
 				if (GameState._weaponList.get(0).getDestroyedFlag() == false && (GameState._weaponList.get(0).getWeaponName()==(Constants.PLAYER)))
 				{
 					long currentTimeGun = currentTime;
-					if (currentTimeGun - startTimeGun > 25)
+					if (currentTimeGun - startTimeGun > _gunFireSpeed)
 					{
 						int gunDirection = GameState._weaponList.get(0).getCurrentDirection() + _gunModifier;
 						if (gunDirection > 360) {
@@ -219,7 +221,10 @@ public class MainLoop extends Thread
 								, (int)GameState._weaponList.get(0).getY(),10, 10, 1, 1,
 								Constants.GUN_PLAYER, GameState._weaponList.get(0), 30);
 						GameState._weaponList.add(bullet);
-						gunModifier();
+						if (GameState.sWaveLevel > 0) {
+							gunModifier();
+							_gunFireSpeed = 20;
+						}
 					}
 				}
 
@@ -240,7 +245,7 @@ public class MainLoop extends Thread
 		    		// make boss damage smoke trail
 		    		if (ship.getWeaponName()==(Constants.ENEMY_BOSS))
 		    		{
-			    		if (ship.getHitpoints() < 7 )
+			    		if (ship.getHitpoints() < 30 )
 			    		{
 							int particleDirection = (int)(Math.random() * 360);
 							int particleSpeed = (int)(Math.random() * 10);
@@ -259,11 +264,11 @@ public class MainLoop extends Thread
 		    	}
 
 				//run the explosions particles also!
-				Node<MovementEngine> head = GameState._explosionParticleList.getHead();
-				while (head != null) {
-					MovementEngine ship = head.getValue();
+				Node<MovementEngine> current = GameState._explosionParticleList.getHead();
+				while (current != null) {
+					MovementEngine ship = current.getValue();
 					ship.run(1);
-					head = head.next();
+					current = current.next();
 				}
 
 				//run the clouds (large)
