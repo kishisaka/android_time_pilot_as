@@ -70,7 +70,7 @@ public class EnemyBoss extends LineEngine {
 				if (checkDestroyed())
 				{
 					// reset boss hitpoints
-					GameState.sBossHitPoints = Constants.BOSS_STARTING_HITPOINT;
+					GameState.sBossHitPoints = GameUtils.getBossHitpoints();
 
 					// play death sound
                     AudioPlayer.stopBoss();

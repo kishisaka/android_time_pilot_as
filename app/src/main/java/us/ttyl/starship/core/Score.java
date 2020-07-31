@@ -23,6 +23,11 @@ public class Score {
     public long getTimeStamp() {
         return timeStamp;
     }
+    public String getTimeFormatter() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timeStamp);
+        return cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.HOUR_OF_DAY) + ":" +cal.get(Calendar.MINUTE);
+    }
     public String toString() {
         return score + ":" + wave + ":" + level + ":" + timeStamp;
     }

@@ -16,12 +16,16 @@ public class Missile extends FollowEngine
 	}
 	
 	@Override
-	public void onCollision(MovementEngine engine2)
+	public void onCollision(MovementEngine withEngine)
 	{
-		if ((engine2.getWeaponName() == Constants.MISSILE_ENEMY && getOrigin().getWeaponName() == Constants.PLAYER)
-				|| (engine2.getWeaponName() == Constants.MISSILE_PLAYER && getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER)
-				|| (engine2.getWeaponName() == Constants.PLAYER_OPTION && getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER))
+		if (       (withEngine.getWeaponName() == Constants.MISSILE_PLAYER && getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER)
+				|| (withEngine.getWeaponName() == Constants.PLAYER_OPTION && getOrigin().getWeaponName() == Constants.ENEMY_FIGHTER)
+				|| (withEngine.getWeaponName() == Constants.ENEMY_BOSS && getOrigin().getWeaponName() == Constants.PLAYER)
+				|| (withEngine.getWeaponName() == Constants.GUN_ENEMY && getOrigin().getWeaponName() == Constants.PLAYER)
+				|| (withEngine.getWeaponName() == Constants.ENEMY_FIGHTER && getOrigin().getWeaponName() == Constants.PLAYER)
+				|| (withEngine.getWeaponName() == Constants.MISSILE_ENEMY && getOrigin().getWeaponName() == Constants.PLAYER))
 		{
+			System.out.println("on collision missile");
 			decrementHitPoints(1);
 			checkDestroyed();
 		}
