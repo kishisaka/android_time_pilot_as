@@ -1,16 +1,33 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('keystore_release')
+            storePassword '*******'
+            keyAlias = 'asteroids'
+            keyPassword '*******'
+        }
+    }
     compileSdkVersion 29
 
     defaultConfig {
         applicationId "us.ttyl.asteroids"
         minSdkVersion 19
         targetSdkVersion 29
+        versionCode 1000004
+        versionName "1.4"
     }
 
     buildTypes {
         release {
+            minifyEnabled true
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }

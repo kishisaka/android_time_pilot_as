@@ -19,6 +19,8 @@ public class GameState
 	public static boolean sIsInvulnerable = false;
 	//turn on main loop frame
 	public static boolean sShowFrameRate = false;
+	//version code
+	public static String versionCode = "";
 	
 	// guns, missiles, player ship, enemy ships, parachutes, etc.
 	public static List <MovementEngine> _weaponList = new ArrayList<MovementEngine>();
