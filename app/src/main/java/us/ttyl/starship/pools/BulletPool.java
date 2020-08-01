@@ -1,6 +1,6 @@
 package us.ttyl.starship.pools;
 
-import android.support.v4.util.Pools;
+import androidx.core.util.Pools;
 
 import us.ttyl.starship.movement.MovementEngine;
 import us.ttyl.starship.movement.ships.Bullet;
