@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import us.ttyl.starship.core.AudioPlayer;
 import us.ttyl.starship.core.DBHelper;
 import us.ttyl.starship.core.GameState;
@@ -22,10 +24,13 @@ public class TimefightersActivity  extends FragmentActivity {
     private static String TAG = "TimeFighterActivity";
     private static DBHelper dbHelper;
     private static Fragment timeFighterFragment;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             GameState.versionCode =  pInfo.versionName;
