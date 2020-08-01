@@ -1,34 +1,37 @@
 {
   "project_info": {
-    "project_number": "29644532224",
-    "project_id": "time-fighters"
+    "project_number": "779975192475",
+    "firebase_url": "https://time-fighters-24170.firebaseio.com",
+    "project_id": "time-fighters-24170",
+    "storage_bucket": "time-fighters-24170.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:29644532224:android:d76ece15657878fb",
+        "mobilesdk_app_id": "1:779975192475:android:f6ead96a825b6cd88abb3e",
         "android_client_info": {
           "package_name": "us.ttyl.asteroids"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "779975192475-m1hm3klkjt8hbov60ijvfl9s3shdu9cu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDACLCuhnTuMp2FjJ3fk4C2o2OqSUlylBo"
+          "current_key": "AIzaSyDfHdYM-41qPnvnqIH3z89f04pj6rfUBME"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2,
-          "test_banner_ad_unit_id": "ca-app-pub-3940256099942544/6300978111",
-          "test_interstitial_ad_unit_id": "ca-app-pub-3940256099942544/1033173712"
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779975192475-m1hm3klkjt8hbov60ijvfl9s3shdu9cu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
