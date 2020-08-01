@@ -604,7 +604,7 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                             , centerXCanvas - (100 * density)
                             , centerYCanvas - (160 * density)
                             , mTextColor);
-                    canvas.drawText(getContext().getString(R.string.mfr_name)
+                    canvas.drawText(getContext().getString(R.string.mfr_name, GameState.versionCode)
                             , centerXCanvas - (140 * density)
                             , centerYCanvas - (130 * density)
                             , mTextColor);
@@ -657,7 +657,10 @@ public class AsteroidView extends SurfaceView implements SurfaceHolder.Callback 
                             , centerXCanvas - (60 * density)
                             , centerYCanvas + (160 * density)
                             , mTextColor);
-
+                    canvas.drawText(getContext().getString(R.string.mfr_version, GameState.versionCode)
+                            , centerXCanvas - (60 * density)
+                            , centerYCanvas + (200 * density)
+                            , mTextColor);
                 }
 
                 // Log.i("kurt_test", "text drawing time: " + (System.currentTimeMillis() - textStartTime));
